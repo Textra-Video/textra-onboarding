@@ -1611,7 +1611,24 @@ function gatherData(){
     // Deadline
     deadline:     sel('deadline'),
     priority:     sel('priority'),
+    // Uploaded files as base64
+    guidelinesFileData: getFileData('ul-guidelines'),
+    c1refFileData:      getFileData('ul-c1'),
+    c2refFileData:      getFileData('ul-c2'),
+    sceneRefFileData:   getFileData('ul-scene'),
+    scriptFileData:     getFileData('ul-script'),
+    musicRefFileData:   getFileData('ul-music-ref'),
   };
+}
+
+function getFileData(uploadId) {
+  // Get base64 data from a file upload element
+  var label = document.getElementById(uploadId);
+  if (!label) return '';
+  var input = label.querySelector('input[type="file"]');
+  if (!input || !input.files || !input.files[0]) return '';
+  // Return the stored dataUrl if available
+  return window._uploadedFiles && window._uploadedFiles[uploadId] ? window._uploadedFiles[uploadId] : '';
 }
 
 function submitBrief(){
