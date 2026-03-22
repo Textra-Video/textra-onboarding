@@ -1009,50 +1009,42 @@ function scrapeWebsite(){
   loading.style.display = 'flex';
   preview.style.display = 'none';
   errEl.style.display   = 'none';
-  if(status) status.textContent = 'Connecting…';
+  if(status) status.textContent = 'Fetching brand data…';
 
-  var enc = encodeURIComponent(raw);
+  // Use allorigins — most reliable, returns JSON {contents: html}
+  var proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(raw) + '&t=' + Date.now();
 
-  // Our own Vercel proxy first (no CORS, real browser UA), then public fallbacks
-  var proxies = [
-    { url: '/api/scrape?url=' + enc,                                          json: true  },
-    { url: 'https://api.allorigins.win/get?url=' + enc + '&t=' + Date.now(), json: true  },
-    { url: 'https://corsproxy.io/?' + enc,                                    json: false },
-    { url: 'https://api.codetabs.com/v1/proxy?quest=' + enc,                 json: false }
-  ];
-
-  var tried = 0;
-
-  function next() {
-    if (tried >= proxies.length) {
+  fetch(proxyUrl)
+    .then(function(r) {
+      if(!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function(data) {
+      var html = data.contents || data.html || '';
+      console.log('[Textra] Got', html.length, 'chars');
+      if(!html || html.length < 100) throw new Error('Empty response');
       loading.style.display = 'none';
       btn.disabled = false;
-      errEl.style.display = 'block';
-      return;
-    }
-    var p = proxies[tried++];
-    if(status) status.textContent = 'Trying method ' + tried + ' of ' + proxies.length + '…';
-    console.log('[Textra] Proxy ' + tried + ':', p.url.substring(0, 60));
-
-    fetch(p.url)
-      .then(function(r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return p.json ? r.json().then(function(d) { return d.contents || d.html || ''; }) : r.text();
-      })
-      .then(function(html) {
-        console.log('[Textra] Got ' + (html ? html.length : 0) + ' chars from proxy ' + tried);
-        if (!html || html.length < 100) { next(); return; }
-        loading.style.display = 'none';
-        btn.disabled = false;
-        parseBrand(html, raw);
-      })
-      .catch(function(e) {
-        console.warn('[Textra] Proxy ' + tried + ' failed:', e.message);
-        next();
-      });
-  }
-
-  next();
+      parseBrand(html, raw);
+    })
+    .catch(function(err) {
+      console.warn('[Textra] allorigins failed:', err.message, '— trying corsproxy');
+      // Fallback to corsproxy.io
+      fetch('https://corsproxy.io/?' + encodeURIComponent(raw))
+        .then(function(r) { return r.text(); })
+        .then(function(html) {
+          if(!html || html.length < 100) throw new Error('Empty');
+          loading.style.display = 'none';
+          btn.disabled = false;
+          parseBrand(html, raw);
+        })
+        .catch(function(err2) {
+          console.warn('[Textra] corsproxy failed:', err2.message);
+          loading.style.display = 'none';
+          btn.disabled = false;
+          errEl.style.display = 'block';
+        });
+    });
 }
 
 function scrapeOnPaste(){
