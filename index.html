@@ -1638,27 +1638,42 @@ function submitBrief(){
   var data = gatherData();
 
   if(!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.trim()===''){
-    goTo(7);
-    return;
+    goTo(7); return;
   }
 
-  // Simple fetch POST — works on https:// (Vercel)
-  fetch(GOOGLE_SCRIPT_URL, {
-    method: 'POST',
-    mode: 'no-cors',  // Google Apps Script requires no-cors
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  })
-  .then(function() {
-    // no-cors means we can't read the response, but data IS sent
+  // Send via hidden form POST — most reliable method for Google Apps Script
+  var form = document.createElement('form');
+  form.method = 'POST';
+  form.action = GOOGLE_SCRIPT_URL;
+  form.target = 'hidden_iframe';
+  form.style.display = 'none';
+
+  // Send all data as a single JSON field
+  var input = document.createElement('input');
+  input.type = 'hidden';
+  input.name = 'data';
+  input.value = JSON.stringify(data);
+  form.appendChild(input);
+
+  // Hidden iframe to catch the response without page redirect
+  var iframe = document.getElementById('hidden_iframe');
+  if(!iframe){
+    iframe = document.createElement('iframe');
+    iframe.name = 'hidden_iframe';
+    iframe.id = 'hidden_iframe';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+  }
+
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+
+  // Go to success after short delay
+  setTimeout(function(){
     if(btn){ btn.disabled=false; btn.textContent='Submit Brief ✓'; }
     goTo(7);
-  })
-  .catch(function(err) {
-    console.warn('Submit error:', err);
-    if(btn){ btn.disabled=false; btn.textContent='Submit Brief ✓'; }
-    goTo(7);
-  });
+  }, 2000);
 }
 
 function rv(val){
