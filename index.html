@@ -1612,6 +1612,7 @@ function gatherData(){
     deadline:     sel('deadline'),
     priority:     sel('priority'),
     // Uploaded files as base64
+    logoDataUrl:        getFileData('ul-logo-scraped') || state.logoDataUrl || '',
     guidelinesFileData: getFileData('ul-guidelines'),
     c1refFileData:      getFileData('ul-c1'),
     c2refFileData:      getFileData('ul-c2'),
@@ -1622,13 +1623,27 @@ function gatherData(){
 }
 
 function getFileData(uploadId) {
-  // Get base64 data from a file upload element
-  var label = document.getElementById(uploadId);
-  if (!label) return '';
-  var input = label.querySelector('input[type="file"]');
-  if (!input || !input.files || !input.files[0]) return '';
-  // Return the stored dataUrl if available
-  return window._uploadedFiles && window._uploadedFiles[uploadId] ? window._uploadedFiles[uploadId] : '';
+  return (window._uploadedFiles && window._uploadedFiles[uploadId]) ? window._uploadedFiles[uploadId] : '';
+}
+
+function resetForm(){
+  // Clear all inputs
+  document.querySelectorAll('input[type="text"],input[type="email"],input[type="tel"],input[type="date"],textarea').forEach(function(el){ el.value=''; });
+  document.querySelectorAll('select').forEach(function(el){ el.selectedIndex=0; });
+  // Clear selections
+  document.querySelectorAll('.cc.sel,.bg-opt.sel,.music-opt.sel').forEach(function(el){ el.classList.remove('sel'); });
+  // Clear script cells
+  document.querySelectorAll('#scriptBody textarea,#scriptBody input').forEach(function(el){ el.value=''; });
+  // Reset state
+  state.brandMethod=''; state.charStyle=''; state.bgChoice=''; state.music='';
+  state.font=''; state.logoDataUrl=null; state.extractedTagline='';
+  state.extractedColors=[]; state.driveFolderUrl='';
+  window._uploadedFiles={};
+  // Reset uploads UI
+  document.querySelectorAll('.upload-label').forEach(function(el){ el.classList.remove('has-file'); });
+  document.querySelectorAll('.upload-fn').forEach(function(el){ el.style.display='none'; el.textContent=''; });
+  window._sbCollapse={};
+  updateSidebar();
 }
 
 function submitBrief(){
