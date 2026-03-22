@@ -838,7 +838,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       <div class="tl-item"><div class="tl-text"><strong>Creative Polish</strong> — QA team reviews for brand safety and quality.</div></div>
       <div class="tl-item"><div class="tl-text"><strong>Within 24 hours</strong> — Your branded animated video arrives.</div></div>
     </div>
-    <button class="btn btn-primary" onclick="goTo(1)">Start a New Project</button>
+    <button class="btn btn-primary" onclick="resetForm();goTo(1)">Start a New Project</button>
   </div>
 </div>
 
@@ -1624,6 +1624,68 @@ function gatherData(){
 
 function getFileData(uploadId) {
   return (window._uploadedFiles && window._uploadedFiles[uploadId]) ? window._uploadedFiles[uploadId] : '';
+}
+
+function resetForm(){
+  // Clear all inputs
+  document.querySelectorAll('input[type="text"],input[type="email"],input[type="tel"],input[type="date"],textarea').forEach(function(el){ el.value=''; });
+  document.querySelectorAll('select').forEach(function(el){ el.selectedIndex=0; });
+  // Clear selections
+  document.querySelectorAll('.cc.sel,.bg-opt.sel,.music-opt.sel').forEach(function(el){ el.classList.remove('sel'); });
+  // Clear script cells
+  document.querySelectorAll('#scriptBody textarea,#scriptBody input').forEach(function(el){ el.value=''; });
+  // Reset state
+  state.brandMethod=''; state.charStyle=''; state.bgChoice=''; state.music='';
+  state.font=''; state.logoDataUrl=null; state.extractedTagline='';
+  state.extractedColors=[]; state.driveFolderUrl='';
+  window._uploadedFiles={};
+  // Reset uploads UI
+  document.querySelectorAll('.upload-label').forEach(function(el){ el.classList.remove('has-file'); });
+  document.querySelectorAll('.upload-fn').forEach(function(el){ el.style.display='none'; el.textContent=''; });
+  window._sbCollapse={};
+  updateSidebar();
+}
+
+function submitBrief(){
+  var btn = document.getElementById('submitBtn');
+  if(btn){ btn.disabled=true; btn.textContent='Submitting…'; }
+
+  var data = gatherData();
+
+  if(!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.trim()===''){
+    goTo(7); return;
+  }
+
+  // Send everything in one request via hidden form POST
+  var iframe = document.getElementById('hidden_iframe');
+  if(!iframe){
+    iframe = document.createElement('iframe');
+    iframe.name = 'hidden_iframe';
+    iframe.id = 'hidden_iframe';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+  }
+
+  var form = document.createElement('form');
+  form.method = 'POST';
+  form.action = GOOGLE_SCRIPT_URL;
+  form.target = 'hidden_iframe';
+  form.style.display = 'none';
+
+  var input = document.createElement('input');
+  input.type = 'hidden';
+  input.name = 'data';
+  input.value = JSON.stringify(data);
+  form.appendChild(input);
+
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+
+  setTimeout(function(){
+    if(btn){ btn.disabled=false; btn.textContent='Submit Brief ✓'; }
+    goTo(7);
+  }, 3000);
 }
 
 function resetForm(){
