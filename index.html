@@ -1009,53 +1009,47 @@ function scrapeWebsite(){
   loading.style.display = 'flex';
   preview.style.display = 'none';
   errEl.style.display   = 'none';
-  if(status) status.textContent = 'Connecting to ' + raw.replace(/^https?:\/\//,'').split('/')[0] + '…';
+  if(status) status.textContent = 'Fetching…';
 
-  // Use JSONP — works from file:// AND http:// contexts, no CORS issues
-  var callbackName = 'textraCallback_' + Date.now();
-  var timeoutId;
+  // Try each proxy in sequence
+  var proxies = [
+    'https://api.allorigins.win/get?url=' + encodeURIComponent(raw),
+    'https://api.allorigins.win/get?url=' + encodeURIComponent(raw) + '&t=' + Date.now(),
+    'https://corsproxy.io/?' + encodeURIComponent(raw),
+    'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(raw)
+  ];
 
-  window[callbackName] = function(data) {
-    clearTimeout(timeoutId);
-    // Clean up
-    delete window[callbackName];
-    var scriptEl = document.getElementById('jsonpScript');
-    if(scriptEl) scriptEl.parentNode.removeChild(scriptEl);
+  var tried = 0;
 
-    loading.style.display = 'none';
-    btn.disabled = false;
-
-    var html = data && (data.contents || data.html || '');
-    if(!html || html.length < 50) {
+  function next() {
+    if (tried >= proxies.length) {
+      loading.style.display = 'none';
+      btn.disabled = false;
       errEl.style.display = 'block';
       return;
     }
-    if(status) status.textContent = 'Parsing brand data…';
-    parseBrand(html, raw);
-  };
+    var url = proxies[tried++];
+    if(status) status.textContent = 'Trying source ' + tried + ' of ' + proxies.length + '…';
 
-  // Timeout fallback
-  timeoutId = setTimeout(function() {
-    delete window[callbackName];
-    var scriptEl = document.getElementById('jsonpScript');
-    if(scriptEl) scriptEl.parentNode.removeChild(scriptEl);
-    loading.style.display = 'none';
-    btn.disabled = false;
-    errEl.style.display = 'block';
-  }, 15000);
+    fetch(url)
+      .then(function(r) {
+        if (!r.ok) throw new Error('bad status');
+        var ct = r.headers.get('content-type') || '';
+        if (ct.indexOf('json') >= 0) {
+          return r.json().then(function(d) { return d.contents || d.html || ''; });
+        }
+        return r.text();
+      })
+      .then(function(html) {
+        if (!html || html.length < 100) { next(); return; }
+        loading.style.display = 'none';
+        btn.disabled = false;
+        parseBrand(html, raw);
+      })
+      .catch(function() { next(); });
+  }
 
-  // Inject JSONP script tag
-  var script = document.createElement('script');
-  script.id = 'jsonpScript';
-  script.src = 'https://api.allorigins.win/get?url=' + encodeURIComponent(raw) + '&callback=' + callbackName;
-  script.onerror = function() {
-    clearTimeout(timeoutId);
-    delete window[callbackName];
-    loading.style.display = 'none';
-    btn.disabled = false;
-    errEl.style.display = 'block';
-  };
-  document.head.appendChild(script);
+  next();
 }
 
 function scrapeOnPaste(){
