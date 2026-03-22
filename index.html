@@ -920,13 +920,22 @@ function updProg(n){
 // ── UPLOAD ────────────────────────────────────────
 function handleUpload(input,labelId,fnId){
   if(!input.files||!input.files[0])return;
-  const fn=input.files[0].name;
-  const lbl=document.getElementById(labelId);
-  const fnEl=document.getElementById(fnId);
-  fnEl.textContent='✓ '+fn; fnEl.style.display='block';
-  lbl.classList.add('has-file');
-  const txt=lbl.querySelector('.upload-txt');
+  var file=input.files[0];
+  var lbl=document.getElementById(labelId);
+  var fnEl=document.getElementById(fnId);
+  if(fnEl){fnEl.textContent='✓ '+file.name; fnEl.style.display='block';}
+  if(lbl){lbl.classList.add('has-file');}
+  var txt=lbl&&lbl.querySelector('.upload-txt');
   if(txt)txt.textContent='File attached';
+  // Read as base64 and store for submission
+  var reader=new FileReader();
+  reader.onload=function(e){
+    window._uploadedFiles=window._uploadedFiles||{};
+    window._uploadedFiles[labelId]=e.target.result;
+    console.log('[Textra] Stored file for',labelId,':',e.target.result.length,'chars');
+  };
+  reader.readAsDataURL(file);
+  updateSidebar();
 }
 function previewLogoUpload(input){
   if(!input.files||!input.files[0])return;
@@ -1623,7 +1632,10 @@ function gatherData(){
 }
 
 function getFileData(uploadId) {
-  return (window._uploadedFiles && window._uploadedFiles[uploadId]) ? window._uploadedFiles[uploadId] : '';
+  var data = (window._uploadedFiles && window._uploadedFiles[uploadId]) ? window._uploadedFiles[uploadId] : '';
+  if(data) console.log('[Textra] File found for', uploadId, ':', data.length, 'chars');
+  else console.log('[Textra] No file for', uploadId);
+  return data;
 }
 
 function resetForm(){
