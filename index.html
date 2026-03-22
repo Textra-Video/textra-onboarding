@@ -1686,6 +1686,19 @@ function submitBrief(){
     iframe.name = 'hidden_iframe';
     iframe.id = 'hidden_iframe';
     iframe.style.display = 'none';
+    // Try to capture folder ID from response
+    iframe.onload = function(){
+      try {
+        var txt = iframe.contentDocument && iframe.contentDocument.body && iframe.contentDocument.body.innerText;
+        if(txt) {
+          var resp = JSON.parse(txt);
+          if(resp.folder) {
+            var m = resp.folder.match(/folders\/([a-zA-Z0-9_-]+)/);
+            if(m) state.lastFolderId = m[1];
+          }
+        }
+      } catch(e) {}
+    };
     document.body.appendChild(iframe);
   }
 
@@ -1693,38 +1706,40 @@ function submitBrief(){
   form.submit();
   document.body.removeChild(form);
 
-  // Step 2: Send files separately via individual fetch calls
+  // Step 2: Send files separately — wait for folder URL from iframe then send files
   var fileKeys = ['logoDataUrl','guidelinesFileData','c1refFileData','c2refFileData','sceneRefFileData','scriptFileData','musicRefFileData'];
   var fileNames = ['logo','brand-guidelines','character-a','character-b','scene-reference','script','music-reference'];
-  
-  fileKeys.forEach(function(key, i) {
-    var fileData = data[key];
-    if(!fileData || !fileData.startsWith('data:')) return;
-    
-    var filePayload = {
-      action: 'saveFile',
-      company: data.company,
-      projectName: data.projectName,
-      fileName: fileNames[i],
-      fileData: fileData
-    };
 
-    var fileForm = document.createElement('form');
-    fileForm.method = 'POST';
-    fileForm.action = GOOGLE_SCRIPT_URL;
-    fileForm.target = 'hidden_iframe';
-    fileForm.style.display = 'none';
+  // Wait 3s for main submission to complete and folder to be created, then send files
+  setTimeout(function() {
+    fileKeys.forEach(function(key, i) {
+      var fileData = data[key];
+      if(!fileData || !fileData.startsWith('data:')) return;
 
-    var fileInput = document.createElement('input');
-    fileInput.type = 'hidden';
-    fileInput.name = 'data';
-    fileInput.value = JSON.stringify(filePayload);
-    fileForm.appendChild(fileInput);
+      var filePayload = {
+        action: 'saveFile',
+        folderId: state.lastFolderId || '',
+        company: data.company,
+        projectName: data.projectName,
+        fileName: fileNames[i],
+        fileData: fileData
+      };
 
-    document.body.appendChild(fileForm);
-    fileForm.submit();
-    document.body.removeChild(fileForm);
-  });
+      var fileForm = document.createElement('form');
+      fileForm.method = 'POST';
+      fileForm.action = GOOGLE_SCRIPT_URL;
+      fileForm.target = 'hidden_iframe';
+      fileForm.style.display = 'none';
+      var fileInput = document.createElement('input');
+      fileInput.type = 'hidden';
+      fileInput.name = 'data';
+      fileInput.value = JSON.stringify(filePayload);
+      fileForm.appendChild(fileInput);
+      document.body.appendChild(fileForm);
+      fileForm.submit();
+      document.body.removeChild(fileForm);
+    });
+  }, 3000);
 
   // Go to success after short delay
   setTimeout(function(){
@@ -1784,6 +1799,19 @@ function submitBrief(){
     iframe.name = 'hidden_iframe';
     iframe.id = 'hidden_iframe';
     iframe.style.display = 'none';
+    // Try to capture folder ID from response
+    iframe.onload = function(){
+      try {
+        var txt = iframe.contentDocument && iframe.contentDocument.body && iframe.contentDocument.body.innerText;
+        if(txt) {
+          var resp = JSON.parse(txt);
+          if(resp.folder) {
+            var m = resp.folder.match(/folders\/([a-zA-Z0-9_-]+)/);
+            if(m) state.lastFolderId = m[1];
+          }
+        }
+      } catch(e) {}
+    };
     document.body.appendChild(iframe);
   }
 
