@@ -1009,14 +1009,16 @@ function scrapeWebsite(){
   loading.style.display = 'flex';
   preview.style.display = 'none';
   errEl.style.display   = 'none';
-  if(status) status.textContent = 'Fetching…';
+  if(status) status.textContent = 'Connecting…';
 
-  // Try each proxy in sequence
+  var enc = encodeURIComponent(raw);
+
+  // Our own Vercel proxy first (no CORS, real browser UA), then public fallbacks
   var proxies = [
-    'https://api.allorigins.win/get?url=' + encodeURIComponent(raw),
-    'https://api.allorigins.win/get?url=' + encodeURIComponent(raw) + '&t=' + Date.now(),
-    'https://corsproxy.io/?' + encodeURIComponent(raw),
-    'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(raw)
+    { url: '/api/scrape?url=' + enc,                                          json: true  },
+    { url: 'https://api.allorigins.win/get?url=' + enc + '&t=' + Date.now(), json: true  },
+    { url: 'https://corsproxy.io/?' + enc,                                    json: false },
+    { url: 'https://api.codetabs.com/v1/proxy?quest=' + enc,                 json: false }
   ];
 
   var tried = 0;
@@ -1028,25 +1030,26 @@ function scrapeWebsite(){
       errEl.style.display = 'block';
       return;
     }
-    var url = proxies[tried++];
-    if(status) status.textContent = 'Trying source ' + tried + ' of ' + proxies.length + '…';
+    var p = proxies[tried++];
+    if(status) status.textContent = 'Trying method ' + tried + ' of ' + proxies.length + '…';
+    console.log('[Textra] Proxy ' + tried + ':', p.url.substring(0, 60));
 
-    fetch(url)
+    fetch(p.url)
       .then(function(r) {
-        if (!r.ok) throw new Error('bad status');
-        var ct = r.headers.get('content-type') || '';
-        if (ct.indexOf('json') >= 0) {
-          return r.json().then(function(d) { return d.contents || d.html || ''; });
-        }
-        return r.text();
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return p.json ? r.json().then(function(d) { return d.contents || d.html || ''; }) : r.text();
       })
       .then(function(html) {
+        console.log('[Textra] Got ' + (html ? html.length : 0) + ' chars from proxy ' + tried);
         if (!html || html.length < 100) { next(); return; }
         loading.style.display = 'none';
         btn.disabled = false;
         parseBrand(html, raw);
       })
-      .catch(function() { next(); });
+      .catch(function(e) {
+        console.warn('[Textra] Proxy ' + tried + ' failed:', e.message);
+        next();
+      });
   }
 
   next();
@@ -1619,54 +1622,28 @@ function submitBrief(){
 
   var data = gatherData();
 
-  // If no Script URL configured, just go to success page
   if(!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.trim()===''){
-    console.warn('No GOOGLE_SCRIPT_URL set — skipping submission, showing success');
     goTo(7);
     return;
   }
 
-  // Submit to Google Apps Script via fetch (or JSONP fallback for file://)
-  var isFileProtocol = window.location.protocol === 'file:';
-
-  if(isFileProtocol){
-    // JSONP for local file context
-    var cbName = 'textraSubmit_' + Date.now();
-    window[cbName] = function(result){
-      delete window[cbName];
-      var s = document.getElementById('jsonpSubmit');
-      if(s) s.parentNode.removeChild(s);
-      if(btn){ btn.disabled=false; btn.textContent='Submit Brief ✓'; }
-      if(result && result.status==='ok'){
-        state.driveFolderUrl = result.folder || '';
-        goTo(7);
-      } else {
-        goTo(7); // Still go to success — data is in the sheet
-      }
-    };
-    var sc = document.createElement('script');
-    sc.id = 'jsonpSubmit';
-    sc.onerror = function(){ delete window[cbName]; if(btn){btn.disabled=false;btn.textContent='Submit Brief ✓';}  goTo(7); };
-    sc.src = GOOGLE_SCRIPT_URL + '?callback=' + cbName + '&data=' + encodeURIComponent(JSON.stringify(data));
-    document.head.appendChild(sc);
-  } else {
-    // Standard fetch for hosted context
-    fetch(GOOGLE_SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: { 'Content-Type': 'application/json' }
-    })
-    .then(function(r){ return r.json(); })
-    .then(function(result){
-      if(btn){ btn.disabled=false; btn.textContent='Submit Brief ✓'; }
-      state.driveFolderUrl = result.folder || '';
-      goTo(7);
-    })
-    .catch(function(){
-      if(btn){ btn.disabled=false; btn.textContent='Submit Brief ✓'; }
-      goTo(7);
-    });
-  }
+  // Simple fetch POST — works on https:// (Vercel)
+  fetch(GOOGLE_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',  // Google Apps Script requires no-cors
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(function() {
+    // no-cors means we can't read the response, but data IS sent
+    if(btn){ btn.disabled=false; btn.textContent='Submit Brief ✓'; }
+    goTo(7);
+  })
+  .catch(function(err) {
+    console.warn('Submit error:', err);
+    if(btn){ btn.disabled=false; btn.textContent='Submit Brief ✓'; }
+    goTo(7);
+  });
 }
 
 function rv(val){
