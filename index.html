@@ -1621,9 +1621,9 @@ function gatherData(){
     deadline:     sel('deadline'),
     priority:     sel('priority'),
     // Uploaded files as base64
-    logoDataUrl:        getFileData('ul-logo-scraped') || state.logoDataUrl || '',
+    logoDataUrl:        getFileData('ul-logo-scraped') || getFileData('ul-logo-a') || getFileData('ul-logo-c') || state.logoDataUrl || '',
     guidelinesFileData: getFileData('ul-guidelines'),
-    c1refFileData:      getFileData('ul-c1'),
+    c1refFileData:      getFileData('ul-c1') || getFileData('ul-ref'),
     c2refFileData:      getFileData('ul-c2'),
     sceneRefFileData:   getFileData('ul-scene'),
     scriptFileData:     getFileData('ul-script'),
