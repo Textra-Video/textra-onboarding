@@ -1656,6 +1656,113 @@ function submitBrief(){
     goTo(7); return;
   }
 
+  // Step 1: Submit main form data via hidden iframe POST
+  var form = document.createElement('form');
+  form.method = 'POST';
+  form.action = GOOGLE_SCRIPT_URL;
+  form.target = 'hidden_iframe';
+  form.style.display = 'none';
+
+  // Send main data (without files - too large for form POST)
+  var mainData = JSON.parse(JSON.stringify(data));
+  // Remove large file data from main submission
+  delete mainData.logoDataUrl;
+  delete mainData.guidelinesFileData;
+  delete mainData.c1refFileData;
+  delete mainData.c2refFileData;
+  delete mainData.sceneRefFileData;
+  delete mainData.scriptFileData;
+  delete mainData.musicRefFileData;
+
+  var input = document.createElement('input');
+  input.type = 'hidden';
+  input.name = 'data';
+  input.value = JSON.stringify(mainData);
+  form.appendChild(input);
+
+  var iframe = document.getElementById('hidden_iframe');
+  if(!iframe){
+    iframe = document.createElement('iframe');
+    iframe.name = 'hidden_iframe';
+    iframe.id = 'hidden_iframe';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+  }
+
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+
+  // Step 2: Send files separately via individual fetch calls
+  var fileKeys = ['logoDataUrl','guidelinesFileData','c1refFileData','c2refFileData','sceneRefFileData','scriptFileData','musicRefFileData'];
+  var fileNames = ['logo','brand-guidelines','character-a','character-b','scene-reference','script','music-reference'];
+  
+  fileKeys.forEach(function(key, i) {
+    var fileData = data[key];
+    if(!fileData || !fileData.startsWith('data:')) return;
+    
+    var filePayload = {
+      action: 'saveFile',
+      company: data.company,
+      projectName: data.projectName,
+      fileName: fileNames[i],
+      fileData: fileData
+    };
+
+    var fileForm = document.createElement('form');
+    fileForm.method = 'POST';
+    fileForm.action = GOOGLE_SCRIPT_URL;
+    fileForm.target = 'hidden_iframe';
+    fileForm.style.display = 'none';
+
+    var fileInput = document.createElement('input');
+    fileInput.type = 'hidden';
+    fileInput.name = 'data';
+    fileInput.value = JSON.stringify(filePayload);
+    fileForm.appendChild(fileInput);
+
+    document.body.appendChild(fileForm);
+    fileForm.submit();
+    document.body.removeChild(fileForm);
+  });
+
+  // Go to success after short delay
+  setTimeout(function(){
+    if(btn){ btn.disabled=false; btn.textContent='Submit Brief ✓'; }
+    goTo(7);
+  }, 2000);
+}
+
+function resetForm(){
+  // Clear all inputs
+  document.querySelectorAll('input[type="text"],input[type="email"],input[type="tel"],input[type="date"],textarea').forEach(function(el){ el.value=''; });
+  document.querySelectorAll('select').forEach(function(el){ el.selectedIndex=0; });
+  // Clear selections
+  document.querySelectorAll('.cc.sel,.bg-opt.sel,.music-opt.sel').forEach(function(el){ el.classList.remove('sel'); });
+  // Clear script cells
+  document.querySelectorAll('#scriptBody textarea,#scriptBody input').forEach(function(el){ el.value=''; });
+  // Reset state
+  state.brandMethod=''; state.charStyle=''; state.bgChoice=''; state.music='';
+  state.font=''; state.logoDataUrl=null; state.extractedTagline='';
+  state.extractedColors=[]; state.driveFolderUrl='';
+  window._uploadedFiles={};
+  // Reset uploads UI
+  document.querySelectorAll('.upload-label').forEach(function(el){ el.classList.remove('has-file'); });
+  document.querySelectorAll('.upload-fn').forEach(function(el){ el.style.display='none'; el.textContent=''; });
+  window._sbCollapse={};
+  updateSidebar();
+}
+
+function submitBrief(){
+  var btn = document.getElementById('submitBtn');
+  if(btn){ btn.disabled=true; btn.textContent='Submitting…'; }
+
+  var data = gatherData();
+
+  if(!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.trim()===''){
+    goTo(7); return;
+  }
+
   // Send via hidden form POST — most reliable method for Google Apps Script
   var form = document.createElement('form');
   form.method = 'POST';
