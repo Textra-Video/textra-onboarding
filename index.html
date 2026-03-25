@@ -379,17 +379,16 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 <!-- ══ PAGE 1: WELCOME ══ -->
 <div class="page active" id="page1">
   <div class="section-head">
-    <div class="s-eyebrow">Getting Started</div>
+    <div class="s-eyebrow">Welcome</div>
     <h1 class="s-title">Welcome to Textra Video</h1>
-    <p class="s-desc">From brief to branded, studio-quality animated video in as little as 24 hours.</p>
+    <p class="s-desc">From brief to branded, studio-quality animated video in as little as 24 hours. Tell us about your brand once — our engine and creative team apply your colours, fonts and characters consistently across every video, in over 40 languages.</p>
   </div>
   <div class="hero-stats">
     <div class="stat-card"><div class="stat-num">24h</div><div class="stat-lbl">Average Delivery</div></div>
-    <div class="stat-card"><div class="stat-num">2</div><div class="stat-lbl">Steps to a Video</div></div>
+    <div class="stat-card"><div class="stat-num">40+</div><div class="stat-lbl">Languages Supported</div></div>
     <div class="stat-card"><div class="stat-num">100%</div><div class="stat-lbl">Brand Accurate</div></div>
   </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center;margin-bottom:20px">
-
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center;margin-bottom:24px">
     <!-- Video -->
     <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:10px;box-shadow:0 4px 20px rgba(13,27,62,.12)">
       <iframe id="textraVimeo"
@@ -400,11 +399,9 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
         title="Textra Video — See How It Works">
       </iframe>
     </div>
-
     <!-- How it works -->
     <div style="display:flex;flex-direction:column;gap:14px">
       <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:800;color:var(--navy);letter-spacing:-.2px;margin-bottom:2px">How it works</div>
-
       <div style="display:flex;align-items:flex-start;gap:12px">
         <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--teal2));color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">1</div>
         <div>
@@ -412,7 +409,6 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
           <div style="font-size:12px;color:var(--text-muted);line-height:1.5">Tell us about your brand, characters, scene and script — takes about 5 minutes.</div>
         </div>
       </div>
-
       <div style="display:flex;align-items:flex-start;gap:12px">
         <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--teal2));color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">2</div>
         <div>
@@ -420,7 +416,6 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
           <div style="font-size:12px;color:var(--text-muted);line-height:1.5">Our designers create your branded characters, backgrounds and animations — ready within 2 working days.</div>
         </div>
       </div>
-
       <div style="display:flex;align-items:flex-start;gap:12px">
         <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--teal2));color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0">3</div>
         <div>
@@ -428,11 +423,20 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
           <div style="font-size:12px;color:var(--text-muted);line-height:1.5">Upload any script or document and get a fully branded animated video back — fast, consistent, on-brand every time.</div>
         </div>
       </div>
-
     </div>
   </div>
+  <div class="btn-row end"><button class="btn btn-primary" onclick="goTo(1.5)">Get Started →</button></div>
+</div>
+
+<!-- ══ PAGE 1.5: CONTACT ══ -->
+<div class="page" id="page1pt5">
+  <div class="section-head">
+    <div class="s-eyebrow">Getting Started</div>
+    <h1 class="s-title">Your Details</h1>
+    <p class="s-desc">Tell us who you are so we can set up your project. This takes less than a minute.</p>
+  </div>
   <div class="card">
-    <div class="card-head"><span class="step-pill">01</span> Your Details</div>
+    <div class="card-head"><span class="step-pill">01</span> Contact Information</div>
     <div class="form-row c2">
       <div class="field"><label>Full Name <span class="req">*</span></label><input type="text" id="fullName" placeholder="Jane Smith" oninput="updateSidebar()"></div>
       <div class="field"><label>Company Name <span class="req">*</span></label><input type="text" id="companyName" placeholder="Acme Corporation" oninput="autoFillProject();updateSidebar()"></div>
@@ -448,7 +452,10 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       </div>
     </div>
   </div>
-  <div class="btn-row end"><button class="btn btn-primary" onclick="goTo(2)">Begin Setup →</button></div>
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="goTo(1)">← Back</button>
+    <button class="btn btn-primary" onclick="goTo(2)">Next: Brand →</button>
+  </div>
 </div>
 
 <!-- ══ PAGE 2: BRAND ══ -->
@@ -472,20 +479,28 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       <div class="form-row c2">
         <div class="field"><label>Brand Guidelines</label>
           <label class="upload-label" id="ul-guidelines">
-            <input type="file" accept=".pdf,.doc,.docx,.zip" style="display:none" onchange="handleUpload(this,'ul-guidelines','fn-guidelines')">
+            <input type="file" accept=".pdf,.doc,.docx,.zip" style="display:none" onchange="handleUpload(this,'ul-guidelines','fn-guidelines');showGuidelinesNote()">
             <div class="upload-ico">📎</div><div class="upload-txt">Click to upload</div>
             <div class="upload-hint">PDF, DOC, ZIP</div>
             <div class="upload-fn" id="fn-guidelines"></div>
           </label>
         </div>
-        <div class="field"><label>Logo File</label>
+        <div class="field"><label>Logo File <span class="hint">— min 1024×1024, square</span></label>
           <label class="upload-label" id="ul-logo-a">
-            <input type="file" accept=".png,.svg,.ai,.eps" style="display:none" onchange="handleUpload(this,'ul-logo-a','fn-logo-a')">
+            <input type="file" accept=".png,.svg,.jpg,.jpeg" style="display:none" onchange="handleUpload(this,'ul-logo-a','fn-logo-a');validateAndPreviewLogo(this,'logo-a-preview','logo-a-err')">
             <div class="upload-ico">🖼️</div><div class="upload-txt">Click to upload</div>
-            <div class="upload-hint">PNG or SVG</div>
+            <div class="upload-hint">PNG / SVG · min 1024×1024px · square</div>
             <div class="upload-fn" id="fn-logo-a"></div>
           </label>
+          <div id="logo-a-err" style="display:none;margin-top:5px;padding:7px 10px;background:#fff5f5;border:1px solid #fecaca;border-radius:6px;color:#ef4444;font-size:11px;line-height:1.5"></div>
+          <div id="logo-a-preview" style="display:none;margin-top:8px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-xs);padding:8px;text-align:center">
+            <div style="font-size:10px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">Logo Preview</div>
+            <img id="logo-a-preview-img" src="" style="max-height:56px;max-width:100%;object-fit:contain">
+          </div>
         </div>
+      </div>
+      <div id="guidelines-note" style="display:none;margin-top:10px;background:var(--blue-soft);border:1px solid rgba(26,113,177,.2);border-left:3px solid var(--blue);border-radius:var(--radius-xs);padding:10px 13px;font-size:12px;color:var(--text-muted);line-height:1.6">
+        <strong style="color:var(--navy)">📄 Guidelines uploaded.</strong> Our team will extract your colours, fonts and logo from the document. To see a live preview now, switch to <a href="#" onclick="brandMethod('manual',document.querySelector('#brandMethodGrid .cc:last-child'));return false" style="color:var(--blue);text-decoration:underline">Fill In Manually</a>.
       </div>
     </div>
 
@@ -529,7 +544,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
           </div>
           <div style="margin-top:8px">
             <label class="upload-label" id="ul-logo-scraped" style="padding:10px">
-              <input type="file" accept=".png,.svg,.jpg,.jpeg,.gif" style="display:none"
+              <input type="file" accept=".png,.svg,.jpg,.jpeg" style="display:none"
                 onchange="handleUpload(this,'ul-logo-scraped','fn-logo-scraped');previewScrapedLogo(this)">
               <div class="upload-txt" style="font-size:11px">📎 Upload your own logo (PNG, SVG, JPG)</div>
               <div class="upload-fn" id="fn-logo-scraped"></div>
@@ -580,6 +595,31 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     <!-- C: Manual -->
     <div class="cond" id="bm-manual" style="margin-top:14px">
       <div class="div"></div>
+      <!-- Manual live brand preview -->
+      <div id="manual-brand-preview" style="display:none;background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;box-shadow:var(--shadow)">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:10px;display:flex;align-items:center;gap:6px">
+          <span style="width:6px;height:6px;border-radius:50%;background:#22c55e;display:inline-block"></span> Live Brand Preview
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div id="mbp-logo" style="width:80px;height:80px;border-radius:var(--radius-xs);background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden">
+            <span style="font-size:10px;color:var(--text-dim);text-align:center;padding:4px;line-height:1.4">Logo will appear here</span>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="margin-bottom:8px">
+              <div style="font-size:10px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">Brand Colours</div>
+              <div id="mbp-swatches" style="display:flex;gap:5px;flex-wrap:wrap">
+                <div style="width:22px;height:22px;border-radius:5px;background:#273572;border:1px solid var(--border)"></div>
+                <div style="width:22px;height:22px;border-radius:5px;background:#1A71B1;border:1px solid var(--border)"></div>
+                <div style="width:22px;height:22px;border-radius:5px;background:#66BCAD;border:1px solid var(--border)"></div>
+              </div>
+            </div>
+            <div>
+              <div style="font-size:10px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">Font Sample</div>
+              <div id="mbp-font" style="font-size:16px;font-weight:700;color:var(--navy);transition:font-family .3s">Aa — Your Brand Font</div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="field" style="margin-bottom:14px">
         <label>Preferred Font</label>
         <select id="fontSelect" onchange="previewFont(this)">
@@ -594,38 +634,46 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
           <optgroup label="Display — Bold">
             <option value="Oswald">Oswald</option>
           </optgroup>
+          <option value="other">My font is not listed — enter name below</option>
           <option value="textra">Let Textra choose</option>
         </select>
         <div class="font-preview-badge" id="fontPreview">Select a font to preview it here</div>
+        <div id="customFontWrap" style="display:none;margin-top:8px">
+          <input type="text" id="customFontInput" placeholder="e.g. Gilroy, Circular, Brandon Grotesque…"
+            oninput="previewCustomFont(this.value)"
+            style="width:100%;padding:9px 12px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-xs);font-family:Inter,sans-serif;font-size:13px;color:var(--text);outline:none;transition:border-color .2s">
+          <p style="font-size:11px;color:var(--text-dim);margin-top:4px;line-height:1.5">Type the exact font name. If it&#39;s a Google Font it will preview live. Our team will source any licensed font.</p>
+        </div>
       </div>
       <div class="color-fields">
         <div class="field"><label>Primary</label>
           <div class="color-row">
-            <label class="cswatch"><input type="color" value="#273572" oninput="updSwatch('cp1',this.value);syncHex('hex1',this.value);updateSidebar()"><div class="cprev" id="cp1" style="background:#273572"></div></label>
-            <input type="text" id="hex1" value="#273572" placeholder="#000000" style="flex:1" oninput="syncCol('cp1',this.value);updateSidebar()">
+            <label class="cswatch"><input type="color" value="#273572" oninput="updSwatch('cp1',this.value);syncHex('hex1',this.value);updateSidebar();updateManualPreview()"><div class="cprev" id="cp1" style="background:#273572"></div></label>
+            <input type="text" id="hex1" value="#273572" placeholder="#000000" style="flex:1" oninput="syncCol('cp1',this.value);updateSidebar();updateManualPreview()">
           </div>
         </div>
         <div class="field"><label>Secondary</label>
           <div class="color-row">
-            <label class="cswatch"><input type="color" value="#1A71B1" oninput="updSwatch('cp2',this.value);syncHex('hex2',this.value);updateSidebar()"><div class="cprev" id="cp2" style="background:#1A71B1"></div></label>
-            <input type="text" id="hex2" value="#1A71B1" placeholder="#000000" style="flex:1" oninput="syncCol('cp2',this.value);updateSidebar()">
+            <label class="cswatch"><input type="color" value="#1A71B1" oninput="updSwatch('cp2',this.value);syncHex('hex2',this.value);updateSidebar();updateManualPreview()"><div class="cprev" id="cp2" style="background:#1A71B1"></div></label>
+            <input type="text" id="hex2" value="#1A71B1" placeholder="#000000" style="flex:1" oninput="syncCol('cp2',this.value);updateSidebar();updateManualPreview()">
           </div>
         </div>
         <div class="field"><label>Additional</label>
           <div class="color-row">
-            <label class="cswatch"><input type="color" value="#66BCAD" oninput="updSwatch('cp3',this.value);syncHex('hex3',this.value);updateSidebar()"><div class="cprev" id="cp3" style="background:#66BCAD"></div></label>
-            <input type="text" id="hex3" value="#66BCAD" placeholder="#000000" style="flex:1" oninput="syncCol('cp3',this.value);updateSidebar()">
+            <label class="cswatch"><input type="color" value="#66BCAD" oninput="updSwatch('cp3',this.value);syncHex('hex3',this.value);updateSidebar();updateManualPreview()"><div class="cprev" id="cp3" style="background:#66BCAD"></div></label>
+            <input type="text" id="hex3" value="#66BCAD" placeholder="#000000" style="flex:1" oninput="syncCol('cp3',this.value);updateSidebar();updateManualPreview()">
           </div>
         </div>
       </div>
       <div class="field">
-        <label>Logo</label>
+        <label>Logo <span class="hint">— min 1024×1024px, square</span></label>
         <label class="upload-label" id="ul-logo-c">
-          <input type="file" accept=".png,.svg,.ai" style="display:none" onchange="handleUpload(this,'ul-logo-c','fn-logo-c');previewLogoUpload(this)">
+          <input type="file" accept=".png,.svg,.jpg,.jpeg" style="display:none" onchange="validateAndPreviewLogo(this,'mbp-logo','logo-c-err');handleUpload(this,'ul-logo-c','fn-logo-c')">
           <div class="upload-ico">🖼️</div><div class="upload-txt">Click to upload Logo</div>
-          <div class="upload-hint">PNG / SVG — transparent background preferred</div>
+          <div class="upload-hint">PNG / SVG · min 1024×1024px · square · transparent background preferred</div>
           <div class="upload-fn" id="fn-logo-c"></div>
         </label>
+        <div id="logo-c-err" style="display:none;margin-top:5px;padding:7px 10px;background:#fff5f5;border:1px solid #fecaca;border-radius:6px;color:#ef4444;font-size:11px;line-height:1.5"></div>
       </div>
     </div>
   </div>
@@ -914,35 +962,39 @@ const state={
 
 // ── NAVIGATION ────────────────────────────────────
 function goTo(n){
-  // Pause Vimeo video when navigating away from page 1
-  if(cur !== n) {
-    try {
-      var iframe = document.getElementById('textraVimeo');
-      if(iframe) {
-        var player = new Vimeo.Player(iframe);
-        player.pause();
-      }
-    } catch(e) {}
+  // Pause Vimeo when leaving page 1
+  if(cur!==n){
+    try{
+      var iframe=document.getElementById('textraVimeo');
+      if(iframe){new Vimeo.Player(iframe).pause();}
+    }catch(e){}
   }
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page'+n).classList.add('active');
+  // Page 1.5 = contact details step
+  var pageId=(n===1.5)?'page1pt5':'page'+n;
+  var pageEl=document.getElementById(pageId);
+  if(pageEl)pageEl.classList.add('active');
   cur=n; updProg(n);
-  document.getElementById('hdr-step').textContent=
-    n<=5?'Step '+n+' of 5':(n===6?'Review':'Done');
+  var stepLabel;
+  if(n===1)stepLabel='Welcome';
+  else if(n===1.5)stepLabel='Step 1 of 5';
+  else if(n<=5)stepLabel='Step '+(n-1)+' of 5';
+  else if(n===6)stepLabel='Review';
+  else stepLabel='Done';
+  document.getElementById('hdr-step').textContent=stepLabel;
   const hb=document.getElementById('headerBack');
   hb.classList.toggle('visible', n>1 && n!==7);
   const sb=document.getElementById('sidebarCol');
-  if(sb)sb.style.display=(n===6||n===7)?'none':'block';
+  if(sb)sb.style.display=(n===6||n===7||n===1)?'none':'block';
   if(n===5)initScriptPage();
   if(n===5&&state.scriptMethod){scriptMethod(state.scriptMethod);}
   if(n===6){buildReview();cameFromReview=false;}
-  if(n===7 && state.driveFolderUrl){
+  if(n===7&&state.driveFolderUrl){
     var dw=document.getElementById('driveLinkWrap');
     var dl=document.getElementById('driveFolderLink');
-    if(dw&&dl){ dl.href=state.driveFolderUrl; dw.style.display='block'; }
+    if(dw&&dl){dl.href=state.driveFolderUrl;dw.style.display='block';}
   }
   window.scrollTo({top:0,behavior:'smooth'});
-  // Reset user-override collapse state so sidebar auto-adjusts to new page
   window._sbCollapse={};
   updateSidebar();
   const btr=document.getElementById('backToReviewBtn');
@@ -950,13 +1002,16 @@ function goTo(n){
 }
 function goBack(){
   if(cameFromReview&&cur>=1&&cur<=5){cameFromReview=false;goTo(6);}
+  else if(cur===2)goTo(1.5);
+  else if(cur===1.5)goTo(1);
   else if(cur>1)goTo(cur-1);
 }
 function editStep(n){cameFromReview=true;goTo(n);}
 
 function updProg(n){
   const steps=document.querySelectorAll('.ps');
-  const prog=Math.min(n,6);
+  // 1=welcome(no progress), 1.5=contact(step 1), 2=brand(step 2)…
+  var prog=(n===1)?1:(n===1.5)?1:Math.min(Math.floor(n),6);
   steps.forEach((el,i)=>{
     const s=i+1; el.classList.remove('active','done');
     if(s<prog)el.classList.add('done');
@@ -988,7 +1043,18 @@ function handleUpload(input,labelId,fnId){
 function previewLogoUpload(input){
   if(!input.files||!input.files[0])return;
   const reader=new FileReader();
-  reader.onload=e=>{state.logoDataUrl=e.target.result;updateSidebar();};
+  reader.onload=e=>{
+    state.logoDataUrl=e.target.result;
+    // Update scraped logo preview panel if it exists
+    var wrap=document.getElementById('bpLogoWrap');
+    if(wrap){
+      var img=document.createElement('img');
+      img.src=e.target.result;
+      img.style.cssText='max-height:40px;max-width:160px;object-fit:contain';
+      wrap.innerHTML='';wrap.appendChild(img);
+    }
+    updateSidebar();
+  };
   reader.readAsDataURL(input.files[0]);
 }
 
@@ -998,7 +1064,104 @@ function brandMethod(m,el){
   el.classList.add('sel');
   ['bm-guidelines','bm-website','bm-manual'].forEach(id=>document.getElementById(id).classList.remove('vis'));
   document.getElementById('bm-'+m).classList.add('vis');
-  state.brandMethod=m; updateSidebar();
+  state.brandMethod=m;
+  // Show manual live preview when manual selected
+  var mp=document.getElementById('manual-brand-preview');
+  if(mp)mp.style.display=(m==='manual')?'block':'none';
+  if(m==='manual')updateManualPreview();
+  updateSidebar();
+}
+
+// ── GUIDELINES NOTE ───────────────────────────────
+function showGuidelinesNote(){
+  var n=document.getElementById('guidelines-note');
+  if(n)n.style.display='block';
+}
+
+// ── LOGO VALIDATION (min 1024×1024, square) ───────
+function validateAndPreviewLogo(input, previewId, errId){
+  if(!input.files||!input.files[0])return;
+  var file=input.files[0];
+  var errEl=document.getElementById(errId);
+  // SVG: skip dimension check, just preview
+  if(file.type==='image/svg+xml'){
+    var r=new FileReader();
+    r.onload=function(e){
+      state.logoDataUrl=e.target.result;
+      _renderLogoInto(e.target.result,previewId);
+      updateSidebar();
+    };
+    r.readAsDataURL(file);
+    if(errEl)errEl.style.display='none';
+    return;
+  }
+  // Raster: check size and squareness
+  var r2=new FileReader();
+  r2.onload=function(e){
+    var img=new Image();
+    img.onload=function(){
+      var w=img.naturalWidth,h=img.naturalHeight;
+      if(w!==h){
+        _logoErr(input,errEl,'⚠️ Logo must be square ('+w+'×'+h+'px detected). Please re-export with equal width and height.');
+        return;
+      }
+      if(w<1024){
+        _logoErr(input,errEl,'⚠️ Logo is too small ('+w+'×'+h+'px). Minimum 1024×1024px required for best quality.');
+        return;
+      }
+      if(errEl)errEl.style.display='none';
+      state.logoDataUrl=e.target.result;
+      _renderLogoInto(e.target.result,previewId);
+      updateSidebar();
+    };
+    img.src=e.target.result;
+  };
+  r2.readAsDataURL(file);
+}
+
+function _logoErr(input,errEl,msg){
+  if(errEl){errEl.innerHTML=msg;errEl.style.display='block';}
+  input.value='';
+  var lbl=input.closest('.upload-label');
+  if(lbl){lbl.classList.remove('has-file');var t=lbl.querySelector('.upload-txt');if(t)t.textContent='Click to upload';}
+  var fn=input.closest('.upload-label')&&input.closest('.upload-label').querySelector('.upload-fn');
+  if(fn){fn.style.display='none';fn.textContent='';}
+}
+
+function _renderLogoInto(dataUrl,containerId){
+  var el=document.getElementById(containerId);
+  if(!el)return;
+  el.innerHTML='<img src="'+dataUrl+'" alt="Logo" style="max-width:100%;max-height:68px;object-fit:contain">';
+  el.style.display='block';
+  // Also show wrapper if it has -preview suffix pattern
+  var wrap=document.getElementById(containerId+'-wrap');
+  if(wrap)wrap.style.display='block';
+}
+
+// ── MANUAL BRAND LIVE PREVIEW ─────────────────────
+function updateManualPreview(){
+  var mp=document.getElementById('manual-brand-preview');
+  if(!mp||state.brandMethod!=='manual')return;
+  mp.style.display='block';
+  // Colours
+  var cols=[
+    document.getElementById('hex1')?document.getElementById('hex1').value:'',
+    document.getElementById('hex2')?document.getElementById('hex2').value:'',
+    document.getElementById('hex3')?document.getElementById('hex3').value:''
+  ].filter(function(c){return /^#[0-9a-fA-F]{6}$/i.test(c);});
+  var sw=document.getElementById('mbp-swatches');
+  if(sw)sw.innerHTML=cols.map(function(col){
+    return '<div title="'+col+'" style="width:22px;height:22px;border-radius:5px;background:'+col+';border:1px solid rgba(0,0,0,.08)"></div>';
+  }).join('');
+  // Font
+  var fs=document.getElementById('mbp-font');
+  if(fs&&state.font&&state.font!=='Let Textra choose'){
+    fs.style.fontFamily="'"+state.font+"',sans-serif";
+    fs.textContent='Aa — '+state.font;
+  } else if(fs){
+    fs.style.fontFamily='Inter,sans-serif';
+    fs.textContent=state.font==='Let Textra choose'?'Aa — Textra will choose':'Aa — Select a font above';
+  }
 }
 
 // ── CHAR STYLE ────────────────────────────────────
@@ -1029,15 +1192,48 @@ function selMusic(el,name){
 function previewFont(sel){
   const val=sel.value;
   const badge=document.getElementById('fontPreview');
-  if(val&&val!=='textra'){
+  const customWrap=document.getElementById('customFontWrap');
+  if(val==='other'){
+    badge.style.fontFamily='Inter,sans-serif';
+    badge.textContent='Type your font name in the field below to preview it';
+    state.font='';
+    if(customWrap)customWrap.style.display='block';
+  } else if(val&&val!=='textra'){
     badge.style.fontFamily="'"+val+"', sans-serif";
     badge.textContent=val+' — The quick brown fox jumps over the lazy dog';
     state.font=val;
+    if(customWrap)customWrap.style.display='none';
   } else {
     badge.style.fontFamily='Inter,sans-serif';
     badge.textContent=val==='textra'?'Textra will choose the best font for your brand':'Select a font to preview it here';
     state.font=val==='textra'?'Let Textra choose':'';
+    if(customWrap)customWrap.style.display='none';
   }
+  updateManualPreview();
+  updateSidebar();
+}
+
+function previewCustomFont(val){
+  const badge=document.getElementById('fontPreview');
+  if(val&&val.trim()){
+    const name=val.trim();
+    // Attempt to load from Google Fonts
+    const linkId='gf-custom-font';
+    var existing=document.getElementById(linkId);
+    if(existing)existing.remove();
+    var link=document.createElement('link');
+    link.id=linkId;link.rel='stylesheet';
+    link.href='https://fonts.googleapis.com/css2?family='+encodeURIComponent(name.replace(/ /g,'+'))+':wght@400;600;700&display=swap';
+    document.head.appendChild(link);
+    badge.style.fontFamily="'"+name+"',sans-serif";
+    badge.textContent=name+' — The quick brown fox jumps over the lazy dog';
+    state.font=name;
+  } else {
+    badge.style.fontFamily='Inter,sans-serif';
+    badge.textContent='Type your font name above to preview it';
+    state.font='';
+  }
+  updateManualPreview();
   updateSidebar();
 }
 
@@ -1704,6 +1900,22 @@ function resetForm(){
   document.querySelectorAll('.upload-fn').forEach(function(el){ el.style.display='none'; el.textContent=''; });
   window._sbCollapse={};
   updateSidebar();
+
+  // Reset brand preview panels
+  var mp=document.getElementById('manual-brand-preview');
+  if(mp)mp.style.display='none';
+  var gn=document.getElementById('guidelines-note');
+  if(gn)gn.style.display='none';
+  var la=document.getElementById('logo-a-preview');
+  if(la)la.style.display='none';
+  var lae=document.getElementById('logo-a-err');
+  if(lae)lae.style.display='none';
+  var lce=document.getElementById('logo-c-err');
+  if(lce)lce.style.display='none';
+  var cfw=document.getElementById('customFontWrap');
+  if(cfw)cfw.style.display='none';
+  var mbpl=document.getElementById('mbp-logo');
+  if(mbpl)mbpl.innerHTML='<span style="font-size:10px;color:var(--text-dim);text-align:center;padding:4px;line-height:1.4">Logo will appear here</span>';
 }
 
 function submitBrief(){
