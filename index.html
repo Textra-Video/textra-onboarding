@@ -2314,8 +2314,9 @@ function autoCollapseCards(){
   if(c2done&&charCards[2])markCardComplete(charCards[2],'Done');
   // Scene / Title / Music — always updateable, just show summary badge
   if(state.bgChoice){const sc=document.querySelector('#page4 .card');if(sc)markCardComplete(sc,state.bgChoice);}
-  const titleSel=document.querySelector('#titleBgGrid .cc.sel .cc-title');
-  if(titleSel){const tc=document.querySelectorAll('#page4 .card');if(tc[1])markCardComplete(tc[1],titleSel.textContent);}
+  var _tmEl2=document.querySelector('#titleBgGrid .cc.sel .cc-title');
+  var _tmName2=_tmEl2?_tmEl2.textContent:(state.titleScreen||'');
+  if(_tmName2){const tc=document.querySelectorAll('#page4 .card');if(tc[1])markCardComplete(tc[1],_tmName2);}
   if(state.music){const mc=document.querySelectorAll('#page4 .card');if(mc[2])markCardComplete(mc[2],state.music);}
 }
 
@@ -2467,12 +2468,13 @@ function updateSidebar(){
   }
 
   // ── SCENE & MUSIC ────────────────────────────────────────
-  const titleSel=document.querySelector('#titleBgGrid .cc.sel .cc-title');
+  var _tsEl=document.querySelector('#titleBgGrid .cc.sel .cc-title');
+  var _tsName=_tsEl?_tsEl.textContent:(state.titleScreen||'');
   const musicSel=document.querySelector('#musicGrid .music-opt.sel .music-lbl');
-  if(state.bgChoice||titleSel||musicSel){
+  if(state.bgChoice||_tsName||musicSel){
     sections.push('<div class="sb-section"><div class="sb-label">Scene & Music</div>'+
       (state.bgChoice ? sbRow('\uD83D\uDDBC\uFE0F',state.bgChoice) : '')+
-      (titleSel       ? sbRow('\uD83C\uDFAC','Title: '+titleSel.textContent) : '')+
+      (_tsName        ? sbRow('\uD83C\uDFAC','Title: '+_tsName) : '')+
       (musicSel       ? sbRow('\uD83C\uDFB5',musicSel.textContent) : '')+
     '</div>');
   }
