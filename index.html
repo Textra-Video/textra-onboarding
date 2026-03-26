@@ -985,7 +985,7 @@ function goTo(n){
   const hb=document.getElementById('headerBack');
   hb.classList.toggle('visible', n>1 && n!==7);
   const sb=document.getElementById('sidebarCol');
-  if(sb)sb.style.display=(n===6||n===7||n===1)?'none':'block';
+  if(sb)sb.style.display=(n===6||n===7||n===1||n===1.5)?'none':'block';
   if(n===5)initScriptPage();
   if(n===5&&state.scriptMethod){scriptMethod(state.scriptMethod);}
   if(n===6){buildReview();cameFromReview=false;}
