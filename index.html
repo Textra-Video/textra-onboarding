@@ -46,7 +46,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 /* ── TWO-COLUMN LAYOUT ── */
 .layout{display:flex;gap:0;max-width:1100px;margin:0 auto;padding:32px 24px 80px;position:relative;z-index:1;align-items:flex-start}
 .form-col{flex:1;min-width:0;padding-right:28px}
-.sidebar-col{width:var(--sidebar);flex-shrink:0;position:sticky;top:80px;max-height:calc(100vh - 100px);display:flex;flex-direction:column}
+.sidebar-col{width:var(--sidebar);flex-shrink:0;position:sticky;top:80px;max-height:calc(100vh - 100px);display:none;flex-direction:column}
 
 /* ── SIDEBAR PANEL ── */
 .sidebar-panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;max-height:calc(100vh - 100px)}
@@ -985,7 +985,7 @@ function goTo(n){
   const hb=document.getElementById('headerBack');
   hb.classList.toggle('visible', n>1 && n!==7);
   const sb=document.getElementById('sidebarCol');
-  if(sb)sb.style.display=(n===6||n===7||n===1||n===1.5)?'none':'block';
+  if(sb)sb.style.display=(n>=2&&n<=5)?'flex':'none';
   if(n===5)initScriptPage();
   if(n===5&&state.scriptMethod){scriptMethod(state.scriptMethod);}
   if(n===6){buildReview();cameFromReview=false;}
