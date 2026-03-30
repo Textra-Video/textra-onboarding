@@ -1845,13 +1845,59 @@ function closeFinishLater(){
   if(modal)modal.style.display='none';
 }
 function sendFinishLater(){
-  var email=document.getElementById('finishLaterEmail').value.trim();
-  if(!email||!email.includes('@')){alert('Please enter a valid email address.');return;}
-  // In production this would POST to your backend; for now show confirmation
-  var confirm=document.getElementById('finishLaterConfirm');
-  if(confirm)confirm.style.display='block';
-  setTimeout(function(){closeFinishLater();},2500);
+  var emailEl=document.getElementById('finishLaterEmail');
+  var draftEmail=emailEl?emailEl.value.trim():'';
+  if(!draftEmail||!draftEmail.includes('@')){
+    if(emailEl)emailEl.focus();
+    return;
+  }
+
+  var btn=document.querySelector('[onclick*="sendFinishLater"]');
+  var originalText=btn?btn.textContent:'';
+  if(btn){btn.textContent='Sending...';btn.disabled=true;}
+
+  // Use gatherData() so we capture everything (brand, chars, scene, music, script)
+  var data=gatherData();
+  data.status='draft';
+  data.draftEmail=draftEmail;
+  data.timestamp=new Date().toISOString();
+
+  // Use hidden form POST — same as submitBrief(), works with Google Apps Script
+  var form=document.createElement('form');
+  form.method='POST';
+  form.action=GOOGLE_SCRIPT_URL;
+  form.target='fl_iframe';
+  form.style.display='none';
+  var input=document.createElement('input');
+  input.type='hidden';
+  input.name='data';
+  input.value=JSON.stringify(data);
+  form.appendChild(input);
+
+  var iframe=document.getElementById('fl_iframe');
+  if(!iframe){
+    iframe=document.createElement('iframe');
+    iframe.name='fl_iframe';
+    iframe.id='fl_iframe';
+    iframe.style.display='none';
+    document.body.appendChild(iframe);
+  }
+
+  iframe.onload=function(){
+    var confirm=document.getElementById('finishLaterConfirm');
+    if(confirm)confirm.style.display='block';
+    if(emailEl)emailEl.value='';
+    setTimeout(function(){
+      closeFinishLater();
+      if(btn){btn.textContent=originalText;btn.disabled=false;}
+    },2500);
+  };
+
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
 }
+
 function confirmLibrarySelection(){} // no-op
 
 function _libThumb(idx){
@@ -2823,6 +2869,116 @@ function buildReview(){
 }
 
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+// Load draft from URL parameters (when user clicks magic link)
+function loadDraftFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const submissionId = params.get('submission_id');
+  const email = params.get('email');
+  
+  if (!submissionId || !email) {
+    return; // No draft to load
+  }
+  
+  // Fetch the draft submission
+  fetch('https://script.google.com/macros/s/AKfycbwogbAQAk4QYIte5Fo1jNS2LL8Xl7ANGptKv1UqiexYTcuS9xjQVuMoX3S8Bk6C5C_oVA/exec', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      action: 'loadDraft',
+      submissionId: submissionId,
+      email: email
+    })
+  })
+  .then(function(response) { return response.json(); })
+  .then(function(data) {
+    if (data.success && data.formData) {
+      // Populate form with saved data
+      populateDraftForm(data.formData);
+      
+      // Show welcome banner
+      showDraftLoadedBanner();
+    }
+  })
+  .catch(function(error) {
+    console.log('Could not load draft:', error);
+  });
+}
+
+// Populate form fields from draft data
+function populateDraftForm(formData) {
+  // Contact info
+  if (formData.fullName) document.getElementById('fullName').value = formData.fullName;
+  if (formData.companyName) document.getElementById('companyName').value = formData.companyName;
+  if (formData.projectName) document.getElementById('projectName').value = formData.projectName;
+  
+  // Brand
+  if (formData.brandMethod) {
+    const radio = document.querySelector('input[name="brandMethod"][value="' + formData.brandMethod + '"]');
+    if (radio) radio.checked = true;
+  }
+  if (formData.font && document.getElementById('fontSelect')) {
+    document.getElementById('fontSelect').value = formData.font;
+  }
+  if (formData.hex1 && document.getElementById('hex1')) {
+    document.getElementById('hex1').value = formData.hex1;
+  }
+  if (formData.hex2 && document.getElementById('hex2')) {
+    document.getElementById('hex2').value = formData.hex2;
+  }
+  if (formData.hex3 && document.getElementById('hex3')) {
+    document.getElementById('hex3').value = formData.hex3;
+  }
+  
+  // Character A
+  if (formData.c1gender) document.getElementById('c1gender').value = formData.c1gender;
+  if (formData.c1age) document.getElementById('c1age').value = formData.c1age;
+  if (formData.c1eth) document.getElementById('c1eth').value = formData.c1eth;
+  if (formData.c1accent) document.getElementById('c1accent').value = formData.c1accent;
+  if (formData.c1clothing) document.getElementById('c1clothing').value = formData.c1clothing;
+  if (formData.c1notes) document.getElementById('c1notes').value = formData.c1notes;
+  
+  // Character B
+  if (formData.c2gender) document.getElementById('c2gender').value = formData.c2gender;
+  if (formData.c2age) document.getElementById('c2age').value = formData.c2age;
+  if (formData.c2eth) document.getElementById('c2eth').value = formData.c2eth;
+  if (formData.c2accent) document.getElementById('c2accent').value = formData.c2accent;
+  if (formData.c2clothing) document.getElementById('c2clothing').value = formData.c2clothing;
+  if (formData.c2notes) document.getElementById('c2notes').value = formData.c2notes;
+  
+  // Scene
+  if (formData.sceneDesc) document.getElementById('scenedesc').value = formData.sceneDesc;
+  
+  // Script
+  if (formData.scriptTitle) document.getElementById('scriptTitle').value = formData.scriptTitle;
+  
+  // Deadline
+  if (formData.deadline) document.getElementById('deadline').value = formData.deadline;
+  
+  // Update sidebar preview
+  updateSidebarPreview();
+}
+
+// Show a banner welcoming them back
+function showDraftLoadedBanner() {
+  const banner = document.createElement('div');
+  banner.style.cssText = 'position:fixed;top:60px;left:0;right:0;background:#e8f7f5;border-bottom:2px solid #66BCAD;padding:14px 20px;text-align:center;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,0.08)';
+  banner.innerHTML = '✓ Welcome back! Your draft has been loaded. Continue below.';
+  banner.style.fontSize = '13px';
+  banner.style.fontWeight = '500';
+  banner.style.color = '#0d1b3e';
+  document.body.appendChild(banner);
+  
+  // Auto-remove after 5 seconds
+  setTimeout(function() {
+    banner.style.opacity = '0';
+    banner.style.transition = 'opacity 0.3s';
+    setTimeout(function() { banner.remove(); }, 300);
+  }, 5000);
+}
+
+// Call this on page load
+document.addEventListener('DOMContentLoaded', loadDraftFromUrl);
+
 </script>
 </body>
 </html>
