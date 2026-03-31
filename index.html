@@ -1838,6 +1838,9 @@ function finalSubmit(){
   
   fetch('https://script.google.com/macros/s/AKfycbxg6gpqaA0cHDbSixZ4IHOKXmrkbqt8aeGZv93aS4E35yFKMiMi9FP6wVHsNIH9D-JiVA/exec', {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
     body: JSON.stringify(formData)
   })
   .then(function(r) { return r.json(); })
