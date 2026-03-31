@@ -1253,7 +1253,7 @@ let cur=1;
 let cameFromReview=false;
 // ── GOOGLE SHEETS INTEGRATION ─────────────────────────────────
 // Paste your Google Apps Script Web App URL here after deploying
-var GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwogbAQAk4QYIte5Fo1jNS2LL8Xl7ANGptKv1UqiexYTcuS9xjQVuMoX3S8Bk6C5C_oVA/exec';
+var GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxB5dZP6S9SBW65ILi_7AjxUeJPyEI16K2oDf5O5O5r0raAXZE1A7ouPAclQoq0_U--/exec';
 
 const state={
   brandMethod:'',charStyle:'',bgChoice:'',titleBg:'',music:'',font:'',
@@ -1836,12 +1836,16 @@ function finalSubmit(){
   var btn = document.getElementById('submitBtn');
   if(btn) { btn.disabled = true; btn.textContent = 'Submitting...'; }
   
-  fetch('https://script.google.com/macros/s/AKfycbxg6gpqaA0cHDbSixZ4IHOKXmrkbqt8aeGZv93aS4E35yFKMiMi9FP6wVHsNIH9D-JiVA/exec', {
+  // Create FormData object instead of JSON
+  var params = new URLSearchParams();
+  params.append('fullName', formData.fullName);
+  params.append('email', formData.email);
+  params.append('companyName', formData.companyName);
+  params.append('projectName', formData.projectName);
+  
+  fetch('https://script.google.com/macros/s/AKfycbxB5dZP6S9SBW65ILi_7AjxUeJPyEI16K2oDf5O5O5r0raAXZE1A7ouPAclQoq0_U--/exec', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(formData)
+    body: params
   })
   .then(function(r) { return r.json(); })
   .then(function(data) {
