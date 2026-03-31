@@ -1117,10 +1117,10 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
   <div id="finishLaterBanner" style="background:var(--teal-soft);border:1.5px solid var(--teal2);border-radius:var(--radius-xs);padding:14px 16px;margin-bottom:20px;display:flex;align-items:center;gap:12px">
     <div style="font-size:22px">💾</div>
     <div style="flex:1">
-      <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:3px">Your progress is saved automatically</div>
-      <div style="font-size:12px;color:var(--text-muted)">Scripts take time — no rush. Click "Finish later" and we'll email you a magic link every 2 days (for 7 days) to return right to this page.</div>
+      <div id="bannerTitle" style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:3px">Not ready to write your script yet?</div>
+      <div id="bannerDesc" style="font-size:12px;color:var(--text-muted)">You can submit your brand brief now and come back to write your script later — we'll email you a magic link every 2 days for 7 days.</div>
     </div>
-    <button onclick="showFinishLater()" style="padding:8px 16px;background:var(--navy);color:#fff;border:none;border-radius:var(--radius-xs);font-family:Inter,sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0">Finish later →</button>
+    <button onclick="goTo(6)" style="padding:8px 16px;background:var(--navy);color:#fff;border:none;border-radius:var(--radius-xs);font-family:Inter,sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0">Review &amp; Submit →</button>
   </div>
 
   <!-- Finish Later modal -->
@@ -1215,9 +1215,33 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     <p class="s-desc">Check everything looks right before we send it to the team.</p>
   </div>
   <div class="card" id="reviewCard"></div>
-  <div class="btn-row">
-    <button class="btn btn-ghost" onclick="goTo(5)">← Edit Script</button>
-    <button class="btn btn-submit" id="submitBtn" onclick="submitBrief()">Submit Brief ✓</button>
+  <!-- Submit options -->
+  <div style="margin-top:20px;border:1.5px solid var(--teal2);border-radius:12px;overflow:hidden">
+    <!-- Option A: Submit + write script now -->
+    <div style="padding:20px 22px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:14px">
+      <div style="font-size:26px;flex-shrink:0;margin-top:2px">✏️</div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:800;color:var(--navy);margin-bottom:4px">Submit brief &amp; write script now</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:12px">Your brand brief goes straight to the team. You'll then write your first script on the next page — or you can save and come back later.</div>
+        <button id="submitBtn" onclick="submitAndScript()" style="padding:10px 22px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer">Submit &amp; write script →</button>
+      </div>
+    </div>
+    <!-- Option B: Submit + finish script later -->
+    <div style="padding:20px 22px;background:#fafbfc;display:flex;align-items:flex-start;gap:14px">
+      <div style="font-size:26px;flex-shrink:0;margin-top:2px">📧</div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:800;color:var(--navy);margin-bottom:4px">Submit brief &amp; finish script later</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:12px">Your brand brief is submitted now. We'll email you a magic link every 2 days (for 7 days) so you can return to write your script when you're ready.</div>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <input type="email" id="submitLaterEmail" placeholder="your@email.com" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:Inter,sans-serif;font-size:13px;width:220px;box-sizing:border-box">
+          <button id="submitLaterBtn" onclick="submitAndLater()" style="padding:10px 20px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">Submit &amp; remind me →</button>
+        </div>
+        <div id="submitLaterErr" style="display:none;margin-top:6px;font-size:11px;color:#c0392b;font-weight:600">Please enter a valid email address.</div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:10px">
+    <button class="btn btn-ghost" onclick="goTo(5)" style="font-size:12px;padding:8px 16px">← Back to script</button>
   </div>
 </div>
 
@@ -1225,8 +1249,8 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 <div class="page" id="page7">
   <div class="success-wrap">
     <div class="success-ring">✓</div>
-    <div class="success-title">Brief Submitted!</div>
-    <div class="success-sub">Your brand brief is with the Textra team. Our designers are already on it — keep an eye on your inbox.</div>
+    <div class="success-title" id="successTitle">Brief Submitted!</div>
+    <div class="success-sub" id="successSub">Your brand brief is with the Textra team. Our designers are already on it — keep an eye on your inbox.</div>
     <div style="margin:28px 0 8px;padding:24px;background:linear-gradient(135deg,var(--teal-soft) 0%,#f0f4ff 100%);border:1.5px solid var(--teal2);border-radius:12px;text-align:left">
       <div style="font-size:15px;font-weight:800;color:var(--navy);margin-bottom:8px">🎬 Ready to write your first script?</div>
       <p style="font-size:13px;color:var(--text-muted);margin:0 0 16px;line-height:1.6">While our team builds your unique characters and brand assets, you can start writing your script now — or we'll email you a link when everything is ready.</p>
@@ -1845,59 +1869,13 @@ function closeFinishLater(){
   if(modal)modal.style.display='none';
 }
 function sendFinishLater(){
-  var emailEl=document.getElementById('finishLaterEmail');
-  var draftEmail=emailEl?emailEl.value.trim():'';
-  if(!draftEmail||!draftEmail.includes('@')){
-    if(emailEl)emailEl.focus();
-    return;
-  }
-
-  var btn=document.querySelector('[onclick*="sendFinishLater"]');
-  var originalText=btn?btn.textContent:'';
-  if(btn){btn.textContent='Sending...';btn.disabled=true;}
-
-  // Use gatherData() so we capture everything (brand, chars, scene, music, script)
-  var data=gatherData();
-  data.status='draft';
-  data.draftEmail=draftEmail;
-  data.timestamp=new Date().toISOString();
-
-  // Use hidden form POST — same as submitBrief(), works with Google Apps Script
-  var form=document.createElement('form');
-  form.method='POST';
-  form.action=GOOGLE_SCRIPT_URL;
-  form.target='fl_iframe';
-  form.style.display='none';
-  var input=document.createElement('input');
-  input.type='hidden';
-  input.name='data';
-  input.value=JSON.stringify(data);
-  form.appendChild(input);
-
-  var iframe=document.getElementById('fl_iframe');
-  if(!iframe){
-    iframe=document.createElement('iframe');
-    iframe.name='fl_iframe';
-    iframe.id='fl_iframe';
-    iframe.style.display='none';
-    document.body.appendChild(iframe);
-  }
-
-  iframe.onload=function(){
-    var confirm=document.getElementById('finishLaterConfirm');
-    if(confirm)confirm.style.display='block';
-    if(emailEl)emailEl.value='';
-    setTimeout(function(){
-      closeFinishLater();
-      if(btn){btn.textContent=originalText;btn.disabled=false;}
-    },2500);
-  };
-
-  document.body.appendChild(form);
-  form.submit();
-  document.body.removeChild(form);
+  var email=document.getElementById('finishLaterEmail').value.trim();
+  if(!email||!email.includes('@')){alert('Please enter a valid email address.');return;}
+  // In production this would POST to your backend; for now show confirmation
+  var confirm=document.getElementById('finishLaterConfirm');
+  if(confirm)confirm.style.display='block';
+  setTimeout(function(){closeFinishLater();},2500);
 }
-
 function confirmLibrarySelection(){} // no-op
 
 function _libThumb(idx){
@@ -2621,7 +2599,7 @@ function gatherData(){
     // Scene
     background:   state.bgChoice,
     sceneNotes:   sel('scenedesc'),
-    titleScreen:  qsel('#titleBgGrid .cc.sel .cc-title'),
+    titleScreen:  (function(){var e=document.querySelector('#titleBgGrid .cc.sel .cc-title');return e?e.textContent.trim():(state.titleScreen||'');})(),
     music:        state.music,
     // Script
     scriptMethod: document.getElementById('togU')&&document.getElementById('togU').classList.contains('active')?'Upload':'Written',
@@ -2672,6 +2650,82 @@ function resetForm(){
   document.querySelectorAll('.upload-fn').forEach(function(el){ el.style.display='none'; el.textContent=''; });
   window._sbCollapse={};
   updateSidebar();
+}
+
+// ── SUBMIT: brief only → then script page ──────────────
+function submitAndScript(){
+  var btn = document.getElementById('submitBtn');
+  if(btn){ btn.disabled=true; btn.textContent='Submitting…'; }
+  _doSubmit(false, '', function(){
+    if(btn){ btn.disabled=false; btn.textContent='Submit & write script →'; }
+    // Update banner on script page to reflect brief is already submitted
+    var t = document.getElementById('bannerTitle');
+    var d = document.getElementById('bannerDesc');
+    if(t) t.textContent = '✅ Brief submitted — now write your script';
+    if(d) d.textContent = 'Your brand brief is with the team. Once you are done with your script, click Review & Submit above to send it over.';
+    goTo(5);
+  });
+}
+
+// ── SUBMIT: brief only → email reminder sequence ────────
+function submitAndLater(){
+  var email = (document.getElementById('submitLaterEmail')||{}).value||'';
+  var errEl = document.getElementById('submitLaterErr');
+  if(!email||!email.includes('@')||!email.includes('.')){
+    if(errEl) errEl.style.display='block';
+    return;
+  }
+  if(errEl) errEl.style.display='none';
+  var btn = document.getElementById('submitLaterBtn');
+  if(btn){ btn.disabled=true; btn.textContent='Submitting…'; }
+  _doSubmit(true, email, function(){
+    if(btn){ btn.disabled=false; btn.textContent='Submit & remind me →'; }
+    // Customise success page for "later" route
+    var t = document.getElementById('successTitle');
+    var s = document.getElementById('successSub');
+    if(t) t.textContent = 'Brief Submitted! Script reminder set ✓';
+    if(s) s.textContent = 'Your brand brief is with the team. We will email '+email+' in 2, 4 and 6 days with a direct link to write your script.';
+    goTo(7);
+  });
+}
+
+// ── CORE SUBMIT HELPER ──────────────────────────────────
+function _doSubmit(scriptLater, reminderEmail, callback){
+  var data = gatherData();
+  data.scriptLater = scriptLater;
+  data.reminderEmail = reminderEmail || '';
+
+  if(!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.trim()===''){
+    setTimeout(callback, 400); return;
+  }
+
+  var form = document.createElement('form');
+  form.method = 'POST';
+  form.action = GOOGLE_SCRIPT_URL;
+  form.target = 'hidden_iframe';
+  form.style.display = 'none';
+  var input = document.createElement('input');
+  input.type = 'hidden'; input.name = 'data';
+  input.value = JSON.stringify(data);
+  form.appendChild(input);
+
+  var iframe = document.getElementById('hidden_iframe');
+  if(!iframe){
+    iframe = document.createElement('iframe');
+    iframe.name = 'hidden_iframe'; iframe.id = 'hidden_iframe';
+    iframe.style.display = 'none';
+    iframe.onload = function(){
+      try{
+        var txt = iframe.contentDocument&&iframe.contentDocument.body&&iframe.contentDocument.body.innerText;
+        if(txt){var resp=JSON.parse(txt); if(resp.folder){var m=resp.folder.match(/folders\/([a-zA-Z0-9_-]+)/);if(m)state.lastFolderId=m[1];}}
+      }catch(e){}
+    };
+    document.body.appendChild(iframe);
+  }
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+  setTimeout(callback, 2000);
 }
 
 function submitBrief(){
@@ -2869,116 +2923,6 @@ function buildReview(){
 }
 
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
-// Load draft from URL parameters (when user clicks magic link)
-function loadDraftFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  const submissionId = params.get('submission_id');
-  const email = params.get('email');
-  
-  if (!submissionId || !email) {
-    return; // No draft to load
-  }
-  
-  // Fetch the draft submission
-  fetch('https://script.google.com/macros/s/AKfycbwogbAQAk4QYIte5Fo1jNS2LL8Xl7ANGptKv1UqiexYTcuS9xjQVuMoX3S8Bk6C5C_oVA/exec', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      action: 'loadDraft',
-      submissionId: submissionId,
-      email: email
-    })
-  })
-  .then(function(response) { return response.json(); })
-  .then(function(data) {
-    if (data.success && data.formData) {
-      // Populate form with saved data
-      populateDraftForm(data.formData);
-      
-      // Show welcome banner
-      showDraftLoadedBanner();
-    }
-  })
-  .catch(function(error) {
-    console.log('Could not load draft:', error);
-  });
-}
-
-// Populate form fields from draft data
-function populateDraftForm(formData) {
-  // Contact info
-  if (formData.fullName) document.getElementById('fullName').value = formData.fullName;
-  if (formData.companyName) document.getElementById('companyName').value = formData.companyName;
-  if (formData.projectName) document.getElementById('projectName').value = formData.projectName;
-  
-  // Brand
-  if (formData.brandMethod) {
-    const radio = document.querySelector('input[name="brandMethod"][value="' + formData.brandMethod + '"]');
-    if (radio) radio.checked = true;
-  }
-  if (formData.font && document.getElementById('fontSelect')) {
-    document.getElementById('fontSelect').value = formData.font;
-  }
-  if (formData.hex1 && document.getElementById('hex1')) {
-    document.getElementById('hex1').value = formData.hex1;
-  }
-  if (formData.hex2 && document.getElementById('hex2')) {
-    document.getElementById('hex2').value = formData.hex2;
-  }
-  if (formData.hex3 && document.getElementById('hex3')) {
-    document.getElementById('hex3').value = formData.hex3;
-  }
-  
-  // Character A
-  if (formData.c1gender) document.getElementById('c1gender').value = formData.c1gender;
-  if (formData.c1age) document.getElementById('c1age').value = formData.c1age;
-  if (formData.c1eth) document.getElementById('c1eth').value = formData.c1eth;
-  if (formData.c1accent) document.getElementById('c1accent').value = formData.c1accent;
-  if (formData.c1clothing) document.getElementById('c1clothing').value = formData.c1clothing;
-  if (formData.c1notes) document.getElementById('c1notes').value = formData.c1notes;
-  
-  // Character B
-  if (formData.c2gender) document.getElementById('c2gender').value = formData.c2gender;
-  if (formData.c2age) document.getElementById('c2age').value = formData.c2age;
-  if (formData.c2eth) document.getElementById('c2eth').value = formData.c2eth;
-  if (formData.c2accent) document.getElementById('c2accent').value = formData.c2accent;
-  if (formData.c2clothing) document.getElementById('c2clothing').value = formData.c2clothing;
-  if (formData.c2notes) document.getElementById('c2notes').value = formData.c2notes;
-  
-  // Scene
-  if (formData.sceneDesc) document.getElementById('scenedesc').value = formData.sceneDesc;
-  
-  // Script
-  if (formData.scriptTitle) document.getElementById('scriptTitle').value = formData.scriptTitle;
-  
-  // Deadline
-  if (formData.deadline) document.getElementById('deadline').value = formData.deadline;
-  
-  // Update sidebar preview
-  updateSidebarPreview();
-}
-
-// Show a banner welcoming them back
-function showDraftLoadedBanner() {
-  const banner = document.createElement('div');
-  banner.style.cssText = 'position:fixed;top:60px;left:0;right:0;background:#e8f7f5;border-bottom:2px solid #66BCAD;padding:14px 20px;text-align:center;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,0.08)';
-  banner.innerHTML = '✓ Welcome back! Your draft has been loaded. Continue below.';
-  banner.style.fontSize = '13px';
-  banner.style.fontWeight = '500';
-  banner.style.color = '#0d1b3e';
-  document.body.appendChild(banner);
-  
-  // Auto-remove after 5 seconds
-  setTimeout(function() {
-    banner.style.opacity = '0';
-    banner.style.transition = 'opacity 0.3s';
-    setTimeout(function() { banner.remove(); }, 300);
-  }, 5000);
-}
-
-// Call this on page load
-document.addEventListener('DOMContentLoaded', loadDraftFromUrl);
-
 </script>
 </body>
 </html>
