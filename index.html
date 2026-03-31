@@ -1113,35 +1113,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 </div>
 <!-- ══ PAGE 5: SCRIPT ══ -->
 <div class="page" id="page5">
-  <!-- Finish Later banner -->
-  <div id="finishLaterBanner" style="background:var(--teal-soft);border:1.5px solid var(--teal2);border-radius:var(--radius-xs);padding:14px 16px;margin-bottom:20px;display:flex;align-items:center;gap:12px">
-    <div style="font-size:22px">💾</div>
-    <div style="flex:1">
-      <div id="bannerTitle" style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:3px">Not ready to write your script yet?</div>
-      <div id="bannerDesc" style="font-size:12px;color:var(--text-muted)">You can submit your brand brief now and come back to write your script later — we'll email you a magic link every 2 days for 7 days.</div>
-    </div>
-    <button onclick="goTo(6)" style="padding:8px 16px;background:var(--navy);color:#fff;border:none;border-radius:var(--radius-xs);font-family:Inter,sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0">Review &amp; Submit →</button>
-  </div>
 
-  <!-- Finish Later modal -->
-  <div id="finishLaterModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center">
-    <div style="background:#fff;border-radius:12px;padding:28px 32px;max-width:440px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.25)">
-      <div style="font-size:20px;font-weight:800;color:var(--navy);margin-bottom:6px">📧 Save my progress</div>
-      <p style="font-size:13px;color:var(--text-muted);margin-bottom:6px;line-height:1.6">Enter your email and we'll send you a magic link back to this exact page. We'll remind you every 2 days for up to 7 days.</p>
-      <div style="background:#f8f9fa;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:11px;color:var(--text-dim);line-height:1.6">
-        📅 Reminders sent on: Day 1 → Day 3 → Day 5 → Day 7. After that, the link expires.
-      </div>
-      <div class="field" style="margin-bottom:16px">
-        <label style="font-size:12px;font-weight:700;color:var(--navy);display:block;margin-bottom:6px">Your email address</label>
-        <input type="email" id="finishLaterEmail" placeholder="you@company.com" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-xs);font-family:Inter,sans-serif;font-size:13px;box-sizing:border-box">
-      </div>
-      <div style="display:flex;gap:10px">
-        <button onclick="sendFinishLater()" style="flex:1;padding:11px;background:var(--teal);color:#fff;border:none;border-radius:var(--radius-xs);font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer">Send me the link</button>
-        <button onclick="closeFinishLater()" style="padding:11px 16px;background:#fff;color:var(--text-muted);border:1.5px solid var(--border);border-radius:var(--radius-xs);font-family:Inter,sans-serif;font-size:13px;cursor:pointer">Cancel</button>
-      </div>
-      <div id="finishLaterConfirm" style="display:none;margin-top:14px;padding:10px 12px;background:var(--teal-soft);border:1.5px solid var(--teal2);border-radius:var(--radius-xs);font-size:12px;color:var(--navy);font-weight:600;text-align:center">✓ Magic link sent! Check your inbox — we'll remind you in 2 days.</div>
-    </div>
-  </div>
 
   <div class="section-head">
     <div class="s-eyebrow">Step 4 of 4 — Script</div>
@@ -1215,30 +1187,9 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     <p class="s-desc">Check everything looks right before we send it to the team.</p>
   </div>
   <div class="card" id="reviewCard"></div>
-  <!-- Submit options -->
-  <div style="margin-top:20px;border:1.5px solid var(--teal2);border-radius:12px;overflow:hidden">
-    <!-- Option A: Submit + write script now -->
-    <div style="padding:20px 22px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:14px">
-      <div style="font-size:26px;flex-shrink:0;margin-top:2px">✏️</div>
-      <div style="flex:1">
-        <div style="font-size:14px;font-weight:800;color:var(--navy);margin-bottom:4px">Submit brief &amp; write script now</div>
-        <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:12px">Your brand brief goes straight to the team. You'll then write your first script on the next page — or you can save and come back later.</div>
-        <button id="submitBtn" onclick="submitAndScript()" style="padding:10px 22px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer">Submit &amp; write script →</button>
-      </div>
-    </div>
-    <!-- Option B: Submit + finish script later -->
-    <div style="padding:20px 22px;background:#fafbfc;display:flex;align-items:flex-start;gap:14px">
-      <div style="font-size:26px;flex-shrink:0;margin-top:2px">📧</div>
-      <div style="flex:1">
-        <div style="font-size:14px;font-weight:800;color:var(--navy);margin-bottom:4px">Submit brief &amp; finish script later</div>
-        <div style="font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:12px">Your brand brief is submitted now. We'll email you a magic link every 2 days (for 7 days) so you can return to write your script when you're ready.</div>
-        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-          <input type="email" id="submitLaterEmail" placeholder="your@email.com" style="padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:Inter,sans-serif;font-size:13px;width:220px;box-sizing:border-box">
-          <button id="submitLaterBtn" onclick="submitAndLater()" style="padding:10px 20px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">Submit &amp; remind me →</button>
-        </div>
-        <div id="submitLaterErr" style="display:none;margin-top:6px;font-size:11px;color:#c0392b;font-weight:600">Please enter a valid email address.</div>
-      </div>
-    </div>
+  <!-- Simple submit button -->
+  <div style="margin-top:20px;text-align:center">
+    <button id="submitBtn" onclick="finalSubmit()" style="padding:14px 32px;background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:14px;font-weight:700;cursor:pointer">Submit Brief</button>
   </div>
   <div style="margin-top:10px">
     <button class="btn btn-ghost" onclick="goTo(5)" style="font-size:12px;padding:8px 16px">← Back to script</button>
@@ -1868,14 +1819,45 @@ function closeFinishLater(){
   var modal=document.getElementById('finishLaterModal');
   if(modal)modal.style.display='none';
 }
-function sendFinishLater(){
-  var email=document.getElementById('finishLaterEmail').value.trim();
-  if(!email||!email.includes('@')){alert('Please enter a valid email address.');return;}
-  // In production this would POST to your backend; for now show confirmation
-  var confirm=document.getElementById('finishLaterConfirm');
-  if(confirm)confirm.style.display='block';
-  setTimeout(function(){closeFinishLater();},2500);
+function submitForm(){
+  // Go to review page (goTo(6) will call buildReview automatically)
+  goTo(6);
 }
+
+function finalSubmit(){
+  // Actually submit the form data to Apps Script
+  var formData = {
+    fullName: document.getElementById('fullName').value,
+    email: document.getElementById('email').value,
+    companyName: document.getElementById('companyName').value,
+    projectName: document.getElementById('projectName').value
+  };
+  
+  var btn = document.getElementById('submitBtn');
+  if(btn) { btn.disabled = true; btn.textContent = 'Submitting...'; }
+  
+  fetch('https://script.google.com/macros/s/AKfycbxg6gpqaA0cHDbSixZ4IHOKXmrkbqt8aeGZv93aS4E35yFKMiMi9FP6wVHsNIH9D-JiVA/exec', {
+    method: 'POST',
+    body: JSON.stringify(formData)
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if(data.success) {
+      goTo(7); // Go to success page
+    } else {
+      alert('Error: ' + data.message);
+      if(btn) { btn.disabled = false; btn.textContent = 'Submit Brief'; }
+    }
+  })
+  .catch(function(err) {
+    alert('Error submitting: ' + err.message);
+    if(btn) { btn.disabled = false; btn.textContent = 'Submit Brief'; }
+  });
+}
+
+function showFinishLater(){} // removed
+function closeFinishLater(){} // removed
+function sendFinishLater(){} // removed
 function confirmLibrarySelection(){} // no-op
 
 function _libThumb(idx){
