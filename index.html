@@ -1169,6 +1169,46 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
   </div>
 </div>
 
+<!-- ══ PAGE 8: CREATE SCRIPT ══ -->
+<div class="page" id="page8">
+  <div class="section-head">
+    <div class="s-eyebrow">Next Step</div>
+    <h1 class="s-title">Create Your Script Template</h1>
+    <p class="s-desc">Your brief has been submitted! Now let's create a Google Sheet for your script.</p>
+  </div>
+
+  <div class="card">
+    <div class="field"><label>Video Title</label><input type="text" id="scriptTitlePage8" placeholder="e.g. Welcome to the Team" oninput="updateSidebar()"></div>
+    <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+      <div style="margin-bottom:16px">
+        <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">Writing Tips</div>
+        <ul style="font-size:12px;color:var(--text-muted);line-height:1.6;margin:0;padding-left:20px">
+          <li>Keep the goal clear: one message per video</li>
+          <li>Use plain, conversational language</li>
+          <li>Stick to one idea per line</li>
+          <li>Write like people talk, not like a document</li>
+          <li>Number each line for easy reference</li>
+          <li>Add visual descriptions for on-screen upgrades</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="background:linear-gradient(135deg, rgba(102,188,173,.05) 0%, rgba(26,113,177,.05) 100%);border:1.5px solid var(--teal2)">
+    <div style="text-align:center;padding:20px 0">
+      <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:16px">Ready to write?</div>
+      <button onclick="createScriptSheetPage8()" id="createSheetBtnPage8" style="padding:14px 32px;background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .2s">
+        <span>📊 Create Google Sheet</span>
+      </button>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:12px">A new tab will open with your template. Write your script there, then come back here.</div>
+    </div>
+  </div>
+
+  <div class="btn-row" style="margin-top:24px">
+    <button class="btn btn-ghost" onclick="goTo(7)">Skip for now →</button>
+  </div>
+</div>
+
 <!-- ══ PAGE 7: SUCCESS ══ -->
 <div class="page" id="page7">
   <div class="success-wrap">
@@ -1798,41 +1838,53 @@ function submitForm(){
 }
 
 function finalSubmit(){
-  // Actually submit the form data to Apps Script
-  var formData = {
-    fullName: document.getElementById('fullName').value,
-    email: document.getElementById('email').value,
-    companyName: document.getElementById('companyName').value,
-    projectName: document.getElementById('projectName').value
-  };
-  
   var btn = document.getElementById('submitBtn');
   if(btn) { btn.disabled = true; btn.textContent = 'Submitting...'; }
-  
-  // Create FormData object instead of JSON
-  var params = new URLSearchParams();
-  params.append('fullName', formData.fullName);
-  params.append('email', formData.email);
-  params.append('companyName', formData.companyName);
-  params.append('projectName', formData.projectName);
-  
-  fetch('https://script.google.com/macros/s/AKfycbxB5dZP6S9SBW65ILi_7AjxUeJPyEI16K2oDf5O5O5r0raAXZE1A7ouPAclQoq0_U--/exec', {
-    method: 'POST',
-    body: params
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    if(data.success) {
-      goTo(7); // Go to success page
-    } else {
-      alert('Error: ' + data.message);
-      if(btn) { btn.disabled = false; btn.textContent = 'Submit Brief'; }
+
+  var data = gatherData();
+
+  if(!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.trim()===''){
+    goTo(7); 
+    return;
+  }
+
+  // Send via form POST — works best with Google Apps Script
+  var form = document.createElement('form');
+  form.method = 'POST';
+  form.action = GOOGLE_SCRIPT_URL;
+  form.target = 'hidden_iframe';
+  form.style.display = 'none';
+
+  // Send all form data as key-value pairs
+  for(var key in data) {
+    if(data.hasOwnProperty(key)) {
+      var input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = data[key];
+      form.appendChild(input);
     }
-  })
-  .catch(function(err) {
-    alert('Error submitting: ' + err.message);
-    if(btn) { btn.disabled = false; btn.textContent = 'Submit Brief'; }
-  });
+  }
+
+  // Hidden iframe to catch the response
+  var iframe = document.getElementById('hidden_iframe');
+  if(!iframe){
+    iframe = document.createElement('iframe');
+    iframe.name = 'hidden_iframe';
+    iframe.id = 'hidden_iframe';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+  }
+
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+
+  // Go to script creation page after short delay
+  setTimeout(function(){
+    if(btn){ btn.disabled = false; btn.textContent = 'Brief submitted!'; }
+    goTo(8); // Go to script creation page
+  }, 2000);
 }
 
 function showFinishLater(){} // removed
@@ -2353,6 +2405,53 @@ function createScriptSheet(){
         btn.innerHTML='<span>📊 Open Sheet again</span>';
         btn.onclick=function(){window.open(state.sheetUrl,'textra-script-sheet');};
       },2000);
+    } else {
+      alert('Error creating sheet: '+(d.error||'Unknown error'));
+      btn.disabled=false;
+      btn.innerHTML=oldText;
+    }
+  })
+  .catch(function(err){
+    console.error('Error:',err);
+    alert('Error creating sheet. Please try again.');
+    btn.disabled=false;
+    btn.innerHTML=oldText;
+  });
+}
+
+function createScriptSheetPage8(){
+  var btn=document.getElementById('createSheetBtnPage8');
+  if(!btn)return;
+  
+  var projectName=document.getElementById('projectName')&&document.getElementById('projectName').value;
+  var scriptTitle=document.getElementById('scriptTitlePage8')&&document.getElementById('scriptTitlePage8').value;
+  var sheetName=(scriptTitle||projectName||'Script')+' — '+(new Date().toLocaleDateString('en-GB',{day:'short',month:'short',year:'2-digit'}));
+  
+  // Mark as loading
+  btn.disabled=true;
+  var oldText=btn.innerHTML;
+  btn.innerHTML='<span>⏳ Creating sheet...</span>';
+  
+  // Call Apps Script to create the sheet
+  fetch('https://script.google.com/macros/s/AKfycbwogbAQAk4QYIte5Fo1jNS2LL8Xl7ANGptKv1UqiexYTcuS9xjQVuMoX3S8Bk6C5C_oVA/exec',{
+    method:'POST',
+    body:JSON.stringify({action:'createScriptSheet',sheetName:sheetName,projectName:projectName||'',scriptTitle:scriptTitle||''}),
+    headers:{'Content-Type':'application/json'}
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.success&&d.sheetUrl){
+      state.sheetCreated=true;
+      state.sheetUrl=d.sheetUrl;
+      state.scriptTitle=scriptTitle;
+      btn.disabled=false;
+      btn.innerHTML='<span>✓ Sheet created</span>';
+      // Open in new tab
+      setTimeout(function(){window.open(d.sheetUrl,'textra-script-sheet');},500);
+      // After 3 seconds, go to success page
+      setTimeout(function(){
+        goTo(7);
+      },3000);
     } else {
       alert('Error creating sheet: '+(d.error||'Unknown error'));
       btn.disabled=false;
