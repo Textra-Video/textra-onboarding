@@ -1114,64 +1114,37 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 <!-- ══ PAGE 5: SCRIPT ══ -->
 <div class="page" id="page5">
 
-
   <div class="section-head">
-    <div class="s-eyebrow">Step 4 of 4 — Script</div>
-    <h1 class="s-title">Write Your Script</h1>
-    <p class="s-desc">Add each line of dialogue one at a time. Choose who's speaking, write their line, and add any visual notes.</p>
+    <div class="s-eyebrow">Step 5 of 6 — Script</div>
+    <h1 class="s-title">Create Your Script Template</h1>
+    <p class="s-desc">We'll create a Google Sheet with a pre-formatted script template. You'll write your script directly in the sheet using our proven format.</p>
   </div>
 
-  <!-- Method toggle + title -->
-  <div class="card" style="margin-bottom:14px">
-    <div class="toggle-group" style="margin-bottom:14px">
-      <button class="tog-btn active" id="togW" onclick="scriptMethod('write')">✏️  Write it myself</button>
-      <button class="tog-btn" id="togU" onclick="scriptMethod('upload')">📄  Upload a document</button>
-    </div>
-    <div class="cond vis" id="sm-write-title">
-      <div class="field"><label>Video Title</label><input type="text" id="scriptTitle" placeholder="e.g. Welcome to the Team" oninput="updateSidebar()"></div>
-    </div>
-    <div class="cond" id="sm-upload-title" style="display:none">
-      <div class="field"><label>Video Title</label><input type="text" id="scriptTitleUpload" placeholder="e.g. Product Walkthrough" oninput="updateSidebar()"></div>
-    </div>
-  </div>
-
-  <!-- Upload panel -->
-  <div class="cond" id="sm-upload" style="display:none">
-    <div class="card">
-      <label class="upload-label" id="ul-script">
-        <input type="file" accept=".doc,.docx,.pdf,.ppt,.pptx,.txt" style="display:none" onchange="handleUpload(this,'ul-script','fn-script')">
-        <div class="upload-ico">📁</div><div class="upload-txt">Click to upload your document</div>
-        <div class="upload-hint">Word, PDF, PowerPoint or TXT — up to 50MB</div>
-        <div class="upload-fn" id="fn-script"></div>
-      </label>
-      <div class="form-row" style="margin-top:14px"><div class="field">
-        <label>Desired Video Length</label>
-        <div class="range-wrap">
-          <span style="font-size:11px;color:var(--text-dim)">0</span>
-          <input type="range" min="0" max="10" step="0.5" value="1.5" oninput="document.getElementById('rval').textContent=this.value+' min'">
-          <span style="font-size:11px;color:var(--text-dim)">10 min</span>
-          <div class="range-val" id="rval">1.5 min</div>
-        </div>
-      </div></div>
-      <div class="form-row"><div class="field"><label>Tone &amp; Purpose</label><textarea placeholder="e.g. Friendly induction video for new starters, approachable tone, ~90 seconds..."></textarea></div></div>
-    </div>
-  </div>
-
-  <!-- Script editor (write mode) -->
-  <div class="cond vis" id="sm-write">
-    <div id="scriptLines"></div>
-    <div id="speakerPicker" style="margin:10px 0 4px">
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:8px;text-align:center">Who speaks next?</div>
-      <div style="display:flex;gap:10px;justify-content:center">
-        <button onclick="addScriptLine('A')" style="padding:10px 24px;border:2px solid var(--teal2);border-radius:var(--radius-xs);background:var(--teal-soft);color:var(--navy);font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px">
-          <span style="width:22px;height:22px;background:var(--teal);color:#fff;border-radius:50%;font-size:10px;font-weight:800;display:inline-flex;align-items:center;justify-content:center">A</span> Speaker A
-        </button>
-        <button onclick="addScriptLine('B')" style="padding:10px 24px;border:2px solid #8899dd;border-radius:var(--radius-xs);background:#f0f4ff;color:var(--navy);font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px">
-          <span style="width:22px;height:22px;background:#5566cc;color:#fff;border-radius:50%;font-size:10px;font-weight:800;display:inline-flex;align-items:center;justify-content:center">B</span> Speaker B
-        </button>
+  <div class="card">
+    <div class="field"><label>Video Title</label><input type="text" id="scriptTitle" placeholder="e.g. Welcome to the Team" oninput="updateSidebar()"></div>
+    <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+      <div style="margin-bottom:16px">
+        <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">Writing Tips</div>
+        <ul style="font-size:12px;color:var(--text-muted);line-height:1.6;margin:0;padding-left:20px">
+          <li>Keep the goal clear: one message per video</li>
+          <li>Use plain, conversational language</li>
+          <li>Stick to one idea per line</li>
+          <li>Write like people talk, not like a document</li>
+          <li>Number each line for easy reference</li>
+          <li>Add visual descriptions for on-screen upgrades</li>
+        </ul>
       </div>
     </div>
-    <p style="font-size:11px;color:var(--text-dim);text-align:center;margin-top:6px">Add as many lines as you need. Each line alternates naturally between speakers.</p>
+  </div>
+
+  <div class="card" style="background:linear-gradient(135deg, rgba(102,188,173,.05) 0%, rgba(26,113,177,.05) 100%);border:1.5px solid var(--teal2)">
+    <div style="text-align:center;padding:20px 0">
+      <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:16px">Ready to write?</div>
+      <button onclick="createScriptSheet()" id="createSheetBtn" style="padding:14px 32px;background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .2s">
+        <span>📊 Create Google Sheet</span>
+      </button>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:12px">A new tab will open with your template. Write your script there, then come back here to review.</div>
+    </div>
   </div>
 
   <div class="btn-row" style="margin-top:24px">
@@ -2251,16 +2224,10 @@ function clearScrapeError(){
 
 // ── INIT SCRIPT PAGE ─────────────────────────────
 function initScriptPage(){
-  // Ensure toggle state is correct when arriving at script page
-  const isUploadActive=document.getElementById('togU')&&document.getElementById('togU').classList.contains('active');
-  if(isUploadActive){
-    document.getElementById('sm-write').classList.remove('vis');
-    document.getElementById('sm-upload').classList.add('vis');
-  } else {
-    document.getElementById('sm-write').classList.add('vis');
-    document.getElementById('sm-upload').classList.remove('vis');
-    document.getElementById('togW').classList.add('active');
-    document.getElementById('togU').classList.remove('active');
+  // Initialize script page - script title input will be focused if empty
+  var titleInput=document.getElementById('scriptTitle');
+  if(titleInput&&!titleInput.value){
+    setTimeout(function(){titleInput.focus();},100);
   }
 }
 
@@ -2350,57 +2317,54 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 
 // ── SCRIPT METHOD ─────────────────────────────────
 // ── SCRIPT EDITOR ──────────────────────────────────
-let _scriptLines = [];
-let _scriptLineCount = 0;
-
-function addScriptLine(speaker){
-  _scriptLineCount++;
-  var id = 'sl-' + _scriptLineCount;
-  var badge = speaker === 'A'
-    ? '<span class="script-line-badge spk-a">A</span>'
-    : '<span class="script-line-badge spk-b">B</span>';
-  var label = speaker === 'A' ? 'Speaker A — Left presenter' : 'Speaker B — Right presenter';
-  var color = speaker === 'A' ? 'var(--teal2)' : '#8899dd';
-
-  var div = document.createElement('div');
-  div.className = 'script-line';
-  div.id = id;
-  div.style.borderColor = speaker==='A' ? 'rgba(102,188,173,.4)' : 'rgba(136,153,221,.4)';
-  div.innerHTML =
-    '<div class="script-line-header">' +
-      badge +
-      '<span class="script-line-speaker">' + label + ' <span style="font-weight:400;color:var(--text-muted);font-size:11px">— line ' + _scriptLineCount + '</span></span>' +
-      '<button class="script-line-delete" onclick="deleteScriptLine(this)" title="Remove line">✕</button>' +
-    '</div>' +
-    '<textarea placeholder="Type the dialogue here…" oninput="updateSidebar()"></textarea>' +
-    '<div class="script-line-visual">' +
-      '<label>🎬 Visual note <span style="font-weight:400;font-size:10px">(optional)</span></label>' +
-      '<input type="text" placeholder="e.g. Show product close-up, on-screen text: Book now…">' +
-    '</div>';
-
-  document.getElementById('scriptLines').appendChild(div);
-  div.querySelector('textarea').focus();
-  // Scroll into view
-  setTimeout(function(){ div.scrollIntoView({behavior:'smooth',block:'nearest'}); }, 80);
-  updateSidebar();
-}
-
-function deleteScriptLine(btn){
-  var el = btn.closest('.script-line');
-  if(el) el.remove();
-  updateSidebar();
-}
-
-function scriptMethod(m){
-  var btnW=document.getElementById('togW'), btnU=document.getElementById('togU');
-  var wTitle=document.getElementById('sm-write-title'), uTitle=document.getElementById('sm-upload-title');
-  var smW=document.getElementById('sm-write'), smU=document.getElementById('sm-upload');
-  if(btnW){btnW.classList.toggle('active',m==='write');}
-  if(btnU){btnU.classList.toggle('active',m==='upload');}
-  if(wTitle)wTitle.style.display=m==='write'?'block':'none';
-  if(uTitle)uTitle.style.display=m==='upload'?'block':'none';
-  if(smW)smW.style.display=m==='write'?'block':'none';
-  if(smU)smU.style.display=m==='upload'?'block':'none';
+// ── CREATE SCRIPT SHEET ──────────────────────────
+function createScriptSheet(){
+  var btn=document.getElementById('createSheetBtn');
+  if(!btn)return;
+  
+  var projectName=document.getElementById('projectName')&&document.getElementById('projectName').value;
+  var scriptTitle=document.getElementById('scriptTitle')&&document.getElementById('scriptTitle').value;
+  var sheetName=(scriptTitle||projectName||'Script')+' — '+(new Date().toLocaleDateString('en-GB',{day:'short',month:'short',year:'2-digit'}));
+  
+  // Mark as loading
+  btn.disabled=true;
+  var oldText=btn.innerHTML;
+  btn.innerHTML='<span>⏳ Creating sheet...</span>';
+  
+  // Call Apps Script to create the sheet
+  fetch('https://script.google.com/macros/s/AKfycbwogbAQAk4QYIte5Fo1jNS2LL8Xl7ANGptKv1UqiexYTcuS9xjQVuMoX3S8Bk6C5C_oVA/exec',{
+    method:'POST',
+    body:JSON.stringify({action:'createScriptSheet',sheetName:sheetName,projectName:projectName||'',scriptTitle:scriptTitle||''}),
+    headers:{'Content-Type':'application/json'}
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.success&&d.sheetUrl){
+      state.sheetCreated=true;
+      state.sheetUrl=d.sheetUrl;
+      state.scriptTitle=scriptTitle;
+      updateSidebar();
+      btn.disabled=false;
+      btn.innerHTML='<span>✓ Sheet created</span>';
+      // Open in new tab
+      setTimeout(function(){window.open(d.sheetUrl,'textra-script-sheet');},500);
+      // Update button after 2 seconds
+      setTimeout(function(){
+        btn.innerHTML='<span>📊 Open Sheet again</span>';
+        btn.onclick=function(){window.open(state.sheetUrl,'textra-script-sheet');};
+      },2000);
+    } else {
+      alert('Error creating sheet: '+(d.error||'Unknown error'));
+      btn.disabled=false;
+      btn.innerHTML=oldText;
+    }
+  })
+  .catch(function(err){
+    console.error('Error:',err);
+    alert('Error creating sheet. Please try again.');
+    btn.disabled=false;
+    btn.innerHTML=oldText;
+  });
 }
 
 // ── SIDEBAR UPDATE ────────────────────────────────
@@ -2494,18 +2458,11 @@ function updateSidebar(){
 
   // ── SCRIPT ───────────────────────────────────────────────
   const st=gv('scriptTitle');
-  const isUpload=document.getElementById('togU')&&document.getElementById('togU').classList.contains('active');
-  const scriptFnEl=document.getElementById('fn-script');
-  const hasFile=scriptFnEl&&scriptFnEl.style.display!=='none'&&scriptFnEl.textContent.trim();
-  const rows=document.querySelectorAll('#scriptBody tr').length;
-  const hasWritten=Array.from(document.querySelectorAll('#scriptBody textarea')).some(function(t){return t.value.trim();});
-  if(cur>=5&&(st||hasFile||hasWritten)){
-    var scriptDesc=isUpload
-      ?(hasFile?'File: '+scriptFnEl.textContent.replace('\u2713 ',''):'Upload method selected')
-      :(rows+' row'+(rows!==1?'s':'')+(hasWritten?' \u2014 content entered':''));
+  if(cur>=5&&st){
+    var scriptDesc=state.sheetCreated?'✓ Sheet created':'Ready to create';
     sections.push('<div class="sb-section"><div class="sb-label">Script</div>'+
-      (st ? sbRow('\uD83D\uDCDD',st) : '')+
-      sbRow('\uD83D\uDCCB',scriptDesc)+
+      sbRow('\uD83D\uDCDD',st)+
+      sbRow('\uD83D\uDCC4',scriptDesc)+
     '</div>');
   }
 
@@ -2591,17 +2548,14 @@ function gatherData(){
     titleScreen:  (function(){var e=document.querySelector('#titleBgGrid .cc.sel .cc-title');return e?e.textContent.trim():(state.titleScreen||'');})(),
     music:        state.music,
     // Script
-    scriptMethod: document.getElementById('togU')&&document.getElementById('togU').classList.contains('active')?'Upload':'Written',
-    scriptTitle:  sel('scriptTitle') || sel('scriptTitleUpload'),
-    scriptFile:   (function(){ var el=document.getElementById('fn-script'); return el&&el.style.display!=='none'?el.textContent.replace('\u2713 ',''):''; })(),
-    videoLength:  sel('rval') || (document.getElementById('rval')?document.getElementById('rval').textContent:''),
-    scriptTone:   (function(){ var el=document.querySelector('#sm-upload textarea'); return el?el.value:''; })(),    // Uploaded files as base64
+    scriptMethod: 'Google Sheet',
+    scriptTitle:  sel('scriptTitle'),
+    scriptSheetUrl: state.sheetUrl || '',
     logoDataUrl:        getFileData('ul-logo-scraped') || getFileData('ul-logo-a') || getFileData('ul-logo-c') || state.logoDataUrl || '',
     guidelinesFileData: getFileData('ul-guidelines'),
     c1refFileData:      getFileData('ul-c1') || getFileData('ul-ref'),
     c2refFileData:      getFileData('ul-c2'),
     sceneRefFileData:   getFileData('ul-scene'),
-    scriptFileData:     getFileData('ul-script'),
     musicRefFileData:   getFileData('ul-music-ref'),
   };
 }
@@ -2627,17 +2581,23 @@ function resetForm(){
   document.querySelectorAll('select').forEach(function(el){ el.selectedIndex=0; });
   // Clear selections
   document.querySelectorAll('.cc.sel,.bg-opt.sel,.music-opt.sel').forEach(function(el){ el.classList.remove('sel'); });
-  // Clear script cells
-  document.querySelectorAll('#scriptBody textarea,#scriptBody input').forEach(function(el){ el.value=''; });
   // Reset state
   state.brandMethod=''; state.charStyle=''; state.bgChoice=''; state.music='';
   state.font=''; state.logoDataUrl=null; state.extractedTagline='';
   state.extractedColors=[]; state.driveFolderUrl='';
+  state.sheetCreated=false; state.sheetUrl=''; state.scriptTitle='';
   window._uploadedFiles={};
   // Reset uploads UI
   document.querySelectorAll('.upload-label').forEach(function(el){ el.classList.remove('has-file'); });
   document.querySelectorAll('.upload-fn').forEach(function(el){ el.style.display='none'; el.textContent=''; });
   window._sbCollapse={};
+  // Reset create sheet button
+  var btn=document.getElementById('createSheetBtn');
+  if(btn){
+    btn.disabled=false;
+    btn.innerHTML='<span>📊 Create Google Sheet</span>';
+    btn.onclick=function(){createScriptSheet();};
+  }
   updateSidebar();
 }
 
@@ -2831,20 +2791,20 @@ function buildReview(){
   }
 
   var scriptSummaryHTML='';
-  if(isUpload){
+  if(state.sheetCreated&&state.sheetUrl){
     scriptSummaryHTML=
-      '<div class="review-item"><div class="review-label">Method</div><div class="review-value">Document upload</div></div>'+
-      '<div class="review-item"><div class="review-label">File</div>'+rv(scriptFile)+'</div>'+
+      '<div class="review-item"><div class="review-label">Method</div><div class="review-value">Google Sheet template</div></div>'+
+      '<div class="review-item"><div class="review-label">Status</div><div class="review-value">✓ Sheet created and linked</div></div>'+
       '<div class="review-item"><div class="review-label">Title</div>'+rv(scriptTitleVal)+'</div>'+
-      '<div class="review-item"><div class="review-label">Video Length</div>'+rv(document.getElementById('rval')&&document.getElementById('rval').textContent)+'</div>'+
-      '<div class="review-item"><div class="review-label">Tone & Purpose</div>'+rv(uploadTone)+'</div>';
-  } else if(scriptTitleVal||hasWrittenContent){
+      '<div class="review-item"><div class="review-label">Action</div><div class="review-value"><a href="'+state.sheetUrl+'" target="_blank" style="color:var(--blue);text-decoration:underline;font-weight:600">Open sheet to edit script</a></div></div>';
+  } else if(scriptTitleVal){
     scriptSummaryHTML=
-      '<div class="review-item"><div class="review-label">Method</div><div class="review-value">Written script</div></div>'+
+      '<div class="review-item"><div class="review-label">Method</div><div class="review-value">Google Sheet template</div></div>'+
+      '<div class="review-item"><div class="review-label">Status</div><div class="review-value review-empty">Sheet not yet created</div></div>'+
       '<div class="review-item"><div class="review-label">Title</div>'+rv(scriptTitleVal)+'</div>'+
-      '<div class="review-item"><div class="review-label">Lines</div><div class="review-value">'+scriptRows+' row'+(scriptRows!==1?'s':'')+' — '+(hasWrittenContent?'content entered':'no content yet')+'</div></div>';
+      '<div class="review-item"><div class="review-label">Action</div><div class="review-value"><span style="color:var(--text-muted)">Go back to Script step to create</span></div></div>';
   } else {
-    scriptSummaryHTML='<div class="review-item" style="grid-column:1/-1"><div class="review-label">Status</div><div class="review-value review-empty">No script content entered yet — click Edit to add.</div></div>';
+    scriptSummaryHTML='<div class="review-item" style="grid-column:1/-1"><div class="review-label">Status</div><div class="review-value review-empty">No script title provided yet — click Edit to add.</div></div>';
   }
 
   document.getElementById('reviewCard').innerHTML=
