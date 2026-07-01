@@ -579,12 +579,12 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
           </p>
         </div>
         <div class="field">
-          <label style="margin-bottom:6px">Logo File <span class="hint">— min 1024×1024px, square</span></label>
+          <label style="margin-bottom:6px">Logo File <span class="hint">— any format, high-res preferred</span></label>
           <label class="upload-label" id="ul-logo-a" style="height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-sizing:border-box">
-            <input type="file" accept=".png,.svg,.jpg,.jpeg" style="display:none" onchange="handleUpload(this,'ul-logo-a','fn-logo-a');validateAndPreviewLogo(this,'logo-a-preview','logo-a-err')">
+            <input type="file" accept="image/*" style="display:none" onchange="handleUpload(this,'ul-logo-a','fn-logo-a');validateAndPreviewLogo(this,'logo-a-preview','logo-a-err')">
             <div class="upload-ico">🖼️</div>
             <div class="upload-txt">Click to upload</div>
-            <div class="upload-hint" style="text-align:center">PNG or SVG preferred<br>Transparent background</div>
+            <div class="upload-hint" style="text-align:center">Any image format<br>Transparent background preferred</div>
             <div class="upload-fn" id="fn-logo-a"></div>
           </label>
           <div id="logo-a-err" style="display:none;margin-top:5px;padding:7px 10px;background:#fff5f5;border:1px solid #fecaca;border-radius:6px;color:#ef4444;font-size:11px;line-height:1.5"></div>
@@ -676,9 +676,9 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       </div>
       <!-- Logo -->
       <div class="field">
-        <label>Logo <span class="hint">— PNG or SVG · min 1024×1024px · square</span></label>
+        <label>Logo <span class="hint">— any format, high-res preferred</span></label>
         <label class="upload-label" id="ul-logo-c">
-          <input type="file" accept=".png,.svg,.jpg,.jpeg" style="display:none" onchange="validateAndPreviewLogo(this,'mbp-logo','logo-c-err');handleUpload(this,'ul-logo-c','fn-logo-c')">
+          <input type="file" accept="image/*" style="display:none" onchange="validateAndPreviewLogo(this,'mbp-logo','logo-c-err');handleUpload(this,'ul-logo-c','fn-logo-c')">
           <div class="upload-ico">🖼️</div><div class="upload-txt">Click to upload your logo</div>
           <div class="upload-hint">Transparent background preferred</div>
           <div class="upload-fn" id="fn-logo-c"></div>
@@ -1534,8 +1534,7 @@ function validateAndPreviewLogo(input,previewId,errId){
     var img=new Image();
     img.onload=function(){
       var w=img.naturalWidth,h=img.naturalHeight;
-      if(w!==h){_logoErr(input,errEl,'⚠️ Logo must be square ('+w+'×'+h+'px detected). Please re-export with equal width and height.');return;}
-      if(w<1024){_logoErr(input,errEl,'⚠️ Logo is too small ('+w+'×'+h+'px). Minimum 1024×1024px required.');return;}
+      if(w<400&&h<400){_logoErr(input,errEl,'⚠️ Logo resolution is too low ('+w+'×'+h+'px). Please upload a higher-resolution version.');return;}
       if(errEl)errEl.style.display='none';
       state.logoDataUrl=e.target.result;
       _renderLogoInto(e.target.result,previewId);
