@@ -406,7 +406,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     <div class="ps"><div class="ps-node">2</div><div class="ps-lbl">Brand</div></div>
     <div class="ps"><div class="ps-node">3</div><div class="ps-lbl">Characters</div></div>
     <div class="ps"><div class="ps-node">4</div><div class="ps-lbl">Scene</div></div>
-    <div class="ps"><div class="ps-node">5</div><div class="ps-lbl">Script</div></div>
+    <div class="ps"><div class="ps-node">5</div><div class="ps-lbl">Review</div></div>
     <div class="ps"><div class="ps-node">✓</div><div class="ps-lbl">Done</div></div>
   </div>
 </div>
@@ -420,10 +420,10 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
   <div class="section-head">
     <div class="s-eyebrow">Welcome</div>
     <h1 class="s-title">Welcome to Textra Video</h1>
-    <p class="s-desc">From brief to branded, studio-quality animated video in as little as 24 hours. Tell us about your brand once — our engine and creative team apply your colours, fonts and characters consistently across every video, in over 40 languages.</p>
+    <p class="s-desc">From brief to branded, studio-quality animated video in under 1 hour once your brand elements are approved. Tell us about your brand once — our engine and creative team apply your colours, fonts and characters consistently across every video, in over 40 languages.</p>
   </div>
   <div class="hero-stats">
-    <div class="stat-card"><div class="stat-num">24h</div><div class="stat-lbl">Average Delivery</div></div>
+    <div class="stat-card"><div class="stat-num">Under 1hr</div><div class="stat-lbl">Average Delivery — once brand approved</div></div>
     <div class="stat-card"><div class="stat-num">40+</div><div class="stat-lbl">Languages Supported</div></div>
     <div class="stat-card"><div class="stat-num">100%</div><div class="stat-lbl">Brand Accurate</div></div>
   </div>
@@ -894,7 +894,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 
   <!-- Illustration style -->
   <div class="card" id="charStyleCard">
-    <div class="card-head"><span class="step-pill">04</span> Illustration Style
+    <div class="card-head"><span class="step-pill" id="charStyleStepPill">03</span> Illustration Style
       <span class="tip" data-tip="Choose how your characters are designed. Pick from our library of ready-made characters, supply reference images, or let our team create something unique.">?</span>
     </div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
@@ -1121,48 +1121,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 
   <div class="btn-row">
     <button class="btn btn-ghost" onclick="goTo(3)">← Back</button>
-    <button class="btn btn-primary" onclick="goTo(5)">Next: Script →</button>
-  </div>
-</div>
-<!-- ══ PAGE 5: SCRIPT ══ -->
-<div class="page" id="page5">
-
-  <div class="section-head">
-    <div class="s-eyebrow">Step 5 of 6 — Script</div>
-    <h1 class="s-title">Create Your Script Template</h1>
-    <p class="s-desc">We'll create a Google Sheet with a pre-formatted script template. You'll write your script directly in the sheet using our proven format.</p>
-  </div>
-
-  <div class="card">
-    <div class="field"><label>Video Title</label><input type="text" id="scriptTitle" placeholder="e.g. Welcome to the Team" oninput="updateSidebar()"></div>
-    <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
-      <div style="margin-bottom:16px">
-        <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">Writing Tips</div>
-        <ul style="font-size:12px;color:var(--text-muted);line-height:1.6;margin:0;padding-left:20px">
-          <li>Keep the goal clear: one message per video</li>
-          <li>Use plain, conversational language</li>
-          <li>Stick to one idea per line</li>
-          <li>Write like people talk, not like a document</li>
-          <li>Number each line for easy reference</li>
-          <li>Add visual descriptions for on-screen upgrades</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <div class="card" style="background:linear-gradient(135deg, rgba(102,188,173,.05) 0%, rgba(26,113,177,.05) 100%);border:1.5px solid var(--teal2)">
-    <div style="text-align:center;padding:20px 0">
-      <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:16px">Ready to write?</div>
-      <button onclick="createScriptSheet()" id="createSheetBtn" style="padding:14px 32px;background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .2s">
-        <span>📊 Create Google Sheet</span>
-      </button>
-      <div style="font-size:11px;color:var(--text-muted);margin-top:12px">A new tab will open with your template. Write your script there, then come back here to review.</div>
-    </div>
-  </div>
-
-  <div class="btn-row" style="margin-top:24px">
-    <button class="btn btn-ghost" onclick="goTo(4)">← Back</button>
-    <button class="btn btn-primary" onclick="goTo(6)">Review &amp; Submit →</button>
+    <button class="btn btn-primary" onclick="goTo(6)">Review &amp; Submit Your Brand →</button>
   </div>
 </div>
 <!-- ══ PAGE 6: REVIEW ══ -->
@@ -1178,22 +1137,44 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     <button id="submitBtn" onclick="finalSubmit()" style="padding:14px 32px;background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:14px;font-weight:700;cursor:pointer">Submit Brief</button>
   </div>
   <div style="margin-top:10px">
-    <button class="btn btn-ghost" onclick="goTo(5)" style="font-size:12px;padding:8px 16px">← Back to script</button>
+    <button class="btn btn-ghost" onclick="goTo(4)" style="font-size:12px;padding:8px 16px">← Back to Scene &amp; Music</button>
   </div>
 </div>
 
 <!-- ══ PAGE 8: CREATE SCRIPT ══ -->
 <div class="page" id="page8">
   <div class="section-head">
-    <div class="s-eyebrow">Next Step</div>
-    <h1 class="s-title">Create Your Script Template</h1>
-    <p class="s-desc">Your brief has been submitted! Now let's create a Google Sheet for your script.</p>
+    <div class="s-eyebrow">Your Project — Script</div>
+    <h1 class="s-title">Video Title &amp; Script</h1>
+    <p class="s-desc">This is submitted separately from your brand brief — it goes straight into the same project.</p>
   </div>
 
   <div class="card">
     <div class="field"><label>Video Title</label><input type="text" id="scriptTitlePage8" placeholder="e.g. Welcome to the Team" oninput="updateSidebar()"></div>
-    <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
-      <div style="margin-bottom:16px">
+  </div>
+
+  <div class="card" id="scriptWriteCard">
+    <div class="card-head">How would you like to provide your script?</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+      <button class="char-count-btn" id="sm-btn-write" onclick="scriptInputMethod('write')">
+        <div style="font-size:20px;margin-bottom:4px">✍️</div>
+        <div style="font-size:13px;font-weight:700;color:var(--navy)">Write it here</div>
+      </button>
+      <button class="char-count-btn" id="sm-btn-upload" onclick="scriptInputMethod('upload')">
+        <div style="font-size:20px;margin-bottom:4px">📄</div>
+        <div style="font-size:13px;font-weight:700;color:var(--navy)">Upload a file</div>
+      </button>
+      <button class="char-count-btn" id="sm-btn-sheet" onclick="scriptInputMethod('sheet')">
+        <div style="font-size:20px;margin-bottom:4px">📊</div>
+        <div style="font-size:13px;font-weight:700;color:var(--navy)">Use a Google Sheet</div>
+      </button>
+    </div>
+
+    <div id="sm-write" style="display:none">
+      <div class="field"><label>Write your script below</label>
+        <textarea id="scriptTextPage8" rows="10" placeholder="1. Character 1: Welcome to the team!&#10;2. Character 2: We're so glad you're here…" oninput="updateSidebar()"></textarea>
+      </div>
+      <div style="margin-top:12px">
         <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">Writing Tips</div>
         <ul style="font-size:12px;color:var(--text-muted);line-height:1.6;margin:0;padding-left:20px">
           <li>Keep the goal clear: one message per video</li>
@@ -1205,20 +1186,32 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
         </ul>
       </div>
     </div>
-  </div>
 
-  <div class="card" style="background:linear-gradient(135deg, rgba(102,188,173,.05) 0%, rgba(26,113,177,.05) 100%);border:1.5px solid var(--teal2)">
-    <div style="text-align:center;padding:20px 0">
-      <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:16px">Ready to write?</div>
+    <div id="sm-upload" style="display:none">
+      <div class="field">
+        <label>Upload your script file</label>
+        <label class="upload-label" id="ul-scriptfile" style="padding:16px">
+          <input type="file" accept=".doc,.docx,.pdf,.txt" style="display:none" onchange="handleUpload(this,'ul-scriptfile','fn-scriptfile')">
+          <div class="upload-txt" style="font-size:12px">Click to upload (.doc, .docx, .pdf or .txt)</div>
+          <div class="upload-fn" id="fn-scriptfile"></div>
+        </label>
+      </div>
+    </div>
+
+    <div id="sm-sheet" style="display:none;text-align:center;padding:20px 0">
       <button onclick="createScriptSheetPage8()" id="createSheetBtnPage8" style="padding:14px 32px;background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .2s">
         <span>📊 Create Google Sheet</span>
       </button>
-      <div style="font-size:11px;color:var(--text-muted);margin-top:12px">A new tab will open with your template. Write your script there, then come back here.</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:12px">A new tab will open with your template. Write your script there, then come back here and submit.</div>
     </div>
   </div>
 
-  <div class="btn-row" style="margin-top:24px">
-    <button class="btn btn-ghost" onclick="goTo(7)">Skip for now →</button>
+  <div style="margin-top:20px;text-align:center">
+    <button id="submitScriptBtn" onclick="submitScript()" style="padding:14px 32px;background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:14px;font-weight:700;cursor:pointer">Submit Script</button>
+  </div>
+
+  <div class="btn-row" style="margin-top:16px">
+    <button class="btn btn-ghost" onclick="goTo(7)">← Back to Portal</button>
   </div>
 </div>
 
@@ -1228,15 +1221,31 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     <div class="success-ring">✓</div>
     <div class="success-title" id="successTitle">Brief Submitted!</div>
     <div class="success-sub" id="successSub">Your brand brief is with the Textra team. Our designers are already on it — keep an eye on your inbox.</div>
-    <div style="margin:28px 0 8px;padding:24px;background:linear-gradient(135deg,var(--teal-soft) 0%,#f0f4ff 100%);border:1.5px solid var(--teal2);border-radius:12px;text-align:left">
+
+    <div style="margin:24px 0 8px;padding:20px 24px;background:#fff;border:1.5px solid var(--border);border-radius:12px;text-align:left">
+      <div style="font-size:13px;font-weight:800;color:var(--navy);margin-bottom:6px">🔑 Your Portal Link</div>
+      <p style="font-size:12px;color:var(--text-muted);margin:0 0 12px;line-height:1.6">Bookmark or save this link — it's how you'll come back to this project later to write your script or check on progress. No password needed.</p>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <input id="portalLinkInput" type="text" readonly style="flex:1;min-width:220px;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;color:var(--text-muted);background:var(--bg)">
+        <button onclick="copyPortalLink()" id="copyPortalLinkBtn" style="padding:9px 16px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Copy Link</button>
+        <button onclick="emailPortalLink()" id="emailPortalLinkBtn" style="padding:9px 16px;background:#fff;color:var(--navy);border:1.5px solid var(--border);border-radius:8px;font-family:Inter,sans-serif;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">Email it to me</button>
+      </div>
+      <div id="emailPortalLinkStatus" style="font-size:11px;color:var(--teal2);margin-top:8px;display:none"></div>
+    </div>
+
+    <div style="margin:16px 0 8px;padding:20px 24px;background:var(--bg);border:1.5px solid var(--border);border-radius:12px;text-align:left">
+      <div style="font-size:13px;font-weight:800;color:var(--navy);margin-bottom:10px">✅ What you've submitted</div>
+      <div id="portalChecklist"></div>
+    </div>
+
+    <div style="margin:16px 0 8px;padding:24px;background:linear-gradient(135deg,var(--teal-soft) 0%,#f0f4ff 100%);border:1.5px solid var(--teal2);border-radius:12px;text-align:left">
       <div style="font-size:15px;font-weight:800;color:var(--navy);margin-bottom:8px">🎬 Ready to write your first script?</div>
-      <p style="font-size:13px;color:var(--text-muted);margin:0 0 16px;line-height:1.6">While our team builds your unique characters and brand assets, you can start writing your script now — or we'll email you a link when everything is ready.</p>
+      <p style="font-size:13px;color:var(--text-muted);margin:0 0 16px;line-height:1.6">Your characters and brand assets are being built. Once you're ready, write (or upload) your script here — it goes straight to the same project.</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button onclick="startScript()" style="padding:11px 22px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer">Write my script now →</button>
-        <button onclick="showFinishLater()" style="padding:11px 22px;background:#fff;color:var(--navy);border:1.5px solid var(--border);border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer">Email me a reminder later</button>
+        <button onclick="startScript()" style="padding:11px 22px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer">Create your script now →</button>
       </div>
     </div>
-    <div style="font-size:11px;color:var(--text-dim);margin-top:8px">📅 If you choose "remind me later", we'll email you every 2 days for up to 7 days with a direct link back to the scripting page.</div>
+
     <div id="driveLinkWrap" style="display:none;margin-bottom:24px">
       <a id="driveFolderLink" href="#" target="_blank"
         style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:white;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-weight:600;color:var(--navy);text-decoration:none;box-shadow:var(--shadow)">
@@ -1248,7 +1257,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       <div class="tl-item"><div class="tl-text"><strong>Within 1 hour</strong> — Confirmation email with your project reference.</div></div>
       <div class="tl-item"><div class="tl-text"><strong>AI Conversion</strong> — Content structured into storyboard and script.</div></div>
       <div class="tl-item"><div class="tl-text"><strong>Creative Polish</strong> — QA team reviews for brand safety and quality.</div></div>
-      <div class="tl-item"><div class="tl-text"><strong>Within 24 hours</strong> — Your branded animated video arrives.</div></div>
+      <div class="tl-item"><div class="tl-text"><strong>Within 1 hour</strong> — Your branded animated video arrives (once brand approved).</div></div>
     </div>
     <button class="btn btn-primary" onclick="resetForm();goTo(1)">Start a New Project</button>
   </div>
@@ -1283,8 +1292,64 @@ var GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxB5dZP6S9SBW65
 
 const state={
   brandMethod:'',charStyle:'',bgChoice:'',titleBg:'',music:'',font:'',
-  colors:['#273572','#1A71B1','#66BCAD'],logoDataUrl:null,extractedTagline:'',extractedColors:[]
+  colors:['#273572','#1A71B1','#66BCAD'],logoDataUrl:null,extractedTagline:'',extractedColors:[],
+  portalToken:''
 };
+
+// ── PORTAL TOKEN (magic-link access) ──────────────
+// Generated once per submission so the client can return to their
+// portal later via a link (?token=...) instead of a username/password.
+function getPortalToken(){
+  if(!state.portalToken){
+    state.portalToken=(crypto.randomUUID?crypto.randomUUID():(Date.now().toString(36)+Math.random().toString(36).slice(2)));
+  }
+  return state.portalToken;
+}
+function getPortalLink(){
+  return window.location.origin+window.location.pathname+'?token='+encodeURIComponent(getPortalToken());
+}
+
+// Revisiting via a saved portal link (?token=...) — fetch their prior
+// submission from the backend and jump straight to the portal page,
+// skipping the intake flow entirely.
+function populateFromSubmission(d){
+  var setVal=function(id,val){var el=document.getElementById(id);if(el&&val!==undefined)el.value=val;};
+  setVal('fullName',d.fullName); setVal('companyName',d.companyName);
+  setVal('email',d.email); setVal('phone',d.phone); setVal('projectName',d.projectName);
+  state.brandMethod=d.brandMethod||''; state.font=d.font||'';
+  setVal('websiteUrl',d.websiteUrl);
+  if(Array.isArray(d.colours)){state.extractedColors=d.colours;}
+  state.extractedTagline=d.tagline||'';
+  state.charStyle=d.charStyle||'';
+  _charCount=d.c2gender?2:(d.c1gender?1:0);
+  setVal('c1gender',d.c1gender); setVal('c1age',d.c1age); setVal('c1eth',d.c1eth);
+  setVal('c1accent',d.c1accent); setVal('c1clothing',d.c1clothing); setVal('c1notes',d.c1notes);
+  setVal('c1trackUrl',d.c1trackUrl);
+  setVal('c2gender',d.c2gender); setVal('c2age',d.c2age); setVal('c2eth',d.c2eth);
+  setVal('c2accent',d.c2accent); setVal('c2clothing',d.c2clothing); setVal('c2notes',d.c2notes);
+  setVal('c2trackUrl',d.c2trackUrl);
+  state.bgChoice=d.background||''; setVal('scenedesc',d.sceneDesc);
+  state.titleScreen=d.titleScreen||''; state.music=d.music||'';
+  setVal('musicTrackUrl',d.musicTrackUrl); setVal('musicNotes',d.musicNotes);
+  state.driveFolderUrl=d.driveFolderUrl||'';
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  var token=new URLSearchParams(window.location.search).get('token');
+  if(!token)return;
+  state.portalToken=token;
+  fetch(GOOGLE_SCRIPT_URL+'?action=getSubmission&token='+encodeURIComponent(token))
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d&&d.success&&d.data){
+        populateFromSubmission(d.data);
+        goTo(7);
+      } else {
+        console.warn('[Textra] No submission found for this portal link.');
+      }
+    })
+    .catch(function(err){console.warn('[Textra] Could not load portal data:',err);});
+});
 
 // ── NAVIGATION ────────────────────────────────────
 function goTo(n){
@@ -1306,14 +1371,9 @@ function goTo(n){
   if(hb)hb.classList.toggle('visible', n>1 && n!==7);
   var sb=document.getElementById('sidebarCol');
   if(sb)sb.style.display=(n>=2&&n<=5)?'flex':'none';
-  if(n===5)initScriptPage();
-  if(n===5&&state.scriptMethod){scriptMethod(state.scriptMethod);}
   if(n===6){buildReview();cameFromReview=false;}
-  if(n===7&&state.driveFolderUrl){
-    var dw=document.getElementById('driveLinkWrap');
-    var dl=document.getElementById('driveFolderLink');
-    if(dw&&dl){dl.href=state.driveFolderUrl;dw.style.display='block';}
-  }
+  if(n===7)renderPortalPage();
+  if(n===8)initScriptPage();
   window.scrollTo({top:0,behavior:'smooth'});
   window._sbCollapse={};
   updateSidebar();
@@ -1330,7 +1390,7 @@ function editStep(n){cameFromReview=true;goTo(n);}
 
 function updProg(n){
   const steps=document.querySelectorAll('.ps');
-  var prog=(n===1)?1:(n===1.5)?1:Math.min(Math.floor(n),6);
+  var prog=(n===1)?1:(n===1.5)?1:(n>=2&&n<=4)?n:(n===6)?5:6;
   steps.forEach((el,i)=>{
     const s=i+1; el.classList.remove('active','done');
     if(s<prog)el.classList.add('done');
@@ -1630,6 +1690,9 @@ function setCharCount(n){
   if(cb)cb.style.display=n===2?'block':'none';
   // Keep style card visible (always available below traits)
   if(sc)sc.style.display='block';
+  // Step pill: 03 when only Character 1 shown, 04 when Character 1+2 both shown
+  var scPill=document.getElementById('charStyleStepPill');
+  if(scPill)scPill.textContent=n===2?'04':'03';
   // Reset style selection
   ['textra','library','reference'].forEach(function(k){
     var btn=document.getElementById('csb-'+k);
@@ -1829,11 +1892,7 @@ function updateLibCount(){
 function closeLibraryModal(){} // no-op
 
 function startScript(){
-  // Reset to script page - go to page 5 directly
-  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
-  var p5 = document.getElementById('page5');
-  if(p5) p5.classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
+  goTo(8);
 }
 
 function showFinishLater(){
@@ -1887,15 +1946,21 @@ function finalSubmit(){
     iframe.style.display = 'none';
     document.body.appendChild(iframe);
   }
+  iframe.onload = function(){
+    try{
+      var txt = iframe.contentDocument && iframe.contentDocument.body && iframe.contentDocument.body.innerText;
+      if(txt){ var resp = JSON.parse(txt); if(resp.folder) state.driveFolderUrl = resp.folder; }
+    }catch(e){}
+  };
 
   document.body.appendChild(form);
   form.submit();
   document.body.removeChild(form);
 
-  // Go to script creation page after short delay
+  // Go to portal/success page after short delay
   setTimeout(function(){
     if(btn){ btn.disabled = false; btn.textContent = 'Brief submitted!'; }
-    goTo(8); // Go to script creation page
+    goTo(7); // Go to portal landing page
   }, 2000);
 }
 
@@ -2289,10 +2354,60 @@ function clearScrapeError(){
 // ── INIT SCRIPT PAGE ─────────────────────────────
 function initScriptPage(){
   // Initialize script page - script title input will be focused if empty
-  var titleInput=document.getElementById('scriptTitle');
+  var titleInput=document.getElementById('scriptTitlePage8');
   if(titleInput&&!titleInput.value){
     setTimeout(function(){titleInput.focus();},100);
   }
+}
+
+var _scriptInputMethod='';
+function scriptInputMethod(m){
+  _scriptInputMethod=m;
+  ['write','upload','sheet'].forEach(function(k){
+    var btn=document.getElementById('sm-btn-'+k);
+    var panel=document.getElementById('sm-'+k);
+    var active=k===m;
+    if(btn){btn.style.borderColor=active?'var(--teal2)':'var(--border)';btn.style.background=active?'var(--teal-soft)':'#fff';}
+    if(panel)panel.style.display=active?'block':'none';
+  });
+}
+
+function submitScript(){
+  var btn=document.getElementById('submitScriptBtn');
+  var title=document.getElementById('scriptTitlePage8')&&document.getElementById('scriptTitlePage8').value;
+  if(!title||!title.trim()){
+    alert('Please add a video title before submitting.');
+    return;
+  }
+  if(!_scriptInputMethod){
+    alert('Please choose how you\'d like to provide your script (write, upload, or Google Sheet).');
+    return;
+  }
+  var payload={
+    action:'submitScript',
+    portalToken:getPortalToken(),
+    scriptTitle:title,
+    scriptInputMethod:_scriptInputMethod,
+    scriptText: _scriptInputMethod==='write' ? (document.getElementById('scriptTextPage8').value||'') : '',
+    scriptFileData: _scriptInputMethod==='upload' ? getFileData('ul-scriptfile') : '',
+    scriptSheetUrl: _scriptInputMethod==='sheet' ? (state.sheetUrl||'') : ''
+  };
+  if(btn){btn.disabled=true;btn.textContent='Submitting…';}
+  fetch(GOOGLE_SCRIPT_URL,{
+    method:'POST',
+    body:JSON.stringify(payload),
+    headers:{'Content-Type':'application/json'}
+  }).then(function(){
+    if(btn){btn.textContent='✓ Script submitted!';}
+    setTimeout(function(){
+      if(btn){btn.disabled=false;btn.textContent='Submit Script';}
+      goTo(7);
+    },1500);
+  }).catch(function(err){
+    console.error('Error submitting script:',err);
+    if(btn){btn.disabled=false;btn.textContent='Submit Script';}
+    alert('There was an error submitting your script. Please try again.');
+  });
 }
 
 // ── SIDEBAR COLLAPSE ─────────────────────────────
@@ -2633,7 +2748,7 @@ function gatherData(){
   return {
     // Contact
     fullName:    sel('fullName'),
-    company:     sel('companyName'),
+    companyName: sel('companyName'),
     email:       sel('email'),
     phone:       sel('phone'),
     projectName: sel('projectName'),
@@ -2657,15 +2772,13 @@ function gatherData(){
     c2trackUrl:   sel('c2trackUrl'),
     // Scene
     background:   state.bgChoice,
-    sceneNotes:   sel('scenedesc'),
+    sceneDesc:    sel('scenedesc'),
     titleScreen:  (function(){var e=document.querySelector('#titleBgGrid .cc.sel .cc-title');return e?e.textContent.trim():(state.titleScreen||'');})(),
     music:        state.music,
     musicTrackUrl: sel('musicTrackUrl'),
     musicNotes:   sel('musicNotes'),
-    // Script
-    scriptMethod: 'Google Sheet',
-    scriptTitle:  sel('scriptTitle'),
-    scriptSheetUrl: state.sheetUrl || '',
+    // Portal
+    portalToken:  getPortalToken(),
     logoDataUrl:        getFileData('ul-logo-scraped') || getFileData('ul-logo-a') || getFileData('ul-logo-c') || state.logoDataUrl || '',
     guidelinesFileData: getFileData('ul-guidelines'),
     c1refFileData:      getFileData('ul-c1') || getFileData('ul-ref'),
@@ -2701,6 +2814,7 @@ function resetForm(){
   state.font=''; state.logoDataUrl=null; state.extractedTagline='';
   state.extractedColors=[]; state.driveFolderUrl='';
   state.sheetCreated=false; state.sheetUrl=''; state.scriptTitle='';
+  state.portalToken='';
   window._uploadedFiles={};
   // Reset uploads UI
   document.querySelectorAll('.upload-label').forEach(function(el){ el.classList.remove('has-file'); });
@@ -2870,16 +2984,6 @@ function buildReview(){
   var _tlEl=document.querySelector('#titleBgGrid .cc.sel .cc-title'); var _tlLib=document.querySelector('#titleLibGrid .scene-lib-card.sel'); var selTitleBg=_tlEl||(_tlLib?{textContent:_tlLib.dataset.name}:null);
   var selMusic=document.querySelector('#musicGrid .music-opt.sel .music-lbl');
 
-  var isUpload=document.getElementById('togU').classList.contains('active');
-  var scriptFnEl=document.getElementById('fn-script');
-  var scriptFile=scriptFnEl&&scriptFnEl.style.display!=='none'?scriptFnEl.textContent.replace('✓ ',''):'';
-  var scriptTitleEl=isUpload?document.getElementById('scriptTitleUpload'):document.getElementById('scriptTitle');
-  var scriptTitleVal=scriptTitleEl?scriptTitleEl.value:'';
-  var scriptRows=document.querySelectorAll('#scriptBody tr').length;
-  var hasWrittenContent=Array.from(document.querySelectorAll('#scriptBody textarea')).some(function(t){return t.value.trim();});
-  var uploadToneEl=document.querySelector('#sm-upload textarea');
-  var uploadTone=uploadToneEl?uploadToneEl.value.trim():'';
-
   var brandSummary='';
   if(state.brandMethod==='website'){
     brandSummary=
@@ -2903,23 +3007,6 @@ function buildReview(){
       '<div class="review-item"><div class="review-label">File</div>'+rv(gfn&&gfn.style.display!=='none'?gfn.textContent.replace('✓ ',''):'')+'</div>';
   } else {
     brandSummary='<div class="review-item"><div class="review-label">Method</div><div class="review-value review-empty">Not selected</div></div>';
-  }
-
-  var scriptSummaryHTML='';
-  if(state.sheetCreated&&state.sheetUrl){
-    scriptSummaryHTML=
-      '<div class="review-item"><div class="review-label">Method</div><div class="review-value">Google Sheet template</div></div>'+
-      '<div class="review-item"><div class="review-label">Status</div><div class="review-value">✓ Sheet created and linked</div></div>'+
-      '<div class="review-item"><div class="review-label">Title</div>'+rv(scriptTitleVal)+'</div>'+
-      '<div class="review-item"><div class="review-label">Action</div><div class="review-value"><a href="'+state.sheetUrl+'" target="_blank" style="color:var(--blue);text-decoration:underline;font-weight:600">Open sheet to edit script</a></div></div>';
-  } else if(scriptTitleVal){
-    scriptSummaryHTML=
-      '<div class="review-item"><div class="review-label">Method</div><div class="review-value">Google Sheet template</div></div>'+
-      '<div class="review-item"><div class="review-label">Status</div><div class="review-value review-empty">Sheet not yet created</div></div>'+
-      '<div class="review-item"><div class="review-label">Title</div>'+rv(scriptTitleVal)+'</div>'+
-      '<div class="review-item"><div class="review-label">Action</div><div class="review-value"><span style="color:var(--text-muted)">Go back to Script step to create</span></div></div>';
-  } else {
-    scriptSummaryHTML='<div class="review-item" style="grid-column:1/-1"><div class="review-label">Status</div><div class="review-value review-empty">No script title provided yet — click Edit to add.</div></div>';
   }
 
   document.getElementById('reviewCard').innerHTML=
@@ -2951,6 +3038,7 @@ function buildReview(){
           '<div><div class="review-label">Accent</div>'+rv(document.getElementById('c1accent').value)+'</div>'+
           '<div><div class="review-label">Clothing</div>'+rv(document.getElementById('c1clothing').value)+'</div>'+
           '<div><div class="review-label">Notes</div>'+rv(document.getElementById('c1notes').value)+'</div>'+
+          '<div><div class="review-label">Reference Track</div>'+rv(document.getElementById('c1trackUrl').value)+'</div>'+
         '</div>'+
       '</div>'+
       '<div style="background:var(--blue-soft);border:1px solid rgba(26,113,177,.2);border-radius:var(--radius-sm);padding:12px 14px">'+
@@ -2964,6 +3052,7 @@ function buildReview(){
           '<div><div class="review-label">Accent</div>'+rv(document.getElementById('c2accent').value)+'</div>'+
           '<div><div class="review-label">Clothing</div>'+rv(document.getElementById('c2clothing').value)+'</div>'+
           '<div><div class="review-label">Notes</div>'+rv(document.getElementById('c2notes').value)+'</div>'+
+          '<div><div class="review-label">Reference Track</div>'+rv(document.getElementById('c2trackUrl').value)+'</div>'+
         '</div>'+
       '</div>'+
     '</div></div>'+
@@ -2975,15 +3064,77 @@ function buildReview(){
       '<div class="review-item"><div class="review-label">Scene Notes</div>'+rv(document.getElementById('scenedesc').value)+'</div>'+
       '<div class="review-item"><div class="review-label">Title Screen</div>'+rv(selTitleBg?selTitleBg.textContent:'')+'</div>'+
       '<div class="review-item"><div class="review-label">Music</div>'+rv(selMusic?selMusic.textContent:'')+'</div>'+
+      '<div class="review-item"><div class="review-label">Music Reference Track</div>'+rv(document.getElementById('musicTrackUrl').value)+'</div>'+
+      '<div class="review-item"><div class="review-label">Music Notes</div>'+rv(document.getElementById('musicNotes').value)+'</div>'+
     '</div></div>'+
-
-    '<div class="review-section">'+
-    '<div class="review-section-title"><span class="step-pill">05</span> Script '+editBtn(5,'Script')+'</div>'+
-    '<div class="review-grid">'+scriptSummaryHTML+'</div></div>'+
 
 '';
 
   cameFromReview=false;
+}
+
+// ── PORTAL PAGE (page 7) ──────────────────────────
+function renderPortalPage(){
+  var linkInput=document.getElementById('portalLinkInput');
+  if(linkInput)linkInput.value=getPortalLink();
+
+  if(state.driveFolderUrl){
+    var dw=document.getElementById('driveLinkWrap');
+    var dl=document.getElementById('driveFolderLink');
+    if(dw&&dl){dl.href=state.driveFolderUrl;dw.style.display='block';}
+  }
+
+  var selCharStyle=document.querySelector('#charStyleGrid .cc.sel .cc-title');
+  var selBgEl=document.querySelector('#bgGrid .bg-opt.sel .bg-name');
+  var selMusic=document.querySelector('#musicGrid .music-opt.sel .music-lbl');
+  var c1g=document.getElementById('c1gender'), c2g=document.getElementById('c2gender');
+
+  var rows=[];
+  rows.push(['🎨 Brand', state.brandMethod?({website:'Website extraction',manual:'Manual entry',guidelines:'Guidelines uploaded'}[state.brandMethod]||state.brandMethod):'Not set']);
+  if(state.font) rows.push(['🔤 Font', state.font]);
+  rows.push(['👥 Characters', (_charCount||'?')+' — '+(selCharStyle?selCharStyle.textContent:(state.charStyle||'Not set'))]);
+  if(c1g&&c1g.value) rows.push(['① Character 1', c1g.value+(document.getElementById('c1age').value?', '+document.getElementById('c1age').value:'')]);
+  if(_charCount===2&&c2g&&c2g.value) rows.push(['② Character 2', c2g.value+(document.getElementById('c2age').value?', '+document.getElementById('c2age').value:'')]);
+  rows.push(['🖼️ Scene', selBgEl?selBgEl.textContent:(state.bgChoice||'Not set')]);
+  rows.push(['🎵 Music', selMusic?selMusic.textContent:(state.music||'Not set')]);
+
+  var html=rows.map(function(r){
+    return '<div style="display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px">'+
+      '<span style="color:var(--text-muted)">'+r[0]+'</span><span style="font-weight:600;color:var(--navy);text-align:right">'+r[1]+'</span></div>';
+  }).join('');
+  var el=document.getElementById('portalChecklist');
+  if(el)el.innerHTML=html;
+}
+
+function copyPortalLink(){
+  var input=document.getElementById('portalLinkInput');
+  if(!input)return;
+  input.select();
+  navigator.clipboard&&navigator.clipboard.writeText(input.value).catch(function(){document.execCommand('copy');});
+  var btn=document.getElementById('copyPortalLinkBtn');
+  if(btn){var old=btn.textContent;btn.textContent='Copied!';setTimeout(function(){btn.textContent=old;},1500);}
+}
+
+function emailPortalLink(){
+  var btn=document.getElementById('emailPortalLinkBtn');
+  var status=document.getElementById('emailPortalLinkStatus');
+  var email=document.getElementById('email')&&document.getElementById('email').value;
+  if(!email){
+    if(status){status.style.display='block';status.style.color='#c0392b';status.textContent='No email on file — please add one on the Contact step.';}
+    return;
+  }
+  if(btn){btn.disabled=true;btn.textContent='Sending…';}
+  fetch(GOOGLE_SCRIPT_URL,{
+    method:'POST',
+    body:JSON.stringify({action:'emailPortalLink',portalToken:getPortalToken(),email:email,portalLink:getPortalLink()}),
+    headers:{'Content-Type':'application/json'}
+  }).then(function(){
+    if(btn){btn.disabled=false;btn.textContent='Email it to me';}
+    if(status){status.style.display='block';status.style.color='var(--teal2)';status.textContent='✓ Sent to '+email;}
+  }).catch(function(){
+    if(btn){btn.disabled=false;btn.textContent='Email it to me';}
+    if(status){status.style.display='block';status.style.color='#c0392b';status.textContent='Could not send — copy the link above instead.';}
+  });
 }
 
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
