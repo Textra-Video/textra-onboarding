@@ -718,90 +718,9 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     </div>
   </div>
 
-  <!-- Illustration style -->
-  <div class="card" id="charStyleCard" style="display:none">
-    <div class="card-head"><span class="step-pill">02</span> Illustration Style
-      <span class="tip" data-tip="Choose how your characters are designed. Pick from our library of ready-made characters, supply reference images, or let our team create something unique.">?</span>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
-      <button class="char-count-btn" id="csb-textra" onclick="setCharStyle('textra')">
-        <div style="font-size:24px;margin-bottom:6px">✨</div>
-        <div style="font-size:13px;font-weight:700;color:var(--navy)">Textra Creates</div>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:3px">We design from your brand brief</div>
-      </button>
-      <button class="char-count-btn" id="csb-library" onclick="setCharStyle('library')">
-        <div style="font-size:24px;margin-bottom:6px">📚</div>
-        <div style="font-size:13px;font-weight:700;color:var(--navy)">Pick from Library</div>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:3px">Choose pre-built characters</div>
-      </button>
-      <button class="char-count-btn" id="csb-reference" onclick="setCharStyle('reference')">
-        <div style="font-size:24px;margin-bottom:6px">🎨</div>
-        <div style="font-size:13px;font-weight:700;color:var(--navy)">Supply a Style</div>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:3px">Share reference images or URL</div>
-      </button>
-    </div>
-    <div id="cs-reference" style="display:none;margin-top:14px">
-      <div class="div"></div>
-      <div class="form-row c2">
-        <div class="field"><label>Reference URL</label><input type="url" id="styleRefUrl" placeholder="https://example.com/style"></div>
-        <div class="field"><label>Or upload reference</label>
-          <label class="upload-label" id="ul-ref" style="padding:12px">
-            <input type="file" accept="image/*,.pdf" style="display:none" onchange="handleUpload(this,'ul-ref','fn-ref')">
-            <div class="upload-txt" style="font-size:11px">Click to upload</div>
-            <div class="upload-fn" id="fn-ref"></div>
-          </label>
-        </div>
-      </div>
-    </div>
-    <div id="cs-library" style="display:none;margin-top:14px">
-      <div class="div"></div>
-
-      <!-- Step A: pick character A -->
-      <div id="lib-stepA">
-        <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px" id="lib-prompt-A">
-          <span style="display:inline-block;background:var(--teal);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:99px;margin-right:6px">1</span>
-          Pick Character 1
-        </div>
-        <p style="font-size:11px;color:var(--text-muted);margin:0 0 10px">Our team will apply your brand colours and styling.</p>
-        <div id="libInlineGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"></div>
-      </div>
-
-      <!-- Confirmed A banner (hidden until A is picked) -->
-      <div id="lib-confirmedA" style="display:none;margin-top:12px;padding:10px 12px;background:var(--teal-soft);border:1.5px solid var(--teal2);border-radius:var(--radius-xs);display:none;align-items:center;gap:10px">
-        <div id="lib-confirmedA-thumb" style="width:40px;height:54px;border-radius:6px;overflow:hidden;border:1.5px solid var(--teal2);flex-shrink:0"></div>
-        <div style="flex:1">
-          <div style="font-size:11px;font-weight:700;color:var(--teal)">✓ Character 1 selected</div>
-          <div id="lib-confirmedA-name" style="font-size:12px;font-weight:600;color:var(--navy)"></div>
-        </div>
-        <button onclick="lib_changeA()" style="background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--text-muted);cursor:pointer">Change</button>
-      </div>
-
-      <!-- Step B: pick character B (hidden until A picked + 2 chars) -->
-      <div id="lib-stepB" style="display:none;margin-top:16px">
-        <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px">
-          <span style="display:inline-block;background:var(--navy);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:99px;margin-right:6px">2</span>
-          Now pick Character 2
-        </div>
-        <p style="font-size:11px;color:var(--text-muted);margin:0 0 10px">Choose a different character for the right side.</p>
-        <div id="libInlineGridB" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"></div>
-      </div>
-
-      <!-- Confirmed B banner -->
-      <div id="lib-confirmedB" style="display:none;margin-top:12px;padding:10px 12px;background:#f0f4ff;border:1.5px solid #8899dd;border-radius:var(--radius-xs);align-items:center;gap:10px">
-        <div id="lib-confirmedB-thumb" style="width:40px;height:54px;border-radius:6px;overflow:hidden;border:1.5px solid #8899dd;flex-shrink:0"></div>
-        <div style="flex:1">
-          <div style="font-size:11px;font-weight:700;color:#5566cc">✓ Character 2 selected</div>
-          <div id="lib-confirmedB-name" style="font-size:12px;font-weight:600;color:var(--navy)"></div>
-        </div>
-        <button onclick="lib_changeB()" style="background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--text-muted);cursor:pointer">Change</button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Character A -->
+  <!-- Character 1 -->
   <div class="card" id="charACard" style="display:none">
-    <div class="card-head"><span class="step-pill">1</span> Character 1</div>
+    <div class="card-head"><span class="step-pill">02</span> Character 1</div>
     <div id="libSelA_wrap" style="display:none;margin-bottom:14px">
       <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:8px">Library Character</div>
       <div id="libSelA_display" style="display:none;align-items:center;gap:10px;padding:10px;background:var(--teal-soft);border:1.5px solid var(--teal2);border-radius:var(--radius-xs);margin-bottom:8px"></div>
@@ -880,9 +799,9 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     </div>
   </div>
 
-  <!-- Character B -->
+  <!-- Character 2 -->
   <div class="card" id="charBCard" style="display:none">
-    <div class="card-head"><span class="step-pill">2</span> Character 2</div>
+    <div class="card-head"><span class="step-pill">03</span> Character 2</div>
     <div id="libSelB_wrap" style="display:none;margin-bottom:14px">
       <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:8px">Library Character</div>
       <div id="libSelB_display" style="display:none;align-items:center;gap:10px;padding:10px;background:var(--teal-soft);border:1.5px solid var(--teal2);border-radius:var(--radius-xs);margin-bottom:8px"></div>
@@ -958,6 +877,87 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
         <div class="upload-txt" style="font-size:11px">Click to upload reference image</div>
         <div class="upload-fn" id="fn-cb"></div>
       </label>
+    </div>
+  </div>
+
+  <!-- Illustration style -->
+  <div class="card" id="charStyleCard">
+    <div class="card-head"><span class="step-pill">04</span> Illustration Style
+      <span class="tip" data-tip="Choose how your characters are designed. Pick from our library of ready-made characters, supply reference images, or let our team create something unique.">?</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+      <button class="char-count-btn" id="csb-textra" onclick="setCharStyle('textra')">
+        <div style="font-size:24px;margin-bottom:6px">✨</div>
+        <div style="font-size:13px;font-weight:700;color:var(--navy)">Textra Creates</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:3px">We design from your brand brief</div>
+      </button>
+      <button class="char-count-btn" id="csb-library" onclick="setCharStyle('library')">
+        <div style="font-size:24px;margin-bottom:6px">📚</div>
+        <div style="font-size:13px;font-weight:700;color:var(--navy)">Pick from Library</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:3px">Choose pre-built characters</div>
+      </button>
+      <button class="char-count-btn" id="csb-reference" onclick="setCharStyle('reference')">
+        <div style="font-size:24px;margin-bottom:6px">🎨</div>
+        <div style="font-size:13px;font-weight:700;color:var(--navy)">Supply a Style</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:3px">Share reference images or URL</div>
+      </button>
+    </div>
+    <div id="cs-reference" style="display:none;margin-top:14px">
+      <div class="div"></div>
+      <div class="form-row c2">
+        <div class="field"><label>Reference URL</label><input type="url" id="styleRefUrl" placeholder="https://example.com/style"></div>
+        <div class="field"><label>Or upload reference</label>
+          <label class="upload-label" id="ul-ref" style="padding:12px">
+            <input type="file" accept="image/*,.pdf" style="display:none" onchange="handleUpload(this,'ul-ref','fn-ref')">
+            <div class="upload-txt" style="font-size:11px">Click to upload</div>
+            <div class="upload-fn" id="fn-ref"></div>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div id="cs-library" style="display:none;margin-top:14px">
+      <div class="div"></div>
+
+      <!-- Step A: pick character A -->
+      <div id="lib-stepA">
+        <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px" id="lib-prompt-A">
+          <span style="display:inline-block;background:var(--teal);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:99px;margin-right:6px">1</span>
+          Pick Character 1
+        </div>
+        <p style="font-size:11px;color:var(--text-muted);margin:0 0 10px">Our team will apply your brand colours and styling.</p>
+        <div id="libInlineGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"></div>
+      </div>
+
+      <!-- Confirmed A banner (hidden until A is picked) -->
+      <div id="lib-confirmedA" style="display:none;margin-top:12px;padding:10px 12px;background:var(--teal-soft);border:1.5px solid var(--teal2);border-radius:var(--radius-xs);display:none;align-items:center;gap:10px">
+        <div id="lib-confirmedA-thumb" style="width:40px;height:54px;border-radius:6px;overflow:hidden;border:1.5px solid var(--teal2);flex-shrink:0"></div>
+        <div style="flex:1">
+          <div style="font-size:11px;font-weight:700;color:var(--teal)">✓ Character 1 selected</div>
+          <div id="lib-confirmedA-name" style="font-size:12px;font-weight:600;color:var(--navy)"></div>
+        </div>
+        <button onclick="lib_changeA()" style="background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--text-muted);cursor:pointer">Change</button>
+      </div>
+
+      <!-- Step B: pick character B (hidden until A picked + 2 chars) -->
+      <div id="lib-stepB" style="display:none;margin-top:16px">
+        <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px">
+          <span style="display:inline-block;background:var(--navy);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:99px;margin-right:6px">2</span>
+          Now pick Character 2
+        </div>
+        <p style="font-size:11px;color:var(--text-muted);margin:0 0 10px">Choose a different character for the right side.</p>
+        <div id="libInlineGridB" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"></div>
+      </div>
+
+      <!-- Confirmed B banner -->
+      <div id="lib-confirmedB" style="display:none;margin-top:12px;padding:10px 12px;background:#f0f4ff;border:1.5px solid #8899dd;border-radius:var(--radius-xs);align-items:center;gap:10px">
+        <div id="lib-confirmedB-thumb" style="width:40px;height:54px;border-radius:6px;overflow:hidden;border:1.5px solid #8899dd;flex-shrink:0"></div>
+        <div style="flex:1">
+          <div style="font-size:11px;font-weight:700;color:#5566cc">✓ Character 2 selected</div>
+          <div id="lib-confirmedB-name" style="font-size:12px;font-weight:600;color:var(--navy)"></div>
+        </div>
+        <button onclick="lib_changeB()" style="background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--text-muted);cursor:pointer">Change</button>
+      </div>
+
     </div>
   </div>
 
@@ -1609,20 +1609,25 @@ function setCharCount(n){
   var b1=document.getElementById('ccb1'),b2=document.getElementById('ccb2');
   if(b1){b1.classList.toggle('sel',n===1);}
   if(b2){b2.classList.toggle('sel',n===2);}
-  // Show style card, reset downstream
+  // Show character trait cards
+  var ca=document.getElementById('charACard');
+  var cb=document.getElementById('charBCard');
   var sc=document.getElementById('charStyleCard');
+  if(ca)ca.style.display='block';
+  if(cb)cb.style.display=n===2?'block':'none';
+  // Keep style card visible (always available below traits)
   if(sc)sc.style.display='block';
-  document.getElementById('charACard').style.display='none';
-  document.getElementById('charBCard').style.display='none';
   // Reset style selection
   ['textra','library','reference'].forEach(function(k){
     var btn=document.getElementById('csb-'+k);
     if(btn){btn.style.borderColor='var(--border)';btn.style.background='#fff';}
   });
+  _charStyle = '';
+  state.charStyle = '';
   document.getElementById('cs-reference').style.display='none';
   document.getElementById('cs-library').style.display='none';
   updateSidebar();
-  setTimeout(function(){sc&&sc.scrollIntoView({behavior:'smooth',block:'nearest'});},100);
+  setTimeout(function(){ca&&ca.scrollIntoView({behavior:'smooth',block:'nearest'});},100);
 }
 
 function setCharStyle(s){
@@ -1636,26 +1641,20 @@ function setCharStyle(s){
   });
   document.getElementById('cs-reference').style.display=s==='reference'?'block':'none';
   document.getElementById('cs-library').style.display=s==='library'?'block':'none';
-  // Library mode: inline grid IS the character picker, no need for detail cards
-  var ca=document.getElementById('charACard');
-  var cb=document.getElementById('charBCard');
+  // Build library grids if library style selected
   if(s==='library'){
-    if(ca)ca.style.display='none';
-    if(cb)cb.style.display='none';
     lib_buildGridA();
   } else {
-    if(ca)ca.style.display='block';
-    if(cb)cb.style.display=_charCount===2?'block':'none';
     lib_resetStepB();
   }
-  // libSelA/B_wrap only relevant when full char cards are shown + library style
+  // Show library character displays in trait cards if library style selected
   var lwA=document.getElementById('libSelA_wrap');
   var lwB=document.getElementById('libSelB_wrap');
-  if(lwA)lwA.style.display='none';
-  if(lwB)lwB.style.display='none';
+  if(lwA)lwA.style.display=s==='library'?'block':'none';
+  if(lwB)lwB.style.display=s==='library'?'block':'none';
   updateSidebar();
   setTimeout(function(){
-    var scrollTo=s==='library'?document.getElementById('cs-library'):ca;
+    var scrollTo=s==='library'?document.getElementById('cs-library'):document.getElementById('charStyleCard');
     if(scrollTo)scrollTo.scrollIntoView({behavior:'smooth',block:'nearest'});
   },100);
 }
