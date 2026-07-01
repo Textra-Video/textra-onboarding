@@ -1536,8 +1536,20 @@ function validateAndPreviewLogo(input,previewId,errId){
       var w=img.naturalWidth,h=img.naturalHeight;
       if(w<400&&h<400){_logoErr(input,errEl,'⚠️ Logo resolution is too low ('+w+'×'+h+'px). Please upload a higher-resolution version.');return;}
       if(errEl)errEl.style.display='none';
-      state.logoDataUrl=e.target.result;
-      _renderLogoInto(e.target.result,previewId);
+      // Downscale/compress before storing — keeps the submission payload
+      // small regardless of how large the original upload is, without
+      // requiring the client to manually resize anything.
+      var maxDim=1600;
+      var scale=Math.min(1,maxDim/Math.max(w,h));
+      var outW=Math.round(w*scale),outH=Math.round(h*scale);
+      var canvas=document.createElement('canvas');
+      canvas.width=outW; canvas.height=outH;
+      var ctx=canvas.getContext('2d');
+      ctx.drawImage(img,0,0,outW,outH);
+      var needsTransparency=(file.type==='image/png'||file.type==='image/gif'||file.type==='image/webp');
+      var outUrl=needsTransparency?canvas.toDataURL('image/png'):canvas.toDataURL('image/jpeg',0.85);
+      state.logoDataUrl=outUrl;
+      _renderLogoInto(outUrl,previewId);
       updateSidebar();
     };
     img.src=e.target.result;
