@@ -789,6 +789,12 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
         <textarea id="c1notes" placeholder="e.g. Short dark hair, glasses, slim build, warm skin tone…" oninput="updateSidebar()"></textarea>
       </div>
     </div>
+    <div class="form-row">
+      <div class="field">
+        <label>Reference Track URL <span class="hint">— optional</span> <span class="tip" data-tip="Audio reference (e.g. YouTube, Vimeo, SoundCloud) showing the voice tone, accent, or speech pattern you want for this character.">?</span></label>
+        <input type="url" id="c1trackUrl" placeholder="https://youtube.com/watch?v=... or https://soundcloud.com/..." oninput="updateSidebar()">
+      </div>
+    </div>
     <div class="field">
       <label>Reference Image <span class="hint">— optional</span> <span class="tip" data-tip="Upload a photo, illustration or screenshot showing the look you have in mind.">?</span></label>
       <label class="upload-label" id="ul-ca" style="padding:12px">
@@ -868,6 +874,12 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       <div class="field">
         <label>Additional Notes <span class="tip" data-tip="Hair colour, glasses, accessories, skin tone details, body type — anything specific you want our designers to know.">?</span></label>
         <textarea id="c2notes" placeholder="e.g. Short dark hair, glasses, slim build, warm skin tone…" oninput="updateSidebar()"></textarea>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="field">
+        <label>Reference Track URL <span class="hint">— optional</span> <span class="tip" data-tip="Audio reference (e.g. YouTube, Vimeo, SoundCloud) showing the voice tone, accent, or speech pattern you want for this character.">?</span></label>
+        <input type="url" id="c2trackUrl" placeholder="https://youtube.com/watch?v=... or https://soundcloud.com/..." oninput="updateSidebar()">
       </div>
     </div>
     <div class="field">
@@ -2637,9 +2649,11 @@ function gatherData(){
     c1gender:     sel('c1gender'), c1age:     sel('c1age'),
     c1eth:        sel('c1eth'),    c1accent:  sel('c1accent'),
     c1clothing:   sel('c1clothing'),c1notes:  sel('c1notes'),
+    c1trackUrl:   sel('c1trackUrl'),
     c2gender:     sel('c2gender'), c2age:     sel('c2age'),
     c2eth:        sel('c2eth'),    c2accent:  sel('c2accent'),
     c2clothing:   sel('c2clothing'),c2notes:  sel('c2notes'),
+    c2trackUrl:   sel('c2trackUrl'),
     // Scene
     background:   state.bgChoice,
     sceneNotes:   sel('scenedesc'),
