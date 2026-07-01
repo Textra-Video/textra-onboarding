@@ -2416,7 +2416,13 @@ function submitScript(){
     // Apps don't handle — the backend still parses it as JSON regardless
     // of the declared content type.
     headers:{'Content-Type':'text/plain;charset=utf-8'}
-  }).then(function(){
+  }).then(function(r){ return r.json(); })
+  .then(function(resp){
+    if(!resp||!resp.success){
+      if(btn){btn.disabled=false;btn.textContent='Submit Script';}
+      alert('There was an error submitting your script: '+(resp&&resp.message?resp.message:'Unknown error'));
+      return;
+    }
     if(btn){btn.textContent='✓ Script submitted!';}
     setTimeout(function(){
       if(btn){btn.disabled=false;btn.textContent='Submit Script';}
@@ -2425,7 +2431,7 @@ function submitScript(){
   }).catch(function(err){
     console.error('Error submitting script:',err);
     if(btn){btn.disabled=false;btn.textContent='Submit Script';}
-    alert('There was an error submitting your script. Please try again.');
+    alert('There was an error submitting your script: '+err.message);
   });
 }
 
@@ -3153,12 +3159,17 @@ function emailPortalLink(){
     // Apps don't handle — the backend still parses it as JSON regardless
     // of the declared content type.
     headers:{'Content-Type':'text/plain;charset=utf-8'}
-  }).then(function(){
+  }).then(function(r){ return r.json(); })
+  .then(function(resp){
     if(btn){btn.disabled=false;btn.textContent='Email it to me';}
-    if(status){status.style.display='block';status.style.color='var(--teal2)';status.textContent='✓ Sent to '+email;}
-  }).catch(function(){
+    if(resp&&resp.success){
+      if(status){status.style.display='block';status.style.color='var(--teal2)';status.textContent='✓ Sent to '+email;}
+    } else {
+      if(status){status.style.display='block';status.style.color='#c0392b';status.textContent='Could not send: '+(resp&&resp.message?resp.message:'Unknown error')+' — copy the link above instead.';}
+    }
+  }).catch(function(err){
     if(btn){btn.disabled=false;btn.textContent='Email it to me';}
-    if(status){status.style.display='block';status.style.color='#c0392b';status.textContent='Could not send — copy the link above instead.';}
+    if(status){status.style.display='block';status.style.color='#c0392b';status.textContent='Could not send: '+err.message+' — copy the link above instead.';}
   });
 }
 
