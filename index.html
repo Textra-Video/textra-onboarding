@@ -709,11 +709,11 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     <div class="char-count-grid">
       <button class="char-count-btn" id="ccb1" onclick="setCharCount(1)">
         <div class="ccb-num">1</div>
-        <div class="ccb-lbl">Single presenter</div>
+        <div class="ccb-lbl">1 Character</div>
       </button>
       <button class="char-count-btn" id="ccb2" onclick="setCharCount(2)">
         <div class="ccb-num">2</div>
-        <div class="ccb-lbl">Two presenters</div>
+        <div class="ccb-lbl">2 Characters</div>
       </button>
     </div>
   </div>
@@ -759,8 +759,8 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       <!-- Step A: pick character A -->
       <div id="lib-stepA">
         <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px" id="lib-prompt-A">
-          <span style="display:inline-block;background:var(--teal);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:99px;margin-right:6px">A</span>
-          Pick character A — left presenter
+          <span style="display:inline-block;background:var(--teal);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:99px;margin-right:6px">1</span>
+          Pick Character 1
         </div>
         <p style="font-size:11px;color:var(--text-muted);margin:0 0 10px">Our team will apply your brand colours and styling.</p>
         <div id="libInlineGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"></div>
@@ -770,7 +770,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       <div id="lib-confirmedA" style="display:none;margin-top:12px;padding:10px 12px;background:var(--teal-soft);border:1.5px solid var(--teal2);border-radius:var(--radius-xs);display:none;align-items:center;gap:10px">
         <div id="lib-confirmedA-thumb" style="width:40px;height:54px;border-radius:6px;overflow:hidden;border:1.5px solid var(--teal2);flex-shrink:0"></div>
         <div style="flex:1">
-          <div style="font-size:11px;font-weight:700;color:var(--teal)">✓ Character A selected</div>
+          <div style="font-size:11px;font-weight:700;color:var(--teal)">✓ Character 1 selected</div>
           <div id="lib-confirmedA-name" style="font-size:12px;font-weight:600;color:var(--navy)"></div>
         </div>
         <button onclick="lib_changeA()" style="background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--text-muted);cursor:pointer">Change</button>
@@ -779,8 +779,8 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       <!-- Step B: pick character B (hidden until A picked + 2 chars) -->
       <div id="lib-stepB" style="display:none;margin-top:16px">
         <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px">
-          <span style="display:inline-block;background:var(--navy);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:99px;margin-right:6px">B</span>
-          Now pick character B — right presenter
+          <span style="display:inline-block;background:var(--navy);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:99px;margin-right:6px">2</span>
+          Now pick Character 2
         </div>
         <p style="font-size:11px;color:var(--text-muted);margin:0 0 10px">Choose a different character for the right side.</p>
         <div id="libInlineGridB" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"></div>
@@ -790,7 +790,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       <div id="lib-confirmedB" style="display:none;margin-top:12px;padding:10px 12px;background:#f0f4ff;border:1.5px solid #8899dd;border-radius:var(--radius-xs);align-items:center;gap:10px">
         <div id="lib-confirmedB-thumb" style="width:40px;height:54px;border-radius:6px;overflow:hidden;border:1.5px solid #8899dd;flex-shrink:0"></div>
         <div style="flex:1">
-          <div style="font-size:11px;font-weight:700;color:#5566cc">✓ Character B selected</div>
+          <div style="font-size:11px;font-weight:700;color:#5566cc">✓ Character 2 selected</div>
           <div id="lib-confirmedB-name" style="font-size:12px;font-weight:600;color:var(--navy)"></div>
         </div>
         <button onclick="lib_changeB()" style="background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--text-muted);cursor:pointer">Change</button>
@@ -801,73 +801,73 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 
   <!-- Character A -->
   <div class="card" id="charACard" style="display:none">
-    <div class="card-head"><span class="step-pill">A</span> Character A — Left Presenter</div>
+    <div class="card-head"><span class="step-pill">1</span> Character 1</div>
     <div id="libSelA_wrap" style="display:none;margin-bottom:14px">
       <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:8px">Library Character</div>
       <div id="libSelA_display" style="display:none;align-items:center;gap:10px;padding:10px;background:var(--teal-soft);border:1.5px solid var(--teal2);border-radius:var(--radius-xs);margin-bottom:8px"></div>
-      
+
     </div>
-    
+
     <div class="form-row c2">
       <div class="field field-with-other">
         <label>Gender <span class="tip" data-tip="Choose the gender presentation for this character.">?</span></label>
-        <select id="cagender" onchange="handleOther(this,'cagender_other');updateSidebar()">
+        <select id="c1gender" onchange="handleOther(this,'c1gender_other');updateSidebar()">
           <option value="">— Select —</option>
           <option>Female</option><option>Male</option><option>Non-binary</option>
           <option>Let Textra decide</option><option value="other">Other — describe below</option>
         </select>
-        <div class="other-input" id="cagender_other"><input type="text" placeholder="Describe gender presentation…" oninput="updateSidebar()"></div>
+        <div class="other-input" id="c1gender_other"><input type="text" placeholder="Describe gender presentation…" oninput="updateSidebar()"></div>
       </div>
       <div class="field field-with-other">
         <label>Age Range <span class="tip" data-tip="The approximate age of the character. This affects face design, posture and clothing style.">?</span></label>
-        <select id="caage" onchange="handleOther(this,'caage_other');updateSidebar()">
+        <select id="c1age" onchange="handleOther(this,'c1age_other');updateSidebar()">
           <option value="">— Select —</option>
           <option>18–25</option><option>26–35</option><option>36–45</option><option>46–55</option><option>55+</option>
           <option>Let Textra decide</option><option value="other">Other — describe below</option>
         </select>
-        <div class="other-input" id="caage_other"><input type="text" placeholder="Describe age range…" oninput="updateSidebar()"></div>
+        <div class="other-input" id="c1age_other"><input type="text" placeholder="Describe age range…" oninput="updateSidebar()"></div>
       </div>
     </div>
     <div class="form-row c2">
       <div class="field field-with-other">
         <label>Ethnicity <span class="tip" data-tip="Helps our designers create a character that reflects the diversity of your audience or team.">?</span></label>
-        <select id="caeth" onchange="handleOther(this,'caeth_other');updateSidebar()">
+        <select id="c1eth" onchange="handleOther(this,'c1eth_other');updateSidebar()">
           <option value="">— Select —</option>
           <option>East Asian</option><option>South Asian</option><option>Black / African</option>
           <option>Mixed / Multiracial</option><option>White / European</option>
           <option>Hispanic / Latino</option><option>Middle Eastern</option>
           <option>Let Textra decide</option><option value="other">Other — describe below</option>
         </select>
-        <div class="other-input" id="caeth_other"><input type="text" placeholder="Describe ethnicity…" oninput="updateSidebar()"></div>
+        <div class="other-input" id="c1eth_other"><input type="text" placeholder="Describe ethnicity…" oninput="updateSidebar()"></div>
       </div>
       <div class="field field-with-other">
         <label>Voice Accent <span class="tip" data-tip="The accent used when this character speaks. Used for voice generation.">?</span></label>
-        <select id="caaccent" onchange="handleOther(this,'caaccent_other');updateSidebar()">
+        <select id="c1accent" onchange="handleOther(this,'c1accent_other');updateSidebar()">
           <option value="">— Select —</option>
           <option>British (Standard)</option><option>American (Neutral)</option>
           <option>Australian</option><option>Irish</option><option>South African</option>
           <option>Let Textra decide</option><option value="other">Other — describe below</option>
         </select>
-        <div class="other-input" id="caaccent_other"><input type="text" placeholder="Describe accent…" oninput="updateSidebar()"></div>
+        <div class="other-input" id="c1accent_other"><input type="text" placeholder="Describe accent…" oninput="updateSidebar()"></div>
       </div>
     </div>
     <div class="form-row">
       <div class="field field-with-other">
         <label>Clothing <span class="tip" data-tip="What the character wears. Smart/formal works well for corporate brands; casual suits softer tones.">?</span></label>
-        <select id="caclothing" onchange="handleOther(this,'caclothing_other');updateSidebar()">
+        <select id="c1clothing" onchange="handleOther(this,'c1clothing_other');updateSidebar()">
           <option value="">— Select —</option>
           <option>Smart / Business formal</option><option>Business casual</option>
           <option>Casual / Everyday</option><option>Uniform</option>
           <option>Industry-specific</option>
           <option>Let Textra decide</option><option value="other">Other — describe below</option>
         </select>
-        <div class="other-input" id="caclothing_other"><input type="text" placeholder="Describe clothing…" oninput="updateSidebar()"></div>
+        <div class="other-input" id="c1clothing_other"><input type="text" placeholder="Describe clothing…" oninput="updateSidebar()"></div>
       </div>
     </div>
     <div class="form-row">
       <div class="field">
         <label>Additional Notes <span class="tip" data-tip="Hair colour, glasses, accessories, skin tone details, body type — anything specific you want our designers to know.">?</span></label>
-        <textarea id="canotes" placeholder="e.g. Short dark hair, glasses, slim build, warm skin tone…" oninput="updateSidebar()"></textarea>
+        <textarea id="c1notes" placeholder="e.g. Short dark hair, glasses, slim build, warm skin tone…" oninput="updateSidebar()"></textarea>
       </div>
     </div>
     <div class="field">
@@ -882,73 +882,73 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 
   <!-- Character B -->
   <div class="card" id="charBCard" style="display:none">
-    <div class="card-head"><span class="step-pill">B</span> Character B — Right Presenter</div>
+    <div class="card-head"><span class="step-pill">2</span> Character 2</div>
     <div id="libSelB_wrap" style="display:none;margin-bottom:14px">
       <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:8px">Library Character</div>
       <div id="libSelB_display" style="display:none;align-items:center;gap:10px;padding:10px;background:var(--teal-soft);border:1.5px solid var(--teal2);border-radius:var(--radius-xs);margin-bottom:8px"></div>
-      
+
     </div>
-    
+
     <div class="form-row c2">
       <div class="field field-with-other">
         <label>Gender <span class="tip" data-tip="Choose the gender presentation for this character.">?</span></label>
-        <select id="cbgender" onchange="handleOther(this,'cbgender_other');updateSidebar()">
+        <select id="c2gender" onchange="handleOther(this,'c2gender_other');updateSidebar()">
           <option value="">— Select —</option>
           <option>Female</option><option>Male</option><option>Non-binary</option>
           <option>Let Textra decide</option><option value="other">Other — describe below</option>
         </select>
-        <div class="other-input" id="cbgender_other"><input type="text" placeholder="Describe gender presentation…" oninput="updateSidebar()"></div>
+        <div class="other-input" id="c2gender_other"><input type="text" placeholder="Describe gender presentation…" oninput="updateSidebar()"></div>
       </div>
       <div class="field field-with-other">
         <label>Age Range <span class="tip" data-tip="The approximate age of the character. This affects face design, posture and clothing style.">?</span></label>
-        <select id="cbage" onchange="handleOther(this,'cbage_other');updateSidebar()">
+        <select id="c2age" onchange="handleOther(this,'c2age_other');updateSidebar()">
           <option value="">— Select —</option>
           <option>18–25</option><option>26–35</option><option>36–45</option><option>46–55</option><option>55+</option>
           <option>Let Textra decide</option><option value="other">Other — describe below</option>
         </select>
-        <div class="other-input" id="cbage_other"><input type="text" placeholder="Describe age range…" oninput="updateSidebar()"></div>
+        <div class="other-input" id="c2age_other"><input type="text" placeholder="Describe age range…" oninput="updateSidebar()"></div>
       </div>
     </div>
     <div class="form-row c2">
       <div class="field field-with-other">
         <label>Ethnicity <span class="tip" data-tip="Helps our designers create a character that reflects the diversity of your audience or team.">?</span></label>
-        <select id="cbeth" onchange="handleOther(this,'cbeth_other');updateSidebar()">
+        <select id="c2eth" onchange="handleOther(this,'c2eth_other');updateSidebar()">
           <option value="">— Select —</option>
           <option>East Asian</option><option>South Asian</option><option>Black / African</option>
           <option>Mixed / Multiracial</option><option>White / European</option>
           <option>Hispanic / Latino</option><option>Middle Eastern</option>
           <option>Let Textra decide</option><option value="other">Other — describe below</option>
         </select>
-        <div class="other-input" id="cbeth_other"><input type="text" placeholder="Describe ethnicity…" oninput="updateSidebar()"></div>
+        <div class="other-input" id="c2eth_other"><input type="text" placeholder="Describe ethnicity…" oninput="updateSidebar()"></div>
       </div>
       <div class="field field-with-other">
         <label>Voice Accent <span class="tip" data-tip="The accent used when this character speaks. Used for voice generation.">?</span></label>
-        <select id="cbaccent" onchange="handleOther(this,'cbaccent_other');updateSidebar()">
+        <select id="c2accent" onchange="handleOther(this,'c2accent_other');updateSidebar()">
           <option value="">— Select —</option>
           <option>British (Standard)</option><option>American (Neutral)</option>
           <option>Australian</option><option>Irish</option><option>South African</option>
           <option>Let Textra decide</option><option value="other">Other — describe below</option>
         </select>
-        <div class="other-input" id="cbaccent_other"><input type="text" placeholder="Describe accent…" oninput="updateSidebar()"></div>
+        <div class="other-input" id="c2accent_other"><input type="text" placeholder="Describe accent…" oninput="updateSidebar()"></div>
       </div>
     </div>
     <div class="form-row">
       <div class="field field-with-other">
         <label>Clothing <span class="tip" data-tip="What the character wears. Smart/formal works well for corporate brands; casual suits softer tones.">?</span></label>
-        <select id="cbclothing" onchange="handleOther(this,'cbclothing_other');updateSidebar()">
+        <select id="c2clothing" onchange="handleOther(this,'c2clothing_other');updateSidebar()">
           <option value="">— Select —</option>
           <option>Smart / Business formal</option><option>Business casual</option>
           <option>Casual / Everyday</option><option>Uniform</option>
           <option>Industry-specific</option>
           <option>Let Textra decide</option><option value="other">Other — describe below</option>
         </select>
-        <div class="other-input" id="cbclothing_other"><input type="text" placeholder="Describe clothing…" oninput="updateSidebar()"></div>
+        <div class="other-input" id="c2clothing_other"><input type="text" placeholder="Describe clothing…" oninput="updateSidebar()"></div>
       </div>
     </div>
     <div class="form-row">
       <div class="field">
         <label>Additional Notes <span class="tip" data-tip="Hair colour, glasses, accessories, skin tone details, body type — anything specific you want our designers to know.">?</span></label>
-        <textarea id="cbnotes" placeholder="e.g. Short dark hair, glasses, slim build, warm skin tone…" oninput="updateSidebar()"></textarea>
+        <textarea id="c2notes" placeholder="e.g. Short dark hair, glasses, slim build, warm skin tone…" oninput="updateSidebar()"></textarea>
       </div>
     </div>
     <div class="field">
@@ -1803,7 +1803,7 @@ function _updateLibDisplayPanel(charKey, selIdx){
     '</div>' +
     '<div style="flex:1;min-width:0">' +
       '<div style="font-size:12px;font-weight:700;color:var(--navy)">'+name+'</div>' +
-      '<div style="font-size:11px;color:var(--text-muted);margin-top:2px">'+charKey.toUpperCase()+' — change in grid above</div>' +
+      '<div style="font-size:11px;color:var(--text-muted);margin-top:2px">'+(charKey==='a'?'Character 1':'Character 2')+' — change in grid above</div>' +
     '</div>';
   if(charKey==='a')state.libCharA=name; else state.libCharB=name;
 }
@@ -2513,8 +2513,8 @@ function updateSidebar(){
   if(brandParts.length) sections.push('<div class="sb-section"><div class="sb-label">Brand</div>'+brandParts.join('')+'</div>');
 
   // ── CHARACTERS ───────────────────────────────────────────
-  var cag=gv('cagender'),caa=gv('caage'),caeth=gv('caeth'),caacc=gv('caaccent'),cacl=gv('caclothing'),can=gv('canotes');
-  var cbg=gv('cbgender'),cba=gv('cbage'),cbeth=gv('cbeth'),cbacc=gv('cbaccent'),cbcl=gv('cbclothing'),cbn=gv('cbnotes');
+  var cag=gv('c1gender'),caa=gv('c1age'),caeth=gv('c1eth'),caacc=gv('c1accent'),cacl=gv('c1clothing'),can=gv('c1notes');
+  var cbg=gv('c2gender'),cba=gv('c2age'),cbeth=gv('c2eth'),cbacc=gv('c2accent'),cbcl=gv('c2clothing'),cbn=gv('c2notes');
   if(_charCount||_charStyle||cag||cbg){
     var getCharVal=function(sid){
       var sel=document.getElementById(sid);if(!sel)return'';
@@ -2525,8 +2525,8 @@ function updateSidebar(){
       }
       return sel.value;
     };
-    var cag2=getCharVal('cagender'),caa2=getCharVal('caage'),caeth2=getCharVal('caeth'),caacc2=getCharVal('caaccent'),cacl2=getCharVal('caclothing');
-    var cbg2=getCharVal('cbgender'),cba2=getCharVal('cbage'),cbeth2=getCharVal('cbeth'),cbacc2=getCharVal('cbaccent'),cbcl2=getCharVal('cbclothing');
+    var cag2=getCharVal('c1gender'),caa2=getCharVal('c1age'),caeth2=getCharVal('c1eth'),caacc2=getCharVal('c1accent'),cacl2=getCharVal('c1clothing');
+    var cbg2=getCharVal('c2gender'),cba2=getCharVal('c2age'),cbeth2=getCharVal('c2eth'),cbacc2=getCharVal('c2accent'),cbcl2=getCharVal('c2clothing');
     var mkChar=function(g,a,eth,acc,cl,n,libName){
       return [libName?'Library: '+libName:'',g?'Gender: '+g:'',a?'Age: '+a:'',
         eth?'Ethnicity: '+eth:'',acc?'Accent: '+acc:'',cl?'Clothing: '+cl:'',n?'Notes: '+n:'']
@@ -2536,10 +2536,10 @@ function updateSidebar(){
     var cbhtml=_charCount===2?mkChar(cbg2,cba2,cbeth2,cbacc2,cbcl2,cbn,state.libCharB||''):'';
     var styleLabel=_charStyle==='textra'?'Textra Creates':_charStyle==='reference'?'Custom Reference':_charStyle==='library'?'From Library':'';
     sections.push('<div class="sb-section"><div class="sb-label">Characters ('+(_charCount||'?')+')</div>'+
-      (_charCount?sbRow('👥',_charCount===1?'Single presenter':'Two presenters'):'')+
+      (_charCount?sbRow('👥',_charCount===1?'1 Character':'2 Characters'):'')+
       (styleLabel?sbRow('✨',styleLabel):'')+
-      (cahtml?'<div style="border-left:2px solid var(--teal-soft);margin:5px 0 5px 6px;padding-left:8px"><div style="font-size:10px;font-weight:700;color:var(--teal2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px">Character A</div>'+cahtml+'</div>':'')+
-      (cbhtml?'<div style="border-left:2px solid var(--blue-soft);margin:5px 0 5px 6px;padding-left:8px"><div style="font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px">Character B</div>'+cbhtml+'</div>':'')+
+      (cahtml?'<div style="border-left:2px solid var(--teal-soft);margin:5px 0 5px 6px;padding-left:8px"><div style="font-size:10px;font-weight:700;color:var(--teal2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px">Character 1</div>'+cahtml+'</div>':'')+
+      (cbhtml?'<div style="border-left:2px solid var(--blue-soft);margin:5px 0 5px 6px;padding-left:8px"><div style="font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px">Character 2</div>'+cbhtml+'</div>':'')+
     '</div>');
   }
 
@@ -2926,7 +2926,7 @@ function buildReview(){
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">'+
       '<div style="background:var(--teal-soft);border:1px solid rgba(102,188,173,.3);border-radius:var(--radius-sm);padding:12px 14px">'+
         '<div style="font-size:11px;font-weight:800;color:var(--teal2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;display:flex;align-items:center;gap:6px">'+
-          '<span style="width:18px;height:18px;background:var(--teal);color:white;border-radius:50%;font-size:9px;display:inline-flex;align-items:center;justify-content:center;font-weight:800">A</span> Character A — Left'+
+          '<span style="width:18px;height:18px;background:var(--teal);color:white;border-radius:50%;font-size:9px;display:inline-flex;align-items:center;justify-content:center;font-weight:800">1</span> Character 1'+
         '</div>'+
         '<div style="display:flex;flex-direction:column;gap:5px">'+
           '<div><div class="review-label">Gender</div>'+rv(document.getElementById('c1gender').value)+'</div>'+
@@ -2939,7 +2939,7 @@ function buildReview(){
       '</div>'+
       '<div style="background:var(--blue-soft);border:1px solid rgba(26,113,177,.2);border-radius:var(--radius-sm);padding:12px 14px">'+
         '<div style="font-size:11px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;display:flex;align-items:center;gap:6px">'+
-          '<span style="width:18px;height:18px;background:var(--blue);color:white;border-radius:50%;font-size:9px;display:inline-flex;align-items:center;justify-content:center;font-weight:800">B</span> Character B — Right'+
+          '<span style="width:18px;height:18px;background:var(--blue);color:white;border-radius:50%;font-size:9px;display:inline-flex;align-items:center;justify-content:center;font-weight:800">2</span> Character 2'+
         '</div>'+
         '<div style="display:flex;flex-direction:column;gap:5px">'+
           '<div><div class="review-label">Gender</div>'+rv(document.getElementById('c2gender').value)+'</div>'+
