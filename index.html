@@ -2395,7 +2395,10 @@ function submitScript(){
   fetch(GOOGLE_SCRIPT_URL,{
     method:'POST',
     body:JSON.stringify(payload),
-    headers:{'Content-Type':'application/json'}
+    // text/plain avoids a CORS preflight (OPTIONS) that Apps Script Web
+    // Apps don't handle — the backend still parses it as JSON regardless
+    // of the declared content type.
+    headers:{'Content-Type':'text/plain;charset=utf-8'}
   }).then(function(){
     if(btn){btn.textContent='✓ Script submitted!';}
     setTimeout(function(){
@@ -3026,7 +3029,7 @@ function buildReview(){
     '<div class="review-section">'+
     '<div class="review-section-title"><span class="step-pill">03</span> Characters '+editBtn(3,'Characters')+'</div>'+
     '<div class="review-item" style="margin-bottom:8px"><div class="review-label">Illustration Style</div>'+rv(selCharStyle?selCharStyle.textContent:'')+'</div>'+
-    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">'+
+    '<div style="display:grid;grid-template-columns:'+(_charCount===2?'1fr 1fr':'1fr')+';gap:12px;margin-top:8px">'+
       '<div style="background:var(--teal-soft);border:1px solid rgba(102,188,173,.3);border-radius:var(--radius-sm);padding:12px 14px">'+
         '<div style="font-size:11px;font-weight:800;color:var(--teal2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;display:flex;align-items:center;gap:6px">'+
           '<span style="width:18px;height:18px;background:var(--teal);color:white;border-radius:50%;font-size:9px;display:inline-flex;align-items:center;justify-content:center;font-weight:800">1</span> Character 1'+
@@ -3041,6 +3044,7 @@ function buildReview(){
           '<div><div class="review-label">Reference Track</div>'+rv(document.getElementById('c1trackUrl').value)+'</div>'+
         '</div>'+
       '</div>'+
+      (_charCount===2?(
       '<div style="background:var(--blue-soft);border:1px solid rgba(26,113,177,.2);border-radius:var(--radius-sm);padding:12px 14px">'+
         '<div style="font-size:11px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;display:flex;align-items:center;gap:6px">'+
           '<span style="width:18px;height:18px;background:var(--blue);color:white;border-radius:50%;font-size:9px;display:inline-flex;align-items:center;justify-content:center;font-weight:800">2</span> Character 2'+
@@ -3054,7 +3058,8 @@ function buildReview(){
           '<div><div class="review-label">Notes</div>'+rv(document.getElementById('c2notes').value)+'</div>'+
           '<div><div class="review-label">Reference Track</div>'+rv(document.getElementById('c2trackUrl').value)+'</div>'+
         '</div>'+
-      '</div>'+
+      '</div>'
+      ):'')+
     '</div></div>'+
 
     '<div class="review-section">'+
@@ -3127,7 +3132,10 @@ function emailPortalLink(){
   fetch(GOOGLE_SCRIPT_URL,{
     method:'POST',
     body:JSON.stringify({action:'emailPortalLink',portalToken:getPortalToken(),email:email,portalLink:getPortalLink()}),
-    headers:{'Content-Type':'application/json'}
+    // text/plain avoids a CORS preflight (OPTIONS) that Apps Script Web
+    // Apps don't handle — the backend still parses it as JSON regardless
+    // of the declared content type.
+    headers:{'Content-Type':'text/plain;charset=utf-8'}
   }).then(function(){
     if(btn){btn.disabled=false;btn.textContent='Email it to me';}
     if(status){status.style.display='block';status.style.color='var(--teal2)';status.textContent='✓ Sent to '+email;}
