@@ -68,6 +68,21 @@
  *   line "Slack webhook not configured..." — that means the property isn't
  *   being read, most likely because it wasn't saved or the deployment is
  *   still running an older version.
+ *
+ * ONE-TIME AUTHORIZATION STEP (required before email/Slack will work)
+ * A deployed Web App running as "Execute as: Me" can only use scopes
+ * (MailApp, UrlFetchApp, etc.) that have ALREADY been granted via an
+ * interactive run in the editor — deploying alone does not trigger that
+ * consent prompt. If you see an error like "You do not have permission to
+ * call MailApp.sendEmail. Required permissions: ...script.send_mail":
+ * 1. In the function dropdown at the top of the editor, select
+ *    `authorizeAllScopes` (defined below).
+ * 2. Click Run (the play button).
+ * 3. A permissions dialog will appear — click "Review Permissions", pick
+ *    your Google account, and if you see "Google hasn't verified this
+ *    app", click "Advanced" → "Go to [project name] (unsafe)" → "Allow".
+ * 4. That's it — no redeploy needed. This grants every scope the whole
+ *    project uses (Mail + UrlFetchApp for Slack) in one go.
  */
 
 const SHEET_ID = '1zgAwpkowKm4s1cpELT1hh5LlUVSLz_gL35iVXWp-72Y';
@@ -461,4 +476,19 @@ function getOrCreateColumn(sheet, headerName) {
 function jsonOut(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+// ── ONE-TIME AUTHORIZATION HELPER ──────────────────────────────
+// Run this once manually from the editor (function dropdown → select
+// authorizeAllScopes → Run) to grant every scope the project needs
+// (Mail, UrlFetchApp for Slack, Drive, Sheets, Docs). See the "ONE-TIME
+// AUTHORIZATION STEP" note in the file header for the full walkthrough.
+// Safe to leave in permanently — it's never called automatically.
+function authorizeAllScopes() {
+  Logger.log('Requesting authorization for all scopes this project uses...');
+  MailApp.getRemainingDailyQuota(); // touches Mail scope
+  UrlFetchApp.fetch('https://www.google.com', { muteHttpExceptions: true }); // touches external request scope
+  SpreadsheetApp.openById(SHEET_ID); // touches Sheets scope
+  DriveApp.getRootFolder(); // touches Drive scope
+  Logger.log('If you saw a permissions prompt and approved it, you are done — no redeploy needed.');
 }
