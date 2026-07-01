@@ -1954,7 +1954,12 @@ function finalSubmit(){
 
   document.body.appendChild(form);
   form.submit();
-  document.body.removeChild(form);
+  // Don't remove the form immediately — on a large submission (e.g. a
+  // high-res logo as base64), the browser may still be transmitting the
+  // request. Removing the form too early can abort it mid-flight, which
+  // shows up as "Execution cancelled" in Apps Script even though the sheet
+  // row was already written (cancelled before reaching Drive/email/Slack).
+  setTimeout(function(){ if(form.parentNode) document.body.removeChild(form); }, 4000);
 
   // Go to portal/success page after short delay
   setTimeout(function(){
