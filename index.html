@@ -1115,7 +1115,8 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       <div class="music-opt" onclick="selMusic(this,'Energetic / Punchy')"><div class="music-ico">⚡</div><div><div class="music-lbl">Energetic / Punchy</div><div class="music-desc">Fast-paced, bold</div></div></div>
       <div class="music-opt" onclick="selMusic(this,'Let Textra Choose')"><div class="music-ico">✨</div><div><div class="music-lbl">Let Textra choose</div><div class="music-desc">Matched to your brand</div></div></div>
     </div>
-    <div class="field" style="margin-top:10px"><label>Reference track URL</label><input type="url" placeholder="https://open.spotify.com/track/..."></div>
+    <div class="field" style="margin-top:10px"><label>Reference track URL <span class="hint">— optional</span></label><input type="url" id="musicTrackUrl" placeholder="https://open.spotify.com/track/..." oninput="updateSidebar()"></div>
+    <div class="field" style="margin-top:10px"><label>Notes <span class="hint">— optional</span> <span class="tip" data-tip="Any additional details about the music mood, tempo, instruments, or feeling you want for your video.">?</span></label><textarea id="musicNotes" placeholder="e.g. Upbeat and energetic, with piano and strings, tempo around 120 BPM…" oninput="updateSidebar()"></textarea></div>
   </div>
 
   <div class="btn-row">
@@ -2659,6 +2660,8 @@ function gatherData(){
     sceneNotes:   sel('scenedesc'),
     titleScreen:  (function(){var e=document.querySelector('#titleBgGrid .cc.sel .cc-title');return e?e.textContent.trim():(state.titleScreen||'');})(),
     music:        state.music,
+    musicTrackUrl: sel('musicTrackUrl'),
+    musicNotes:   sel('musicNotes'),
     // Script
     scriptMethod: 'Google Sheet',
     scriptTitle:  sel('scriptTitle'),
