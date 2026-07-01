@@ -1926,58 +1926,34 @@ function finalSubmit(){
   var data = gatherData();
 
   if(!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.trim()===''){
-    goTo(7); 
+    goTo(7);
     return;
   }
 
-  // Send via form POST — works best with Google Apps Script
-  var form = document.createElement('form');
-  form.method = 'POST';
-  form.action = GOOGLE_SCRIPT_URL;
-  form.target = 'hidden_iframe';
-  form.style.display = 'none';
-
-  // Send all form data as key-value pairs
-  for(var key in data) {
-    if(data.hasOwnProperty(key)) {
-      var input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = key;
-      input.value = data[key];
-      form.appendChild(input);
+  // fetch() with a real response check — the previous hidden-iframe form
+  // POST always showed "Brief submitted!" on a fixed timer regardless of
+  // whether the backend actually succeeded, and could never really read
+  // the response anyway (the iframe navigates cross-origin to
+  // script.google.com, which the browser blocks JS from reading).
+  fetch(GOOGLE_SCRIPT_URL,{
+    method:'POST',
+    body:JSON.stringify(data),
+    headers:{'Content-Type':'text/plain;charset=utf-8'}
+  }).then(function(r){ return r.json(); })
+  .then(function(resp){
+    if(btn){ btn.disabled = false; }
+    if(resp&&resp.success){
+      if(resp.folder) state.driveFolderUrl = resp.folder;
+      if(btn) btn.textContent = 'Brief submitted!';
+      goTo(7);
+    } else {
+      if(btn) btn.textContent = 'Submit Brief';
+      alert('There was an error submitting your brief: '+(resp&&resp.message?resp.message:'Unknown error')+'\n\nPlease try again.');
     }
-  }
-
-  // Hidden iframe to catch the response
-  var iframe = document.getElementById('hidden_iframe');
-  if(!iframe){
-    iframe = document.createElement('iframe');
-    iframe.name = 'hidden_iframe';
-    iframe.id = 'hidden_iframe';
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
-  }
-  iframe.onload = function(){
-    try{
-      var txt = iframe.contentDocument && iframe.contentDocument.body && iframe.contentDocument.body.innerText;
-      if(txt){ var resp = JSON.parse(txt); if(resp.folder) state.driveFolderUrl = resp.folder; }
-    }catch(e){}
-  };
-
-  document.body.appendChild(form);
-  form.submit();
-  // Don't remove the form immediately — on a large submission (e.g. a
-  // high-res logo as base64), the browser may still be transmitting the
-  // request. Removing the form too early can abort it mid-flight, which
-  // shows up as "Execution cancelled" in Apps Script even though the sheet
-  // row was already written (cancelled before reaching Drive/email/Slack).
-  setTimeout(function(){ if(form.parentNode) document.body.removeChild(form); }, 4000);
-
-  // Go to portal/success page after short delay
-  setTimeout(function(){
-    if(btn){ btn.disabled = false; btn.textContent = 'Brief submitted!'; }
-    goTo(7); // Go to portal landing page
-  }, 2000);
+  }).catch(function(err){
+    if(btn){ btn.disabled = false; btn.textContent = 'Submit Brief'; }
+    alert('There was an error submitting your brief: '+err.message+'\n\nPlease try again.');
+  });
 }
 
 function showFinishLater(){} // removed
