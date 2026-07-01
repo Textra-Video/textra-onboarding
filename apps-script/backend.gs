@@ -34,7 +34,12 @@
  *   client writes/uploads their script — updates the SAME row (found by
  *   token) rather than assuming "last row", since it now arrives on its own
  *   request, potentially much later and after other clients' submissions.
- * - doPost(action=emailPortalLink): emails the client their portal link.
+ * - doPost(action=emailPortalLink): emails the client their portal link
+ *   (manual "Email it to me" button on the portal page).
+ * - sendClientConfirmationEmail(): automatically emails the client on brief
+ *   submission with a confirmation + their portal link (no button needed).
+ * - sendTeamNotificationEmail(): optional internal notification email,
+ *   separate from Slack — only sends once TEAM_NOTIFY_EMAIL is configured.
  *
  * DEPLOYMENT
  * 1. Paste this entire file over your existing script (same Sheet — nothing
@@ -45,9 +50,24 @@
  *    (This used to be a hardcoded constant — moved out of source because
  *    GitHub blocks commits containing a raw Slack webhook URL, and because
  *    committing real secrets to a repo is bad practice regardless.)
- * 3. Deploy → Manage deployments → edit your existing deployment → New
+ * 3. Optional: once you have a dedicated internal address, add a second
+ *    Script Property — key `TEAM_NOTIFY_EMAIL`, value = that address — to
+ *    start receiving a notification email per submission alongside Slack.
+ *    Leaving it unset is fine; everything else works without it.
+ * 4. Deploy → Manage deployments → edit your existing deployment → New
  *    version. This keeps the same /exec URL, so index.html's
  *    GOOGLE_SCRIPT_URL doesn't need to change.
+ *
+ * TROUBLESHOOTING "NO SLACK NOTIFICATION"
+ * - Confirm the Script Property key is exactly `SLACK_WEBHOOK` (case
+ *   sensitive) with no extra spaces, and that you redeployed a NEW VERSION
+ *   after adding it — saving the property alone doesn't update a live
+ *   deployment.
+ * - Apps Script editor → View → Executions: find your test submission's
+ *   doPost execution and open it. If Slack was skipped, you'll see the log
+ *   line "Slack webhook not configured..." — that means the property isn't
+ *   being read, most likely because it wasn't saved or the deployment is
+ *   still running an older version.
  */
 
 const SHEET_ID = '1zgAwpkowKm4s1cpELT1hh5LlUVSLz_gL35iVXWp-72Y';
@@ -57,6 +77,12 @@ const SHEET_ID = '1zgAwpkowKm4s1cpELT1hh5LlUVSLz_gL35iVXWp-72Y';
 // GitHub's push protection will reject any commit containing a raw
 // Slack webhook URL.
 const SLACK_WEBHOOK = PropertiesService.getScriptProperties().getProperty('SLACK_WEBHOOK');
+
+// Internal team-facing notification address — separate from the client's
+// own confirmation email. Optional: leave unset until you have a dedicated
+// address, everything else works fine without it. Set the same way as
+// SLACK_WEBHOOK: Script Properties → key TEAM_NOTIFY_EMAIL → your address.
+const TEAM_NOTIFY_EMAIL = PropertiesService.getScriptProperties().getProperty('TEAM_NOTIFY_EMAIL');
 
 // Fields that carry base64 data URLs — saved as real Drive files instead of
 // being stuffed into a sheet cell.
@@ -187,6 +213,8 @@ function handleBriefSubmission(data) {
   }
 
   sendSlack(data);
+  sendClientConfirmationEmail(data, data.portalLink);
+  sendTeamNotificationEmail(data, folder.getUrl());
 
   return jsonOut({
     success: true,
@@ -247,7 +275,7 @@ function handleGetSubmission(token) {
   return jsonOut({ success: true, data: data });
 }
 
-// ── EMAIL PORTAL LINK ────────────────────────────────────────────
+// ── EMAIL PORTAL LINK (manual "Email it to me" button) ─────────
 function handleEmailPortalLink(payload) {
   if (!payload.email || !payload.portalLink) {
     return jsonOut({ success: false, message: 'Missing email or link' });
@@ -255,11 +283,61 @@ function handleEmailPortalLink(payload) {
   MailApp.sendEmail({
     to: payload.email,
     subject: 'Your Textra Video project link',
-    body: 'Here is your link to return to your Textra Video project any time:\n\n' +
-          payload.portalLink +
-          '\n\nBookmark it — no password needed. Use it to check progress or write your script.'
+    body: portalLinkEmailBody(payload.portalLink)
   });
   return jsonOut({ success: true });
+}
+
+function portalLinkEmailBody(portalLink) {
+  return 'Here is your link to return to your Textra Video project any time:\n\n' +
+         portalLink +
+         '\n\nBookmark it — no password needed. Use it to check progress or write your script.';
+}
+
+// ── CLIENT CONFIRMATION EMAIL (automatic, on brief submission) ─
+function sendClientConfirmationEmail(data, portalLink) {
+  try {
+    if (!data.email) return;
+    var greeting = data.fullName ? ('Hi ' + data.fullName + ',') : 'Hi,';
+    var body = greeting + '\n\n' +
+      'Thanks — your Textra Video brand brief has been received. Our team is already on it.\n\n' +
+      (portalLink
+        ? 'Here is your project link — bookmark it, no password needed. Use it any time to check progress or write your script:\n\n' + portalLink + '\n\n'
+        : '') +
+      'We will be in touch shortly.\n\n— Textra Video';
+    MailApp.sendEmail({
+      to: data.email,
+      subject: 'Your Textra Video brief has been received',
+      body: body
+    });
+    Logger.log('Client confirmation email sent to ' + data.email);
+  } catch (e) {
+    Logger.log('Client confirmation email error: ' + e.toString());
+  }
+}
+
+// ── TEAM NOTIFICATION EMAIL (optional, internal) ────────────────
+function sendTeamNotificationEmail(data, folderUrl) {
+  try {
+    if (!TEAM_NOTIFY_EMAIL) {
+      Logger.log('TEAM_NOTIFY_EMAIL not configured — skipping team notification email.');
+      return;
+    }
+    var body = 'New Textra Video brief submitted.\n\n' +
+      'Name: ' + (data.fullName || 'N/A') + '\n' +
+      'Email: ' + (data.email || 'N/A') + '\n' +
+      'Company: ' + (data.companyName || 'N/A') + '\n' +
+      'Project: ' + (data.projectName || 'N/A') + '\n\n' +
+      'Client folder: ' + folderUrl;
+    MailApp.sendEmail({
+      to: TEAM_NOTIFY_EMAIL,
+      subject: 'New Textra submission — ' + (data.companyName || data.fullName || 'Client'),
+      body: body
+    });
+    Logger.log('Team notification email sent to ' + TEAM_NOTIFY_EMAIL);
+  } catch (e) {
+    Logger.log('Team notification email error: ' + e.toString());
+  }
 }
 
 // ── SLACK ─────────────────────────────────────────────────────
