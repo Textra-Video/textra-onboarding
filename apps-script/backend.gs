@@ -1,5 +1,5 @@
 /**
- * Textra Onboarding — Apps Script backend
+ * Textra Onboarding - Apps Script backend
  *
  * This is your existing script (Sheet ID 1zgAwpkowKm4s1cpELT1hh5LlUVSLz_gL35iVXWp-72Y,
  * Slack webhook, header list, Slack notification, script-URL hyperlink logic)
@@ -10,15 +10,15 @@
  *    declared *inside* `sendSlack()`'s function body (a missing `}` before the
  *    "NEW LINE" comment). Since doPost() calls updateDataSheetWithScriptUrl()
  *    from the outer scope, this threw `ReferenceError: ... is not defined` on
- *    EVERY submission — right after the row was saved, but before sendSlack()
+ *    EVERY submission - right after the row was saved, but before sendSlack()
  *    ever ran. Data was saving fine; Slack notifications were never actually
  *    sent. Fixed by giving each function its own top-level scope.
- * 2. The backend read `data.sceneDesc`, but the frontend sent `sceneNotes` —
+ * 2. The backend read `data.sceneDesc`, but the frontend sent `sceneNotes` -
  *    so the "Scene Notes" column has always been blank. Fixed on the frontend
  *    (index.html now sends `sceneDesc`) to match this backend, which is
  *    unchanged here.
  * 3. The backend read `data.companyName`, but the frontend sent `data.company`
- *    — so the "Company" column and Slack's "Company:" line have always been
+ *    - so the "Company" column and Slack's "Company:" line have always been
  *    blank/"N/A". Fixed on the frontend to send `companyName`.
  *
  * WHAT'S NEW
@@ -31,7 +31,7 @@
  * - doGet(action=getSubmission&token=...): lets a returning client fetch
  *   their prior submission for the read-only portal checklist.
  * - doPost(action=submitScript): a second, separate submission once the
- *   client writes/uploads their script — updates the SAME row (found by
+ *   client writes/uploads their script - updates the SAME row (found by
  *   token) rather than assuming "last row", since it now arrives on its own
  *   request, potentially much later and after other clients' submissions.
  * - doPost(action=emailPortalLink): emails the client their portal link
@@ -39,72 +39,72 @@
  * - sendClientConfirmationEmail(): automatically emails the client on brief
  *   submission with a confirmation + their portal link (no button needed).
  * - sendTeamNotificationEmail(): optional internal notification email,
- *   separate from Slack — only sends once TEAM_NOTIFY_EMAIL is configured.
+ *   separate from Slack - only sends once TEAM_NOTIFY_EMAIL is configured.
  *
  * DEPLOYMENT
- * 1. Paste this entire file over your existing script (same Sheet — nothing
+ * 1. Paste this entire file over your existing script (same Sheet - nothing
  *    to reconfigure there).
  * 2. Set your Slack webhook as a Script Property instead of hardcoding it:
- *    Project Settings (gear icon, left sidebar) → Script Properties →
- *    Add script property → key `SLACK_WEBHOOK`, value = your webhook URL.
- *    (This used to be a hardcoded constant — moved out of source because
+ *    Project Settings (gear icon, left sidebar) -> Script Properties ->
+ *    Add script property -> key `SLACK_WEBHOOK`, value = your webhook URL.
+ *    (This used to be a hardcoded constant - moved out of source because
  *    GitHub blocks commits containing a raw Slack webhook URL, and because
  *    committing real secrets to a repo is bad practice regardless.)
  * 3. Optional: once you have a dedicated internal address, add a second
- *    Script Property — key `TEAM_NOTIFY_EMAIL`, value = that address — to
+ *    Script Property - key `TEAM_NOTIFY_EMAIL`, value = that address - to
  *    start receiving a notification email per submission alongside Slack.
  *    Leaving it unset is fine; everything else works without it.
- * 4. Deploy → Manage deployments → edit your existing deployment → New
+ * 4. Deploy -> Manage deployments -> edit your existing deployment -> New
  *    version. This keeps the same /exec URL, so index.html's
  *    GOOGLE_SCRIPT_URL doesn't need to change.
  *
  * TROUBLESHOOTING "NO SLACK NOTIFICATION"
  * - Confirm the Script Property key is exactly `SLACK_WEBHOOK` (case
  *   sensitive) with no extra spaces, and that you redeployed a NEW VERSION
- *   after adding it — saving the property alone doesn't update a live
+ *   after adding it - saving the property alone doesn't update a live
  *   deployment.
- * - Apps Script editor → View → Executions: find your test submission's
+ * - Apps Script editor -> View -> Executions: find your test submission's
  *   doPost execution and open it. If Slack was skipped, you'll see the log
- *   line "Slack webhook not configured..." — that means the property isn't
+ *   line "Slack webhook not configured..." - that means the property isn't
  *   being read, most likely because it wasn't saved or the deployment is
  *   still running an older version.
  *
  * ONE-TIME AUTHORIZATION STEP (required before email/Slack will work)
  * A deployed Web App running as "Execute as: Me" can only use scopes
  * (MailApp, UrlFetchApp, etc.) that have ALREADY been granted via an
- * interactive run in the editor — deploying alone does not trigger that
+ * interactive run in the editor - deploying alone does not trigger that
  * consent prompt. If you see an error like "You do not have permission to
  * call MailApp.sendEmail. Required permissions: ...script.send_mail":
  * 1. In the function dropdown at the top of the editor, select
  *    `authorizeAllScopes` (defined below).
  * 2. Click Run (the play button).
- * 3. A permissions dialog will appear — click "Review Permissions", pick
+ * 3. A permissions dialog will appear - click "Review Permissions", pick
  *    your Google account, and if you see "Google hasn't verified this
- *    app", click "Advanced" → "Go to [project name] (unsafe)" → "Allow".
- * 4. That's it — no redeploy needed. This grants every scope the whole
+ *    app", click "Advanced" -> "Go to [project name] (unsafe)" -> "Allow".
+ * 4. That's it - no redeploy needed. This grants every scope the whole
  *    project uses (Mail + UrlFetchApp for Slack) in one go.
  */
 
 const SHEET_ID = '1zgAwpkowKm4s1cpELT1hh5LlUVSLz_gL35iVXWp-72Y';
-// Set this once in the Apps Script editor: Project Settings (gear icon) →
-// Script Properties → add key SLACK_WEBHOOK with your webhook URL as the
-// value. Keeping it out of source means it's never committed to GitHub —
+// Set this once in the Apps Script editor: Project Settings (gear icon) ->
+// Script Properties -> add key SLACK_WEBHOOK with your webhook URL as the
+// value. Keeping it out of source means it's never committed to GitHub -
 // GitHub's push protection will reject any commit containing a raw
 // Slack webhook URL.
 const SLACK_WEBHOOK = PropertiesService.getScriptProperties().getProperty('SLACK_WEBHOOK');
 
-// Internal team-facing notification address — separate from the client's
+// Internal team-facing notification address - separate from the client's
 // own confirmation email. Optional: leave unset until you have a dedicated
 // address, everything else works fine without it. Set the same way as
-// SLACK_WEBHOOK: Script Properties → key TEAM_NOTIFY_EMAIL → your address.
+// SLACK_WEBHOOK: Script Properties -> key TEAM_NOTIFY_EMAIL -> your address.
 const TEAM_NOTIFY_EMAIL = PropertiesService.getScriptProperties().getProperty('TEAM_NOTIFY_EMAIL');
 
-// Fields that carry base64 data URLs — saved as real Drive files instead of
+// Fields that carry base64 data URLs - saved as real Drive files instead of
 // being stuffed into a sheet cell.
 const FILE_FIELDS = ['logoDataUrl', 'guidelinesFileData', 'c1refFileData', 'c2refFileData',
                       'sceneRefFileData', 'musicRefFileData'];
 
-// Textra logo, extracted from index.html's header (PNG, base64) — used
+// Textra logo, extracted from index.html's header (PNG, base64) - used
 // as an inline (cid:) image in branded emails so it renders reliably
 // across email clients (data: URIs in <img src> are unreliably
 // supported in email, especially Gmail webmail).
@@ -122,7 +122,7 @@ function doPost(e) {
       return handleEmailPortalLink(jsonPayload);
     }
 
-    // Main brief submission — now sent as a JSON body via fetch() so the
+    // Main brief submission - now sent as a JSON body via fetch() so the
     // frontend can actually verify success (see finalSubmit() in
     // index.html). e.parameter is kept as a fallback for any old cached
     // frontend still doing a plain form POST.
@@ -150,7 +150,7 @@ function doGet(e) {
   }
 }
 
-// ── BRIEF SUBMISSION (existing logic, extended) ───────────────
+// -- BRIEF SUBMISSION (existing logic, extended) ---------------
 function handleBriefSubmission(data) {
   Logger.log('Request received');
   Logger.log('Data: ' + JSON.stringify(data));
@@ -180,7 +180,7 @@ function handleBriefSubmission(data) {
   var folder = getOrCreateClientFolder(token, data.companyName || data.projectName || data.fullName || 'Client');
   saveUploadedFiles(folder, data);
 
-  // Keep "Full Data" lean — strip base64 blobs (saved as real files above)
+  // Keep "Full Data" lean - strip base64 blobs (saved as real files above)
   // so we don't risk hitting the ~50,000-character sheet cell limit.
   var lightData = {};
   for (var key in data) {
@@ -232,12 +232,12 @@ function handleBriefSubmission(data) {
   }
 
   var targetRow = existingRow || sheet.getLastRow();
-  setColumnFormula(sheet, targetRow, 'Client Folder', '=HYPERLINK("' + folder.getUrl() + '","📁 Open Folder")');
+  setColumnFormula(sheet, targetRow, 'Client Folder', '=HYPERLINK("' + folder.getUrl() + '","[Folder] Open Folder")');
 
   // Legacy: if a script sheet URL happened to arrive with the brief itself,
   // still link it (kept for backwards compatibility with the old flow).
   if (data.scriptSheetUrl) {
-    setColumnFormula(sheet, targetRow, 'Script Sheet URL', '=HYPERLINK("' + data.scriptSheetUrl + '","📊 Open Script")');
+    setColumnFormula(sheet, targetRow, 'Script Sheet URL', '=HYPERLINK("' + data.scriptSheetUrl + '","[Script] Open Script")');
   }
 
   sendSlack(data);
@@ -252,11 +252,11 @@ function handleBriefSubmission(data) {
   });
 }
 
-// ── SCRIPT SUBMISSION (separate step, same row via token) ─────
+// -- SCRIPT SUBMISSION (separate step, same row via token) -----
 function handleSubmitScript(payload) {
   const sheet = SpreadsheetApp.openById(SHEET_ID).getActiveSheet();
   const tokenCol = findColumnByHeader(sheet, 'Portal Token');
-  if (tokenCol === -1) return jsonOut({ success: false, message: 'Portal Token column not found — submit a brief first.' });
+  if (tokenCol === -1) return jsonOut({ success: false, message: 'Portal Token column not found - submit a brief first.' });
 
   const row = findRowByColumnValue(sheet, tokenCol, payload.portalToken);
   if (!row) return jsonOut({ success: false, message: 'No submission found for this token.' });
@@ -279,13 +279,13 @@ function handleSubmitScript(payload) {
 
   setColumnValue(sheet, row, 'Script Title', payload.scriptTitle || '');
   setColumnValue(sheet, row, 'Script Method', payload.scriptInputMethod || '');
-  if (scriptLink) setColumnFormula(sheet, row, 'Script Sheet URL', '=HYPERLINK("' + scriptLink + '","📊 Open Script")');
+  if (scriptLink) setColumnFormula(sheet, row, 'Script Sheet URL', '=HYPERLINK("' + scriptLink + '","[Script] Open Script")');
   setColumnValue(sheet, row, 'Status', 'Script submitted');
 
   return jsonOut({ success: true, scriptLink: scriptLink });
 }
 
-// ── PORTAL LOOKUP (magic link revisit) ─────────────────────────
+// -- PORTAL LOOKUP (magic link revisit) -------------------------
 function handleGetSubmission(token) {
   if (!token) return jsonOut({ success: false, message: 'Missing token' });
   const sheet = SpreadsheetApp.openById(SHEET_ID).getActiveSheet();
@@ -303,8 +303,8 @@ function handleGetSubmission(token) {
   return jsonOut({ success: true, data: data });
 }
 
-// ── BRANDED EMAIL TEMPLATE ──────────────────────────────────────
-// Shared HTML shell for every client-facing email — logo header, Textra
+// -- BRANDED EMAIL TEMPLATE --------------------------------------
+// Shared HTML shell for every client-facing email - logo header, Textra
 // brand colours, a portal-link CTA button. Images embedded via cid: (not
 // a data: URI) since Gmail webmail and others strip inline data: images.
 function textraLogoBlob() {
@@ -329,11 +329,11 @@ function brandedEmailHtml(heading, bodyHtml, portalLink, ctaLabel) {
       '<div style="margin-top:14px;text-align:center;font-size:11px;color:#94a3b8;word-break:break-all;">' + portalLink + '</div>'
     ) : '') +
     '</td></tr>' +
-    '<tr><td style="padding:16px 32px;background:#f7f9fc;text-align:center;font-size:11px;color:#94a3b8;">Textra Video — studio-quality animated videos, fast.</td></tr>' +
+    '<tr><td style="padding:16px 32px;background:#f7f9fc;text-align:center;font-size:11px;color:#94a3b8;">Textra Video - studio-quality animated videos, fast.</td></tr>' +
     '</table></td></tr></table></body></html>';
 }
 
-// ── EMAIL PORTAL LINK (manual "Email it to me" button) ─────────
+// -- EMAIL PORTAL LINK (manual "Email it to me" button) ---------
 function handleEmailPortalLink(payload) {
   if (!payload.email || !payload.portalLink) {
     return jsonOut({ success: false, message: 'Missing email or link' });
@@ -344,7 +344,7 @@ function handleEmailPortalLink(payload) {
     body: portalLinkEmailBody(payload.portalLink),
     htmlBody: brandedEmailHtml(
       'Welcome to Textra Video!',
-      'Here is your project link — bookmark it, no password needed. Use it any time to check progress or write your script.',
+      'Here is your project link - bookmark it, no password needed. Use it any time to check progress or write your script.',
       payload.portalLink,
       'View Your Project'
     ),
@@ -356,23 +356,23 @@ function handleEmailPortalLink(payload) {
 function portalLinkEmailBody(portalLink) {
   return 'Here is your link to return to your Textra Video project any time:\n\n' +
          portalLink +
-         '\n\nBookmark it — no password needed. Use it to check progress or write your script.';
+         '\n\nBookmark it - no password needed. Use it to check progress or write your script.';
 }
 
-// ── CLIENT CONFIRMATION EMAIL (automatic, on brief submission) ─
+// -- CLIENT CONFIRMATION EMAIL (automatic, on brief submission) -
 function sendClientConfirmationEmail(data, portalLink) {
   try {
     if (!data.email) return;
     var greeting = data.fullName ? ('Hi ' + data.fullName + ',') : 'Hi,';
     var body = greeting + '\n\n' +
-      'Thanks — your Textra Video brand brief has been received. Our team is already on it.\n\n' +
+      'Thanks - your Textra Video brand brief has been received. Our team is already on it.\n\n' +
       (portalLink
-        ? 'Here is your project link — bookmark it, no password needed. Use it any time to check progress or write your script:\n\n' + portalLink + '\n\n'
+        ? 'Here is your project link - bookmark it, no password needed. Use it any time to check progress or write your script:\n\n' + portalLink + '\n\n'
         : '') +
-      'We will be in touch shortly.\n\n— Textra Video';
+      'We will be in touch shortly.\n\n- Textra Video';
     var bodyHtml = greeting + '<br><br>' +
-      'Thanks — your Textra Video brand brief has been received. Our team is already on it.' +
-      (portalLink ? '<br><br>Bookmark your project link below — no password needed. Use it any time to check progress or write your script.' : '') +
+      'Thanks - your Textra Video brand brief has been received. Our team is already on it.' +
+      (portalLink ? '<br><br>Bookmark your project link below - no password needed. Use it any time to check progress or write your script.' : '') +
       '<br><br>We will be in touch shortly.';
     MailApp.sendEmail({
       to: data.email,
@@ -387,11 +387,11 @@ function sendClientConfirmationEmail(data, portalLink) {
   }
 }
 
-// ── TEAM NOTIFICATION EMAIL (optional, internal) ────────────────
+// -- TEAM NOTIFICATION EMAIL (optional, internal) ----------------
 function sendTeamNotificationEmail(data, folderUrl) {
   try {
     if (!TEAM_NOTIFY_EMAIL) {
-      Logger.log('TEAM_NOTIFY_EMAIL not configured — skipping team notification email.');
+      Logger.log('TEAM_NOTIFY_EMAIL not configured - skipping team notification email.');
       return;
     }
     var body = 'New Textra Video brief submitted.\n\n' +
@@ -402,7 +402,7 @@ function sendTeamNotificationEmail(data, folderUrl) {
       'Client folder: ' + folderUrl;
     MailApp.sendEmail({
       to: TEAM_NOTIFY_EMAIL,
-      subject: 'New Textra submission — ' + (data.companyName || data.fullName || 'Client'),
+      subject: 'New Textra submission - ' + (data.companyName || data.fullName || 'Client'),
       body: body
     });
     Logger.log('Team notification email sent to ' + TEAM_NOTIFY_EMAIL);
@@ -411,11 +411,11 @@ function sendTeamNotificationEmail(data, folderUrl) {
   }
 }
 
-// ── SLACK ─────────────────────────────────────────────────────
+// -- SLACK -----------------------------------------------------
 function sendSlack(data) {
   try {
     if (!SLACK_WEBHOOK) {
-      Logger.log('Slack webhook not configured (Script Properties → SLACK_WEBHOOK) — skipping notification.');
+      Logger.log('Slack webhook not configured (Script Properties -> SLACK_WEBHOOK) - skipping notification.');
       return;
     }
     var nameVal = data.fullName ? data.fullName : 'N/A';
@@ -446,12 +446,12 @@ function sendSlack(data) {
   }
 }
 
-// ── DRIVE FOLDER HELPERS ────────────────────────────────────────
-const ROOT_FOLDER_NAME = 'Textra Onboarding — Client Briefs';
+// -- DRIVE FOLDER HELPERS ----------------------------------------
+const ROOT_FOLDER_NAME = 'Textra Onboarding - Client Briefs';
 
 function getOrCreateClientFolder(token, label) {
   var root = getOrCreateRootFolder();
-  var name = (label || 'Client') + ' — ' + token.slice(0, 8);
+  var name = (label || 'Client') + ' - ' + token.slice(0, 8);
   var existing = root.getFoldersByName(name);
   if (existing.hasNext()) return existing.next();
   return root.createFolder(name);
@@ -493,7 +493,7 @@ function saveBase64File(folder, dataUrl, baseName) {
   return folder.createFile(blob);
 }
 
-// ── SHEET HELPERS ─────────────────────────────────────────────
+// -- SHEET HELPERS ---------------------------------------------
 function findColumnByHeader(sheet, headerName) {
   const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
   for (let i = 0; i < headers.length; i++) {
@@ -534,17 +534,17 @@ function jsonOut(obj) {
     .setMimeType(ContentService.MimeType.JSON);
 }
 
-// ── ONE-TIME AUTHORIZATION HELPER ──────────────────────────────
-// Run this once manually from the editor (function dropdown → select
-// authorizeAllScopes → Run) to grant every scope the project needs
+// -- ONE-TIME AUTHORIZATION HELPER ------------------------------
+// Run this once manually from the editor (function dropdown -> select
+// authorizeAllScopes -> Run) to grant every scope the project needs
 // (Mail, UrlFetchApp for Slack, Drive, Sheets, Docs). See the "ONE-TIME
 // AUTHORIZATION STEP" note in the file header for the full walkthrough.
-// Safe to leave in permanently — it's never called automatically.
+// Safe to leave in permanently - it's never called automatically.
 function authorizeAllScopes() {
   Logger.log('Requesting authorization for all scopes this project uses...');
   MailApp.getRemainingDailyQuota(); // touches Mail scope
   UrlFetchApp.fetch('https://www.google.com', { muteHttpExceptions: true }); // touches external request scope
   SpreadsheetApp.openById(SHEET_ID); // touches Sheets scope
   DriveApp.getRootFolder(); // touches Drive scope
-  Logger.log('If you saw a permissions prompt and approved it, you are done — no redeploy needed.');
+  Logger.log('If you saw a permissions prompt and approved it, you are done - no redeploy needed.');
 }
