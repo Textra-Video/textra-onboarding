@@ -161,20 +161,24 @@ function handleBriefSubmission(data) {
 
   const sheet = SpreadsheetApp.openById(SHEET_ID).getActiveSheet();
 
-  if (sheet.getLastRow() === 0) {
-    const headers = [
-      'Timestamp', 'Email', 'Full Name', 'Company', 'Project', 'Brand Method', 'Font',
-      'Characters Style', 'Character A Gender', 'Character A Age', 'Character A Ethnicity',
-      'Character A Accent', 'Character A Clothing', 'Character A Notes',
-      'Character B Gender', 'Character B Age', 'Character B Ethnicity',
-      'Character B Accent', 'Character B Clothing', 'Character B Notes',
-      'Background', 'Scene Notes', 'Title Screen', 'Music',
-      'Script Title', 'Script Method', 'Deadline', 'Full Data',
-      'Portal Token', 'Status', 'Client Folder'
-    ];
-    sheet.appendRow(headers);
-    Logger.log('Headers created');
-  }
+  // Always (re)write row 1 with the current header set - not just when the
+  // sheet is empty. A stale header row left over from an earlier version
+  // of this script (different columns) meant this never ran, so data kept
+  // landing in the right columns with no labels above most of them - and
+  // findColumnByHeader(sheet, 'Portal Token') always came back empty since
+  // that literal header text was never written, which is also why magic
+  // links couldn't find a client's existing submission.
+  const HEADERS = [
+    'Timestamp', 'Email', 'Full Name', 'Company', 'Project', 'Brand Method', 'Font',
+    'Characters Style', 'Character A Gender', 'Character A Age', 'Character A Ethnicity',
+    'Character A Accent', 'Character A Clothing', 'Character A Notes',
+    'Character B Gender', 'Character B Age', 'Character B Ethnicity',
+    'Character B Accent', 'Character B Clothing', 'Character B Notes',
+    'Background', 'Scene Notes', 'Title Screen', 'Music',
+    'Script Title', 'Script Method', 'Deadline', 'Full Data',
+    'Portal Token', 'Status', 'Client Folder'
+  ];
+  sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
 
   var token = data.portalToken || Utilities.getUuid();
   var folder = getOrCreateClientFolder(token, data.companyName || data.projectName || data.fullName || 'Client');
@@ -240,7 +244,7 @@ function handleBriefSubmission(data) {
     setColumnFormula(sheet, targetRow, 'Script Sheet URL', '=HYPERLINK("' + data.scriptSheetUrl + '","[Script] Open Script")');
   }
 
-  sendSlack(data);
+  sendSlack(data, folder.getUrl());
   sendClientConfirmationEmail(data, data.portalLink);
   sendTeamNotificationEmail(data, folder.getUrl());
 
@@ -316,8 +320,8 @@ function brandedEmailHtml(heading, bodyHtml, portalLink, ctaLabel) {
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f7f9fc;padding:32px 16px;">' +
     '<tr><td align="center">' +
     '<table role="presentation" width="480" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(13,27,62,.08);max-width:480px;">' +
-    '<tr><td style="background:linear-gradient(135deg,#1A71B1,#66BCAD);padding:28px 32px;text-align:center;">' +
-    '<img src="cid:logo" alt="Textra Video" style="height:28px;display:inline-block;border:0;">' +
+    '<tr><td style="background:#ffffff;border-bottom:1px solid #e2e8f0;padding:28px 32px;text-align:center;">' +
+    '<img src="cid:logo" alt="Textra Video" style="height:32px;display:inline-block;border:0;">' +
     '</td></tr>' +
     '<tr><td style="padding:32px;">' +
     '<h1 style="margin:0 0 16px;font-size:20px;color:#0d1b3e;font-family:Arial,Helvetica,sans-serif;">' + heading + '</h1>' +
@@ -412,7 +416,7 @@ function sendTeamNotificationEmail(data, folderUrl) {
 }
 
 // -- SLACK -----------------------------------------------------
-function sendSlack(data) {
+function sendSlack(data, folderUrl) {
   try {
     if (!SLACK_WEBHOOK) {
       Logger.log('Slack webhook not configured (Script Properties -> SLACK_WEBHOOK) - skipping notification.');
@@ -422,8 +426,10 @@ function sendSlack(data) {
     var emailVal = data.email ? data.email : 'N/A';
     var companyVal = data.companyName ? data.companyName : 'N/A';
     var projectVal = data.projectName ? data.projectName : 'N/A';
+    var spreadsheetUrl = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/edit';
 
-    var textMsg = 'Name: ' + nameVal + '\nEmail: ' + emailVal + '\nCompany: ' + companyVal + '\nProject: ' + projectVal;
+    var textMsg = 'Name: ' + nameVal + '\nEmail: ' + emailVal + '\nCompany: ' + companyVal + '\nProject: ' + projectVal +
+      '\n\n<' + (folderUrl || spreadsheetUrl) + '|Client Drive folder>  |  <' + spreadsheetUrl + '|Master spreadsheet>';
 
     var message = {
       text: 'New Textra Submission',

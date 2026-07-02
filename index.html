@@ -1223,18 +1223,22 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     <div class="success-sub" id="successSub">Your brand brief is with the Textra team. Our designers are already on it — keep an eye on your inbox.</div>
 
     <div style="margin:24px 0 8px;padding:20px 24px;background:#fff;border:1.5px solid var(--border);border-radius:12px;text-align:left">
-      <div style="font-size:13px;font-weight:800;color:var(--navy);margin-bottom:6px">🔑 Your Portal Link</div>
-      <p style="font-size:12px;color:var(--text-muted);margin:0 0 12px;line-height:1.6">Bookmark or save this link — it's how you'll come back to this project later to write your script or check on progress. No password needed.</p>
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        <input id="portalLinkInput" type="text" readonly style="flex:1;min-width:220px;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;color:var(--text-muted);background:var(--bg)">
-        <button onclick="copyPortalLink()" id="copyPortalLinkBtn" style="padding:9px 16px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Copy Link</button>
-        <button onclick="emailPortalLink()" id="emailPortalLinkBtn" style="padding:9px 16px;background:#fff;color:var(--navy);border:1.5px solid var(--border);border-radius:8px;font-family:Inter,sans-serif;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">Email it to me</button>
-      </div>
-      <div id="emailPortalLinkStatus" style="font-size:11px;color:var(--teal2);margin-top:8px;display:none"></div>
+      <p style="font-size:14px;color:var(--navy);margin:0;line-height:1.7">Thank you for submitting your brief and brand info. We've emailed you a magic link and confirmation — use it to edit your submission and also submit a script.</p>
+    </div>
+
+    <div id="driveLinkWrap" style="display:none;margin:16px 0 8px">
+      <a id="driveFolderLink" href="#" target="_blank"
+        style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:white;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-weight:600;color:var(--navy);text-decoration:none;box-shadow:var(--shadow)">
+        <img src="https://www.google.com/images/about/googledrive-1.png" style="height:18px" alt="">
+        View your brief in Google Drive
+      </a>
     </div>
 
     <div style="margin:16px 0 8px;padding:20px 24px;background:var(--bg);border:1.5px solid var(--border);border-radius:12px;text-align:left">
-      <div style="font-size:13px;font-weight:800;color:var(--navy);margin-bottom:10px">✅ What you've submitted</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-size:13px;font-weight:800;color:var(--navy)">✅ What you've submitted</div>
+        <button onclick="editBrief()" style="padding:6px 14px;background:#fff;color:var(--navy);border:1.5px solid var(--border);border-radius:8px;font-family:Inter,sans-serif;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">✎ Edit my brief</button>
+      </div>
       <div id="portalChecklist"></div>
     </div>
 
@@ -1246,13 +1250,6 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       </div>
     </div>
 
-    <div id="driveLinkWrap" style="display:none;margin-bottom:24px">
-      <a id="driveFolderLink" href="#" target="_blank"
-        style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:white;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-weight:600;color:var(--navy);text-decoration:none;box-shadow:var(--shadow)">
-        <img src="https://www.google.com/images/about/googledrive-1.png" style="height:18px" alt="">
-        View your brief in Google Drive
-      </a>
-    </div>
     <div class="timeline">
       <div class="tl-item"><div class="tl-text"><strong>Within 1 hour</strong> — Confirmation email with your project reference.</div></div>
       <div class="tl-item"><div class="tl-text"><strong>AI Conversion</strong> — Content structured into storyboard and script.</div></div>
@@ -1904,6 +1901,13 @@ function closeLibraryModal(){} // no-op
 
 function startScript(){
   goTo(8);
+}
+
+// Take the client back into the intake flow to change something (e.g.
+// add a character) — the same portal token carries through, so
+// finalSubmit() upserts the same row/folder instead of creating a new one.
+function editBrief(){
+  goTo(2);
 }
 
 function showFinishLater(){
@@ -3079,8 +3083,10 @@ function buildReview(){
 
 // ── PORTAL PAGE (page 7) ──────────────────────────
 function renderPortalPage(){
-  var linkInput=document.getElementById('portalLinkInput');
-  if(linkInput)linkInput.value=getPortalLink();
+  // Ensure a token always exists here regardless of DOM state — this used
+  // to only happen as a side effect of populating the (now removed)
+  // portal-link input field.
+  getPortalToken();
 
   if(state.driveFolderUrl){
     var dw=document.getElementById('driveLinkWrap');
