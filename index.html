@@ -1945,7 +1945,7 @@ function finalSubmit(){
   fetch(GOOGLE_SCRIPT_URL,{
     method:'POST',
     body:JSON.stringify(data),
-    headers:{'Content-Type':'application/json'}
+    headers:{'Content-Type':'text/plain;charset=utf-8'}
   }).then(function(r){ return r.json(); })
   .then(function(resp){
     if(btn){ btn.disabled = false; }
@@ -2399,7 +2399,7 @@ function submitScript(){
     // text/plain avoids a CORS preflight (OPTIONS) that Apps Script Web
     // Apps don't handle — the backend still parses it as JSON regardless
     // of the declared content type.
-    headers:{'Content-Type':'application/json'}
+    headers:{'Content-Type':'text/plain;charset=utf-8'}
   }).then(function(r){ return r.json(); })
   .then(function(resp){
     if(!resp||!resp.success){
@@ -2526,7 +2526,7 @@ function createScriptSheet(){
     // text/plain avoids a CORS preflight (OPTIONS) that Apps Script Web
     // Apps don't handle — the backend still parses it as JSON regardless
     // of the declared content type.
-    headers:{'Content-Type':'application/json'}
+    headers:{'Content-Type':'text/plain;charset=utf-8'}
   })
   .then(function(r){return r.json();})
   .then(function(d){
@@ -2578,7 +2578,7 @@ function createScriptSheetPage8(){
     // text/plain avoids a CORS preflight (OPTIONS) that Apps Script Web
     // Apps don't handle — the backend still parses it as JSON regardless
     // of the declared content type.
-    headers:{'Content-Type':'application/json'}
+    headers:{'Content-Type':'text/plain;charset=utf-8'}
   })
   .then(function(r){return r.json();})
   .then(function(d){
@@ -3160,7 +3160,7 @@ function emailPortalLink(){
     // text/plain avoids a CORS preflight (OPTIONS) that Apps Script Web
     // Apps don't handle — the backend still parses it as JSON regardless
     // of the declared content type.
-    headers:{'Content-Type':'application/json'}
+    headers:{'Content-Type':'text/plain;charset=utf-8'}
   }).then(function(r){ return r.json(); })
   .then(function(resp){
     if(btn){btn.disabled=false;btn.textContent='Email it to me';}
