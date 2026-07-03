@@ -395,6 +395,7 @@ function handleEmailPortalLink(payload) {
   }
   MailApp.sendEmail({
     to: payload.email,
+    from: 'onboarding@textra.video',
     subject: 'Your Textra Video project link',
     body: portalLinkEmailBody(payload.portalLink),
     htmlBody: brandedEmailHtml(
@@ -434,6 +435,7 @@ function sendClientConfirmationEmail(data, portalLink, folderUrl) {
       '<br><br>We will be in touch shortly.';
     MailApp.sendEmail({
       to: data.email,
+      from: 'onboarding@textra.video',
       subject: 'Your Textra Video brief has been received - ' + (data.companyName || data.projectName || data.fullName || 'New Project'),
       body: body,
       htmlBody: brandedEmailHtml('Welcome to Textra Video!', bodyHtml, portalLink, 'View Your Project', folderUrl, scriptLink),
@@ -460,6 +462,7 @@ function sendTeamNotificationEmail(data, folderUrl) {
       'Client folder: ' + folderUrl;
     MailApp.sendEmail({
       to: TEAM_NOTIFY_EMAIL,
+      from: 'onboarding@textra.video',
       subject: 'New Textra submission - ' + (data.companyName || data.fullName || 'Client'),
       body: body
     });
