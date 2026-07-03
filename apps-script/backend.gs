@@ -192,7 +192,6 @@ function handleBriefSubmission(data) {
   // token suffix), so a name lookup would create a duplicate if the client
   // changes their company name between submissions.
   var folder = (existingRow && getFolderFromRow(sheet, existingRow)) || createClientFolder(clientLabel, token);
-  grantClientAccess(folder, data.email);
   saveUploadedFiles(folder, data, clientLabel);
   generateBriefDocument(folder, data, clientLabel);
 
@@ -246,14 +245,13 @@ function handleBriefSubmission(data) {
   }
 
   sendSlack(data, folder.getUrl());
-  sendClientConfirmationEmail(data, data.portalLink, folder.getUrl());
+  sendClientConfirmationEmail(data, data.portalLink);
   sendTeamNotificationEmail(data, folder.getUrl());
 
   return jsonOut({
     success: true,
     message: 'Form submitted successfully',
-    token: token,
-    folder: folder.getUrl()
+    token: token
   });
 }
 
@@ -330,10 +328,6 @@ function handleGetSubmission(token) {
   var data = {};
   try { data = JSON.parse(sheet.getRange(row, fullDataCol).getValue()); } catch (e) {}
 
-  var folder = getFolderFromRow(sheet, row);
-  if (folder) grantClientAccess(folder, data.email);
-  data.driveFolderUrl = folder ? folder.getUrl() : '';
-
   return jsonOut({ success: true, data: data });
 }
 
@@ -395,7 +389,7 @@ function handleEmailPortalLink(payload) {
   }
   MailApp.sendEmail({
     to: payload.email,
-    from: 'onboarding@textra.video',
+    name: 'Textra Onboarding',
     subject: 'Your Textra Video project link',
     body: portalLinkEmailBody(payload.portalLink),
     htmlBody: brandedEmailHtml(
@@ -416,29 +410,27 @@ function portalLinkEmailBody(portalLink) {
 }
 
 // -- CLIENT CONFIRMATION EMAIL (automatic, on brief submission) -
-function sendClientConfirmationEmail(data, portalLink, folderUrl) {
+function sendClientConfirmationEmail(data, portalLink) {
   try {
     if (!data.email) return;
-    var scriptLink = portalLink ? (portalLink + '&step=script') : '';
     var greeting = data.fullName ? ('Hi ' + data.fullName + ',') : 'Hi,';
+    var scriptLink = portalLink ? (portalLink + '&step=script') : '';
     var body = greeting + '\n\n' +
       'Thanks - your Textra Video brand brief has been received. Our team is already on it.\n\n' +
       (portalLink
-        ? 'Here is your project link - bookmark it, no password needed. Use it any time to check progress or write your script:\n\n' + portalLink + '\n\n'
+        ? 'Bookmark your project link below - no password needed. Use it any time to check progress or write your script:\n\n' + portalLink + '\n\n'
         : '') +
-      (scriptLink ? 'Ready to write your script? ' + scriptLink + '\n\n' : '') +
-      (folderUrl ? 'View your uploaded files and data any time:\n\n' + folderUrl + '\n\n' : '') +
-      'We will be in touch shortly.\n\n- Textra Video';
+      'We will be in touch shortly.\n\n- Textra Onboarding';
     var bodyHtml = greeting + '<br><br>' +
       'Thanks - your Textra Video brand brief has been received. Our team is already on it.' +
       (portalLink ? '<br><br>Bookmark your project link below - no password needed. Use it any time to check progress or write your script.' : '') +
       '<br><br>We will be in touch shortly.';
     MailApp.sendEmail({
       to: data.email,
-      from: 'onboarding@textra.video',
+      name: 'Textra Onboarding',
       subject: 'Your Textra Video brief has been received - ' + (data.companyName || data.projectName || data.fullName || 'New Project'),
       body: body,
-      htmlBody: brandedEmailHtml('Welcome to Textra Video!', bodyHtml, portalLink, 'View Your Project', folderUrl, scriptLink),
+      htmlBody: brandedEmailHtml('Welcome to Textra Video!', bodyHtml, portalLink, 'View Your Project', null, scriptLink),
       inlineImages: { logo: textraLogoBlob() }
     });
     Logger.log('Client confirmation email sent to ' + data.email);
@@ -462,7 +454,7 @@ function sendTeamNotificationEmail(data, folderUrl) {
       'Client folder: ' + folderUrl;
     MailApp.sendEmail({
       to: TEAM_NOTIFY_EMAIL,
-      from: 'onboarding@textra.video',
+      name: 'Textra Onboarding',
       subject: 'New Textra submission - ' + (data.companyName || data.fullName || 'Client'),
       body: body
     });
@@ -510,16 +502,16 @@ function sendSlack(data, folderUrl) {
 }
 
 // -- DRIVE FOLDER HELPERS ----------------------------------------
-// The root folder itself is never shared with clients - only individual
-// client subfolders are, via addViewer() below, so a client can never
-// browse into another client's folder even though they all live under
-// the same root in Textra's Drive.
+// Client subfolders are internal only - never shared with the client (no
+// addViewer, no Drive "shared with you" notification email). The client's
+// only view into their project is the portal page and the Google Doc/Sheet
+// links we choose to surface there; the raw Drive folder stays internal,
+// visible to the team via Slack.
 const ROOT_FOLDER_NAME = 'Textra Onboarding - Client Briefs';
 
 // Named after the client only - no token suffix - since that name is what
-// shows up in Drive's native "shared with you" notification and in the
-// confirmation email subject. The token still identifies the folder
-// unambiguously via the sheet's "Client Folder" link (see
+// shows up in the confirmation email subject. The token still identifies
+// the folder unambiguously via the sheet's "Client Folder" link (see
 // handleBriefSubmission), so two clients sharing a display name is
 // cosmetic only, never a lookup collision.
 function createClientFolder(label, token) {
@@ -527,29 +519,6 @@ function createClientFolder(label, token) {
   var folder = root.createFolder(label || 'Client');
   folder.setDescription('Textra portal token: ' + token);
   return folder;
-}
-
-// Restricted sharing (not "anyone with the link") - explicitly adds only
-// this client's email as a viewer. Safe to call repeatedly (checks first,
-// see below) - this also backfills folders that were created before this
-// sharing step existed, without re-spamming a "shared with you" email on
-// every visit.
-function grantClientAccess(folder, clientEmail) {
-  if (!clientEmail) return;
-  try {
-    // Drive re-sends its native "shared with you" notification email every
-    // single time addViewer() is called, even if that person already has
-    // access - it's not idempotent the way the comment above used to
-    // assume. Since this runs on every magic-link revisit (handleGetSubmission)
-    // as well as on submit, that meant a fresh "shared with you" email on
-    // every single portal visit. Only call addViewer() the first time.
-    var alreadyShared = folder.getViewers().some(function (u) {
-      return u.getEmail().toLowerCase() === clientEmail.toLowerCase();
-    });
-    if (!alreadyShared) folder.addViewer(clientEmail);
-  } catch (e) {
-    Logger.log('addViewer failed: ' + e.toString());
-  }
 }
 
 function getOrCreateRootFolder() {
@@ -571,6 +540,10 @@ function getFolderFromRow(sheet, row) {
 
 function generateBriefDocument(folder, data, clientLabel) {
   try {
+    if (!folder) {
+      Logger.log('generateBriefDocument: folder is null/undefined');
+      return null;
+    }
     const docTitle = 'Textra Video Brief - ' + clientLabel;
     const doc = DocumentApp.create(docTitle);
     const body = doc.getBody();
@@ -638,9 +611,10 @@ function generateBriefDocument(folder, data, clientLabel) {
     const docFile = DriveApp.getFileById(doc.getId());
     folder.addFile(docFile);
     DriveApp.getRootFolder().removeFile(docFile);
+    Logger.log('Brief document created: ' + docTitle + ' in folder: ' + folder.getName());
     return doc.getUrl();
   } catch (e) {
-    Logger.log('Error generating brief: ' + e.toString());
+    Logger.log('Error generating brief document: ' + e.toString());
     return null;
   }
 }

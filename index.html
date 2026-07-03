@@ -1135,7 +1135,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
   <div class="card" id="reviewCard"></div>
   <!-- Simple submit button -->
   <div style="margin-top:20px;text-align:center">
-    <button id="submitBtn" onclick="finalSubmit()" style="padding:14px 32px;background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:14px;font-weight:700;cursor:pointer">Submit Brief</button>
+    <button id="submitBtn" onclick="finalSubmit()" style="padding:14px 0;width:170px;background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:14px;font-weight:700;cursor:pointer;text-align:center">Submit Brief</button>
   </div>
   <div style="margin-top:10px">
     <button class="btn btn-ghost" onclick="goTo(4)" style="font-size:12px;padding:8px 16px">← Back to Scene &amp; Music</button>
@@ -1234,13 +1234,6 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       </div>
       <div id="portalChecklist"></div>
       <div style="margin-top:10px;font-size:11px;color:var(--text-muted)">Need to add a character or tweak something? Update your brief below — this revises your existing project, it won't start a new one.</div>
-      <div id="driveLinkWrap" style="display:none;margin-top:16px">
-        <a id="driveFolderLink" href="#" target="_blank"
-          style="display:inline-flex;align-items:center;gap:8px;padding:11px 20px;background:white;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-weight:700;color:var(--navy);text-decoration:none">
-          <img src="https://www.google.com/images/about/googledrive-1.png" style="height:16px" alt="">
-          View My Data
-        </a>
-      </div>
     </div>
 
     <div class="timeline">
@@ -1321,7 +1314,6 @@ function populateFromSubmission(d){
   state.bgChoice=d.background||''; setVal('scenedesc',d.sceneDesc);
   state.titleScreen=d.titleScreen||''; state.music=d.music||'';
   setVal('musicTrackUrl',d.musicTrackUrl); setVal('musicNotes',d.musicNotes);
-  state.driveFolderUrl=d.driveFolderUrl||'';
 }
 
 document.addEventListener('DOMContentLoaded',function(){
@@ -1931,10 +1923,11 @@ function finalSubmit(){
   if(btn) {
     btn.disabled = true;
     var dots = 0;
-    btn.textContent = 'Submitting.';
+    btn.innerHTML = 'Submitting<span id="dots" style="display:inline-block;width:27px;text-align:left">.</span>';
     var dotInterval = setInterval(function() {
       dots = (dots + 1) % 4;
-      btn.textContent = 'Submitting' + '.'.repeat(dots);
+      var dotsSpan = document.getElementById('dots');
+      if(dotsSpan) dotsSpan.textContent = '.'.repeat(dots);
     }, 500);
     window._submitInterval = dotInterval;
   }
@@ -1960,7 +1953,6 @@ function finalSubmit(){
     if(window._submitInterval) clearInterval(window._submitInterval);
     if(btn){ btn.disabled = false; }
     if(resp&&resp.success){
-      if(resp.folder) state.driveFolderUrl = resp.folder;
       if(btn) btn.textContent = 'Brief submitted!';
       goTo(7);
     } else {
@@ -2849,7 +2841,7 @@ function resetForm(){
   // Reset state
   state.brandMethod=''; state.charStyle=''; state.bgChoice=''; state.music='';
   state.font=''; state.logoDataUrl=null; state.extractedTagline='';
-  state.extractedColors=[]; state.driveFolderUrl='';
+  state.extractedColors=[];
   state.sheetCreated=false; state.sheetUrl=''; state.scriptTitle='';
   state.portalToken='';
   window._uploadedFiles={};
@@ -3118,12 +3110,6 @@ function renderPortalPage(){
   // to only happen as a side effect of populating the (now removed)
   // portal-link input field.
   getPortalToken();
-
-  if(state.driveFolderUrl){
-    var dw=document.getElementById('driveLinkWrap');
-    var dl=document.getElementById('driveFolderLink');
-    if(dw&&dl){dl.href=state.driveFolderUrl;dw.style.display='block';}
-  }
 
   var selCharStyle=document.querySelector('#charStyleGrid .cc.sel .cc-title');
   var selBgEl=document.querySelector('#bgGrid .bg-opt.sel .bg-name');
