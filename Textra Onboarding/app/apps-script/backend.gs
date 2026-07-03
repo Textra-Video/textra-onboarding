@@ -422,14 +422,16 @@ function sendClientConfirmationEmail(data, portalLink, folderUrl) {
     var body = greeting + '\n\n' +
       'Thanks - your Textra Video brand brief has been received.\n\n' +
       'View your uploaded files and data any time:\n' + (folderUrl || '') + '\n\n' +
-      '- Textra Onboarding';
+      '- Textra Video';
     var bodyHtml = greeting + '<br><br>' +
       'Thanks - your Textra Video brand brief has been received.';
     MailApp.sendEmail({
       to: data.email,
+      from: 'Textra Onboarding <onboarding@textra.video>',
+      replyTo: 'onboarding@textra.video',
       subject: 'Your Textra Video brief has been received - ' + (data.companyName || data.projectName || data.fullName || 'New Project'),
       body: body,
-      htmlBody: brandedEmailHtml('Welcome to Textra Video!', bodyHtml, null, null, folderUrl, null),
+      htmlBody: brandedEmailHtml('Welcome to Textra Video!', bodyHtml, portalLink, 'View My Data', folderUrl, null),
       inlineImages: { logo: textraLogoBlob() }
     });
     Logger.log('Client confirmation email sent to ' + data.email);
