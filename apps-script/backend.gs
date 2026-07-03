@@ -178,7 +178,7 @@ function handleBriefSubmission(data) {
     'Character B Gender', 'Character B Age', 'Character B Ethnicity',
     'Character B Accent', 'Character B Clothing', 'Character B Notes',
     'Background', 'Scene Notes', 'Title Screen', 'Music',
-    'Script Title', 'Script Method', 'Deadline', 'Full Data',
+    'Script Title', 'Script Method', 'Deadline',
     'Portal Token', 'Status', 'Client Folder'
   ];
   sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
@@ -194,15 +194,7 @@ function handleBriefSubmission(data) {
   var folder = (existingRow && getFolderFromRow(sheet, existingRow)) || createClientFolder(clientLabel, token);
   grantClientAccess(folder, data.email);
   saveUploadedFiles(folder, data, clientLabel);
-
-  // Keep "Full Data" lean - strip base64 blobs (saved as real files above)
-  // so we don't risk hitting the ~50,000-character sheet cell limit.
-  var lightData = {};
-  for (var key in data) {
-    if (!data.hasOwnProperty(key)) continue;
-    if (FILE_FIELDS.indexOf(key) !== -1) continue;
-    lightData[key] = data[key];
-  }
+  generateBriefDocument(folder, data, clientLabel);
 
   const row = [
     new Date(),
@@ -232,7 +224,6 @@ function handleBriefSubmission(data) {
     data.scriptTitle || '',
     data.scriptMethod || '',
     data.deadline || '',
-    JSON.stringify(lightData),
     token,
     'Brief submitted',
     ''
@@ -573,6 +564,82 @@ function getFolderFromRow(sheet, row) {
   var idMatch = /\/folders\/([a-zA-Z0-9_-]+)/.exec(match[1]);
   if (!idMatch) return null;
   try { return DriveApp.getFolderById(idMatch[1]); } catch (e) { return null; }
+}
+
+function generateBriefDocument(folder, data, clientLabel) {
+  try {
+    const docTitle = 'Textra Video Brief - ' + clientLabel;
+    const doc = DocumentApp.create(docTitle);
+    const body = doc.getBody();
+    const para = body.clear().appendParagraph('');
+
+    body.appendParagraph(clientLabel).setHeading(DocumentApp.ParagraphHeading.HEADING1);
+    body.appendParagraph(data.projectName || '').setForegroundColor('#666666').setFontSize(12);
+
+    body.appendParagraph('').setSpacingAfter(12);
+
+    // Contact & Project
+    body.appendParagraph('Project Details').setHeading(DocumentApp.ParagraphHeading.HEADING2);
+    if(data.email) body.appendParagraph('Email: ' + data.email);
+    if(data.phone) body.appendParagraph('Phone: ' + data.phone);
+    if(data.deadline) body.appendParagraph('Deadline: ' + data.deadline);
+    body.appendParagraph('').setSpacingAfter(12);
+
+    // Brand
+    body.appendParagraph('Brand').setHeading(DocumentApp.ParagraphHeading.HEADING2);
+    body.appendParagraph('Method: ' + ({website:'Website extraction',manual:'Manual entry',guidelines:'Guidelines uploaded'}[data.brandMethod] || data.brandMethod || 'Not specified'));
+    if(data.font) body.appendParagraph('Font: ' + data.font);
+    if(data.tagline) body.appendParagraph('Tagline: ' + data.tagline);
+    body.appendParagraph('').setSpacingAfter(12);
+
+    // Characters
+    body.appendParagraph('Characters').setHeading(DocumentApp.ParagraphHeading.HEADING2);
+    body.appendParagraph('Style: ' + (data.charStyle || 'Not specified'));
+    if(data.c1gender) {
+      body.appendParagraph('Character 1:');
+      if(data.c1gender) body.appendParagraph('  • Gender: ' + data.c1gender);
+      if(data.c1age) body.appendParagraph('  • Age: ' + data.c1age);
+      if(data.c1eth) body.appendParagraph('  • Ethnicity: ' + data.c1eth);
+      if(data.c1accent) body.appendParagraph('  • Accent: ' + data.c1accent);
+      if(data.c1clothing) body.appendParagraph('  • Clothing: ' + data.c1clothing);
+      if(data.c1notes) body.appendParagraph('  • Notes: ' + data.c1notes);
+    }
+    if(data.c2gender) {
+      body.appendParagraph('Character 2:');
+      if(data.c2gender) body.appendParagraph('  • Gender: ' + data.c2gender);
+      if(data.c2age) body.appendParagraph('  • Age: ' + data.c2age);
+      if(data.c2eth) body.appendParagraph('  • Ethnicity: ' + data.c2eth);
+      if(data.c2accent) body.appendParagraph('  • Accent: ' + data.c2accent);
+      if(data.c2clothing) body.appendParagraph('  • Clothing: ' + data.c2clothing);
+      if(data.c2notes) body.appendParagraph('  • Notes: ' + data.c2notes);
+    }
+    body.appendParagraph('').setSpacingAfter(12);
+
+    // Scene & Music
+    body.appendParagraph('Scene & Music').setHeading(DocumentApp.ParagraphHeading.HEADING2);
+    if(data.background) body.appendParagraph('Background: ' + data.background);
+    if(data.sceneDesc) body.appendParagraph('Scene Notes: ' + data.sceneDesc);
+    if(data.titleScreen) body.appendParagraph('Title Screen: ' + data.titleScreen);
+    if(data.music) body.appendParagraph('Music: ' + data.music);
+    if(data.musicNotes) body.appendParagraph('Music Notes: ' + data.musicNotes);
+    body.appendParagraph('').setSpacingAfter(12);
+
+    // Script
+    if(data.scriptTitle || data.scriptMethod) {
+      body.appendParagraph('Script').setHeading(DocumentApp.ParagraphHeading.HEADING2);
+      if(data.scriptTitle) body.appendParagraph('Title: ' + data.scriptTitle);
+      if(data.scriptMethod) body.appendParagraph('Method: ' + data.scriptMethod);
+      body.appendParagraph('').setSpacingAfter(12);
+    }
+
+    const docFile = DriveApp.getFileById(doc.getId());
+    folder.addFile(docFile);
+    DriveApp.getRootFolder().removeFile(docFile);
+    return doc.getUrl();
+  } catch (e) {
+    Logger.log('Error generating brief: ' + e.toString());
+    return null;
+  }
 }
 
 function saveUploadedFiles(folder, data, clientLabel) {
