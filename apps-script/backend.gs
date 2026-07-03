@@ -344,7 +344,7 @@ function textraLogoBlob() {
 // the layout Outlook and other email clients actually render reliably.
 // Falls back to a single full-width button if only one link is present.
 function secondaryButton(href, label) {
-  return '<a href="' + href + '" style="display:block;padding:11px 12px;background:#ffffff;border:1.5px solid #e2e8f0;border-radius:8px;color:#0d1b3e;text-decoration:none;font-weight:bold;font-size:13px;text-align:center;">' + label + '</a>';
+  return '<a href="' + href + '" style="display:block;box-sizing:border-box;width:100%;padding:13px 12px;background:#ffffff;border:1.5px solid #e2e8f0;border-radius:8px;color:#0d1b3e;text-decoration:none;font-weight:bold;font-size:14px;text-align:center;">' + label + '</a>';
 }
 
 function secondaryButtonsRow(scriptLink, folderUrl) {
@@ -367,8 +367,8 @@ function brandedEmailHtml(heading, bodyHtml, portalLink, ctaLabel, folderUrl, sc
     '<h1 style="margin:0 0 16px;font-size:20px;color:#0d1b3e;font-family:Arial,Helvetica,sans-serif;">' + heading + '</h1>' +
     '<div style="font-size:14px;line-height:1.6;color:#334155;">' + bodyHtml + '</div>' +
     (portalLink ? (
-      '<div style="margin-top:28px;text-align:center;">' +
-      '<a href="' + portalLink + '" style="display:inline-block;padding:13px 30px;background:linear-gradient(135deg,#1A71B1,#66BCAD);color:#ffffff;text-decoration:none;border-radius:8px;font-weight:bold;font-size:14px;">' + (ctaLabel || 'View Your Project') + '</a>' +
+      '<div style="margin-top:28px;">' +
+      '<a href="' + portalLink + '" style="display:block;box-sizing:border-box;width:100%;padding:13px 12px;background:linear-gradient(135deg,#1A71B1,#66BCAD);color:#ffffff;text-decoration:none;border-radius:8px;font-weight:bold;font-size:14px;text-align:center;">' + (ctaLabel || 'View Your Project') + '</a>' +
       '</div>'
     ) : '') +
     secondaryButtonsRow(scriptLink, folderUrl) +
@@ -390,6 +390,7 @@ function handleEmailPortalLink(payload) {
   MailApp.sendEmail({
     to: payload.email,
     name: 'Textra Onboarding',
+    replyTo: 'onboarding@textra.video',
     subject: 'Your Textra Video project link',
     body: portalLinkEmailBody(payload.portalLink),
     htmlBody: brandedEmailHtml(
@@ -428,6 +429,7 @@ function sendClientConfirmationEmail(data, portalLink) {
     MailApp.sendEmail({
       to: data.email,
       name: 'Textra Onboarding',
+      replyTo: 'onboarding@textra.video',
       subject: 'Your Textra Video brief has been received - ' + (data.companyName || data.projectName || data.fullName || 'New Project'),
       body: body,
       htmlBody: brandedEmailHtml('Welcome to Textra Video!', bodyHtml, portalLink, 'View Your Project', null, scriptLink),
