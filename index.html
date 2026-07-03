@@ -1928,7 +1928,16 @@ function submitForm(){
 
 function finalSubmit(){
   var btn = document.getElementById('submitBtn');
-  if(btn) { btn.disabled = true; btn.innerHTML = '<span style="display:inline-block;animation:spin 1s linear infinite">⟳</span> Submitting...'; }
+  if(btn) {
+    btn.disabled = true;
+    var dots = 0;
+    btn.textContent = 'Submitting.';
+    var dotInterval = setInterval(function() {
+      dots = (dots + 1) % 4;
+      btn.textContent = 'Submitting' + '.'.repeat(dots);
+    }, 500);
+    window._submitInterval = dotInterval;
+  }
 
   var data = gatherData();
 
@@ -1948,6 +1957,7 @@ function finalSubmit(){
     headers:{'Content-Type':'text/plain;charset=utf-8'}
   }).then(function(r){ return r.json(); })
   .then(function(resp){
+    if(window._submitInterval) clearInterval(window._submitInterval);
     if(btn){ btn.disabled = false; }
     if(resp&&resp.success){
       if(resp.folder) state.driveFolderUrl = resp.folder;
@@ -1958,6 +1968,7 @@ function finalSubmit(){
       alert('There was an error submitting your brief: '+(resp&&resp.message?resp.message:'Unknown error')+'\n\nPlease try again.');
     }
   }).catch(function(err){
+    if(window._submitInterval) clearInterval(window._submitInterval);
     if(btn){ btn.disabled = false; btn.textContent = 'Submit Brief'; }
     alert('There was an error submitting your brief: '+err.message+'\n\nPlease try again.');
   });
