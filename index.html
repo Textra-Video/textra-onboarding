@@ -1234,15 +1234,12 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       </div>
       <div id="portalChecklist"></div>
       <div style="margin-top:10px;font-size:11px;color:var(--text-muted)">Need to add a character or tweak something? Update your brief below — this revises your existing project, it won't start a new one.</div>
-      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
-        <button onclick="startScript()" style="padding:11px 22px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer">Submit Script</button>
-        <div id="driveLinkWrap" style="display:none">
-          <a id="driveFolderLink" href="#" target="_blank"
-            style="display:inline-flex;align-items:center;gap:8px;padding:11px 20px;background:white;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-weight:700;color:var(--navy);text-decoration:none">
-            <img src="https://www.google.com/images/about/googledrive-1.png" style="height:16px" alt="">
-            View My Data
-          </a>
-        </div>
+      <div id="driveLinkWrap" style="display:none;margin-top:16px">
+        <a id="driveFolderLink" href="#" target="_blank"
+          style="display:inline-flex;align-items:center;gap:8px;padding:11px 20px;background:white;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-weight:700;color:var(--navy);text-decoration:none">
+          <img src="https://www.google.com/images/about/googledrive-1.png" style="height:16px" alt="">
+          View My Data
+        </a>
       </div>
     </div>
 
@@ -1331,25 +1328,19 @@ document.addEventListener('DOMContentLoaded',function(){
   var token=new URLSearchParams(window.location.search).get('token');
   if(!token)return;
   state.portalToken=token;
+  var stepParam=new URLSearchParams(window.location.search).get('step');
+  var targetPage=stepParam==='script'?8:7;
+  goTo(targetPage);
+  var t=document.getElementById('successTitle'), s=document.getElementById('successSub');
+  if(stepParam!=='script'&&t){t.textContent='Welcome back!'}
+  if(stepParam!=='script'&&s){s.textContent="Here's where your project stands. Update your brief or write your script any time.";}
   fetch(GOOGLE_SCRIPT_URL+'?action=getSubmission&token='+encodeURIComponent(token))
     .then(function(r){return r.json();})
     .then(function(d){
       if(d&&d.success&&d.data){
         populateFromSubmission(d.data);
-        // Lets the "Write Your Script" email button link straight to
-        // ?token=...&step=script and land on the script page directly,
-        // instead of flashing the portal page first.
-        if(new URLSearchParams(window.location.search).get('step')==='script'){
-          goTo(8);
-        } else {
-          // Revisiting via a saved link isn't a fresh submission - "Brief
-          // Submitted!" would be misleading here, so swap in return-visit
-          // copy on the same page.
-          var t=document.getElementById('successTitle'), s=document.getElementById('successSub');
-          if(t) t.textContent='Welcome back!';
-          if(s) s.textContent="Here's where your project stands. Update your brief or write your script any time.";
-          goTo(7);
-        }
+        renderPortalPage();
+        if(stepParam==='script')initScriptPage();
       } else {
         console.warn('[Textra] No submission found for this portal link.');
       }
@@ -1370,6 +1361,7 @@ function goTo(n){
   else if(n===1.5)stepLabel='Step 1 of 5';
   else if(n<=5)stepLabel='Step '+(n-1)+' of 5';
   else if(n===6)stepLabel='Review';
+  else if(n===8)stepLabel='Script';
   else stepLabel='Done';
   var hs=document.getElementById('hdr-step');
   if(hs)hs.textContent=stepLabel;
