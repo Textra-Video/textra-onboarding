@@ -395,6 +395,7 @@ function handleEmailPortalLink(payload) {
   }
   MailApp.sendEmail({
     to: payload.email,
+    name: 'Textra Onboarding',
     subject: 'Your Textra Video project link',
     body: portalLinkEmailBody(payload.portalLink),
     htmlBody: brandedEmailHtml(
@@ -419,17 +420,23 @@ function sendClientConfirmationEmail(data, portalLink, folderUrl) {
   try {
     if (!data.email) return;
     var greeting = data.fullName ? ('Hi ' + data.fullName + ',') : 'Hi,';
+    var scriptLink = portalLink ? (portalLink + '&step=script') : '';
     var body = greeting + '\n\n' +
-      'Thanks - your Textra Video brand brief has been received.\n\n' +
-      'View your uploaded files and data any time:\n' + (folderUrl || '') + '\n\n' +
-      '- Textra Onboarding';
+      'Thanks - your Textra Video brand brief has been received. Our team is already on it.\n\n' +
+      (portalLink
+        ? 'Bookmark your project link below - no password needed. Use it any time to check progress or write your script:\n\n' + portalLink + '\n\n'
+        : '') +
+      'We will be in touch shortly.\n\n- Textra Onboarding';
     var bodyHtml = greeting + '<br><br>' +
-      'Thanks - your Textra Video brand brief has been received.';
+      'Thanks - your Textra Video brand brief has been received. Our team is already on it.' +
+      (portalLink ? '<br><br>Bookmark your project link below - no password needed. Use it any time to check progress or write your script.' : '') +
+      '<br><br>We will be in touch shortly.';
     MailApp.sendEmail({
       to: data.email,
+      name: 'Textra Onboarding',
       subject: 'Your Textra Video brief has been received - ' + (data.companyName || data.projectName || data.fullName || 'New Project'),
       body: body,
-      htmlBody: brandedEmailHtml('Welcome to Textra Video!', bodyHtml, portalLink, 'View My Data', folderUrl, null),
+      htmlBody: brandedEmailHtml('Welcome to Textra Video!', bodyHtml, portalLink, 'View Your Project', folderUrl, scriptLink),
       inlineImages: { logo: textraLogoBlob() }
     });
     Logger.log('Client confirmation email sent to ' + data.email);
@@ -453,6 +460,7 @@ function sendTeamNotificationEmail(data, folderUrl) {
       'Client folder: ' + folderUrl;
     MailApp.sendEmail({
       to: TEAM_NOTIFY_EMAIL,
+      name: 'Textra Onboarding',
       subject: 'New Textra submission - ' + (data.companyName || data.fullName || 'Client'),
       body: body
     });
