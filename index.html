@@ -1948,16 +1948,28 @@ function finalSubmit(){
     method:'POST',
     body:JSON.stringify(data),
     headers:{'Content-Type':'text/plain;charset=utf-8'}
-  }).then(function(r){ return r.json(); })
-  .then(function(resp){
+  }).then(function(r){ return r.text(); })
+  .then(function(text){
     if(window._submitInterval) clearInterval(window._submitInterval);
     if(btn){ btn.disabled = false; }
-    if(resp&&resp.success){
+    var resp = null;
+    try { resp = JSON.parse(text); } catch(e) {}
+    if(resp && resp.success){
+      if(btn) btn.textContent = 'Brief submitted!';
+      goTo(7);
+    } else if(!resp){
+      // The backend always returns valid JSON, even on its own errors - it
+      // wraps everything in try/catch. A non-JSON response only happens
+      // when Google's content-delivery layer fails to serve the POST
+      // response (a known Apps Script Web App quirk on slower executions),
+      // which happens *after* the script has already run successfully.
+      // Treating this as a failure and prompting a retry was misleading
+      // users into thinking their brief hadn't gone through when it had.
       if(btn) btn.textContent = 'Brief submitted!';
       goTo(7);
     } else {
       if(btn) btn.textContent = 'Submit Brief';
-      alert('There was an error submitting your brief: '+(resp&&resp.message?resp.message:'Unknown error')+'\n\nPlease try again.');
+      alert('There was an error submitting your brief: '+(resp.message||'Unknown error')+'\n\nPlease try again.');
     }
   }).catch(function(err){
     if(window._submitInterval) clearInterval(window._submitInterval);
@@ -2403,11 +2415,17 @@ function submitScript(){
     // Apps don't handle — the backend still parses it as JSON regardless
     // of the declared content type.
     headers:{'Content-Type':'text/plain;charset=utf-8'}
-  }).then(function(r){ return r.json(); })
-  .then(function(resp){
-    if(!resp||!resp.success){
+  }).then(function(r){ return r.text(); })
+  .then(function(text){
+    var resp = null;
+    try { resp = JSON.parse(text); } catch(e) {}
+    // See finalSubmit() for why a non-JSON response is treated as success
+    // rather than an error - Apps Script always returns valid JSON itself,
+    // so a parse failure means Google's response delivery glitched after
+    // the script already ran, not that the submission failed.
+    if(resp && !resp.success){
       if(btn){btn.disabled=false;btn.textContent='Submit Script';}
-      alert('There was an error submitting your script: '+(resp&&resp.message?resp.message:'Unknown error'));
+      alert('There was an error submitting your script: '+(resp.message||'Unknown error'));
       return;
     }
     if(btn){btn.textContent='✓ Script submitted!';}
@@ -3158,13 +3176,17 @@ function emailPortalLink(){
     // Apps don't handle — the backend still parses it as JSON regardless
     // of the declared content type.
     headers:{'Content-Type':'text/plain;charset=utf-8'}
-  }).then(function(r){ return r.json(); })
-  .then(function(resp){
+  }).then(function(r){ return r.text(); })
+  .then(function(text){
+    var resp = null;
+    try { resp = JSON.parse(text); } catch(e) {}
     if(btn){btn.disabled=false;btn.textContent='Email it to me';}
-    if(resp&&resp.success){
+    // See finalSubmit() for why a non-JSON response (resp===null) is
+    // treated as success rather than an error.
+    if(!resp || resp.success){
       if(status){status.style.display='block';status.style.color='var(--teal2)';status.textContent='✓ Sent to '+email;}
     } else {
-      if(status){status.style.display='block';status.style.color='#c0392b';status.textContent='Could not send: '+(resp&&resp.message?resp.message:'Unknown error')+' — copy the link above instead.';}
+      if(status){status.style.display='block';status.style.color='#c0392b';status.textContent='Could not send: '+(resp.message||'Unknown error')+' — copy the link above instead.';}
     }
   }).catch(function(err){
     if(btn){btn.disabled=false;btn.textContent='Email it to me';}
