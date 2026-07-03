@@ -194,7 +194,7 @@ function handleBriefSubmission(data) {
   var folder = (existingRow && getFolderFromRow(sheet, existingRow)) || createClientFolder(clientLabel, token);
   grantClientAccess(folder, data.email);
   saveUploadedFiles(folder, data, clientLabel);
-  // generateBriefDocument(folder, data, clientLabel);
+  generateBriefDocument(folder, data, clientLabel);
 
   const row = [
     new Date(),
