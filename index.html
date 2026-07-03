@@ -279,11 +279,12 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 @keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
 .success-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:26px;font-weight:800;color:var(--navy);margin-bottom:7px}
 .success-sub{font-size:14px;color:var(--text-muted);line-height:1.65;max-width:400px;margin:0 auto 28px}
-.timeline{display:flex;flex-direction:column;max-width:380px;margin:0 auto 28px;text-align:left}
-.tl-item{padding:11px 0 11px 18px;border-left:2px solid var(--border);margin-left:11px;position:relative}
-.tl-item::before{content:'';position:absolute;left:-4px;top:16px;width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--teal))}
+.timeline{display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;gap:20px;max-width:900px;margin:0 auto 28px;text-align:left}
+.tl-item{flex:1 1 190px;max-width:220px;padding:18px 2px 0;border-top:2px solid var(--border);position:relative}
+.tl-item::before{content:'';position:absolute;left:0;top:-4px;width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--teal))}
 .tl-text{font-size:12px;color:var(--text-muted);line-height:1.5}
 .tl-text strong{color:var(--navy);font-weight:600}
+@media(max-width:640px){.timeline{flex-direction:column;max-width:380px}.tl-item{border-top:none;border-left:2px solid var(--border);margin-left:11px;padding:11px 0 11px 18px}.tl-item::before{left:-4px;top:16px}}
 
 @media(max-width:860px){
   .sidebar-col{display:none}
@@ -1223,30 +1224,25 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     <div class="success-sub" id="successSub">Your brand brief is with the Textra team. Our designers are already on it — keep an eye on your inbox.</div>
 
     <div style="margin:24px 0 8px;padding:20px 24px;background:#fff;border:1.5px solid var(--border);border-radius:12px;text-align:left">
-      <p style="font-size:14px;color:var(--navy);margin:0;line-height:1.7">Thank you for submitting your brief and brand info. We've emailed you a magic link and confirmation — use it to edit your submission and also submit a script.</p>
-    </div>
-
-    <div id="driveLinkWrap" style="display:none;margin:16px 0 8px">
-      <a id="driveFolderLink" href="#" target="_blank"
-        style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:white;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-weight:600;color:var(--navy);text-decoration:none;box-shadow:var(--shadow)">
-        <img src="https://www.google.com/images/about/googledrive-1.png" style="height:18px" alt="">
-        View your brief in Google Drive
-      </a>
+      <p style="font-size:14px;color:var(--navy);margin:0;line-height:1.7">You're all set — we've emailed you a link back to this project any time.</p>
     </div>
 
     <div style="margin:16px 0 8px;padding:20px 24px;background:var(--bg);border:1.5px solid var(--border);border-radius:12px;text-align:left">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
         <div style="font-size:13px;font-weight:800;color:var(--navy)">✅ What you've submitted</div>
-        <button onclick="editBrief()" style="padding:6px 14px;background:#fff;color:var(--navy);border:1.5px solid var(--border);border-radius:8px;font-family:Inter,sans-serif;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">✎ Edit my brief</button>
+        <button onclick="editBrief()" style="padding:6px 14px;background:#fff;color:var(--navy);border:1.5px solid var(--border);border-radius:8px;font-family:Inter,sans-serif;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap">✎ Update my brief</button>
       </div>
       <div id="portalChecklist"></div>
-    </div>
-
-    <div style="margin:16px 0 8px;padding:24px;background:linear-gradient(135deg,var(--teal-soft) 0%,#f0f4ff 100%);border:1.5px solid var(--teal2);border-radius:12px;text-align:left">
-      <div style="font-size:15px;font-weight:800;color:var(--navy);margin-bottom:8px">🎬 Ready to write your first script?</div>
-      <p style="font-size:13px;color:var(--text-muted);margin:0 0 16px;line-height:1.6">Your characters and brand assets are being built. Once you're ready, write (or upload) your script here — it goes straight to the same project.</p>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button onclick="startScript()" style="padding:11px 22px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer">Create your script now →</button>
+      <div style="margin-top:10px;font-size:11px;color:var(--text-muted)">Need to add a character or tweak something? Update your brief below — this revises your existing project, it won't start a new one.</div>
+      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+        <button onclick="startScript()" style="padding:11px 22px;background:var(--teal);color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer">Submit Script</button>
+        <div id="driveLinkWrap" style="display:none">
+          <a id="driveFolderLink" href="#" target="_blank"
+            style="display:inline-flex;align-items:center;gap:8px;padding:11px 20px;background:white;border:1.5px solid var(--border);border-radius:8px;font-size:13px;font-weight:700;color:var(--navy);text-decoration:none">
+            <img src="https://www.google.com/images/about/googledrive-1.png" style="height:16px" alt="">
+            View My Data
+          </a>
+        </div>
       </div>
     </div>
 
@@ -1340,7 +1336,20 @@ document.addEventListener('DOMContentLoaded',function(){
     .then(function(d){
       if(d&&d.success&&d.data){
         populateFromSubmission(d.data);
-        goTo(7);
+        // Lets the "Write Your Script" email button link straight to
+        // ?token=...&step=script and land on the script page directly,
+        // instead of flashing the portal page first.
+        if(new URLSearchParams(window.location.search).get('step')==='script'){
+          goTo(8);
+        } else {
+          // Revisiting via a saved link isn't a fresh submission - "Brief
+          // Submitted!" would be misleading here, so swap in return-visit
+          // copy on the same page.
+          var t=document.getElementById('successTitle'), s=document.getElementById('successSub');
+          if(t) t.textContent='Welcome back!';
+          if(s) s.textContent="Here's where your project stands. Update your brief or write your script any time.";
+          goTo(7);
+        }
       } else {
         console.warn('[Textra] No submission found for this portal link.');
       }
@@ -1411,6 +1420,8 @@ function handleUpload(input,labelId,fnId){
   reader.onload=function(e){
     window._uploadedFiles=window._uploadedFiles||{};
     window._uploadedFiles[labelId]=e.target.result;
+    window._uploadedFileNames=window._uploadedFileNames||{};
+    window._uploadedFileNames[labelId]=file.name;
     console.log('[Textra] Stored file for',labelId,':',e.target.result.length,'chars');
   };
   reader.readAsDataURL(file);
@@ -2386,6 +2397,7 @@ function submitScript(){
     scriptInputMethod:_scriptInputMethod,
     scriptText: _scriptInputMethod==='write' ? (document.getElementById('scriptTextPage8').value||'') : '',
     scriptFileData: _scriptInputMethod==='upload' ? getFileData('ul-scriptfile') : '',
+    scriptFileDataName: _scriptInputMethod==='upload' ? getFileName('ul-scriptfile') : '',
     scriptSheetUrl: _scriptInputMethod==='sheet' ? (state.sheetUrl||'') : ''
   };
   if(btn){btn.disabled=true;btn.textContent='Submitting…';}
@@ -2516,10 +2528,13 @@ function createScriptSheet(){
   btn.innerHTML='<span>⏳ Creating sheet...</span>';
   
   // Call Apps Script to create the sheet
-  fetch('https://script.google.com/macros/s/AKfycbwogbAQAk4QYIte5Fo1jNS2LL8Xl7ANGptKv1UqiexYTcuS9xjQVuMoX3S8Bk6C5C_oVA/exec',{
+  fetch(GOOGLE_SCRIPT_URL,{
     method:'POST',
-    body:JSON.stringify({action:'createScriptSheet',sheetName:sheetName,projectName:projectName||'',scriptTitle:scriptTitle||''}),
-    headers:{'Content-Type':'application/json'}
+    body:JSON.stringify({action:'createScriptSheet',portalToken:getPortalToken(),sheetName:sheetName,projectName:projectName||'',scriptTitle:scriptTitle||''}),
+    // text/plain avoids a CORS preflight (OPTIONS) that Apps Script Web
+    // Apps don't handle — the backend still parses it as JSON regardless
+    // of the declared content type.
+    headers:{'Content-Type':'text/plain;charset=utf-8'}
   })
   .then(function(r){return r.json();})
   .then(function(d){
@@ -2565,10 +2580,13 @@ function createScriptSheetPage8(){
   btn.innerHTML='<span>⏳ Creating sheet...</span>';
   
   // Call Apps Script to create the sheet
-  fetch('https://script.google.com/macros/s/AKfycbwogbAQAk4QYIte5Fo1jNS2LL8Xl7ANGptKv1UqiexYTcuS9xjQVuMoX3S8Bk6C5C_oVA/exec',{
+  fetch(GOOGLE_SCRIPT_URL,{
     method:'POST',
-    body:JSON.stringify({action:'createScriptSheet',sheetName:sheetName,projectName:projectName||'',scriptTitle:scriptTitle||''}),
-    headers:{'Content-Type':'application/json'}
+    body:JSON.stringify({action:'createScriptSheet',portalToken:getPortalToken(),sheetName:sheetName,projectName:projectName||'',scriptTitle:scriptTitle||''}),
+    // text/plain avoids a CORS preflight (OPTIONS) that Apps Script Web
+    // Apps don't handle — the backend still parses it as JSON regardless
+    // of the declared content type.
+    headers:{'Content-Type':'text/plain;charset=utf-8'}
   })
   .then(function(r){return r.json();})
   .then(function(d){
@@ -2786,11 +2804,17 @@ function gatherData(){
     portalToken:  getPortalToken(),
     portalLink:   getPortalLink(),
     logoDataUrl:        getFileData('ul-logo-scraped') || getFileData('ul-logo-a') || getFileData('ul-logo-c') || state.logoDataUrl || '',
+    logoDataUrlName:        getFileName('ul-logo-scraped') || getFileName('ul-logo-a') || getFileName('ul-logo-c') || '',
     guidelinesFileData: getFileData('ul-guidelines'),
+    guidelinesFileDataName: getFileName('ul-guidelines'),
     c1refFileData:      getFileData('ul-c1') || getFileData('ul-ref'),
+    c1refFileDataName:      getFileName('ul-c1') || getFileName('ul-ref'),
     c2refFileData:      getFileData('ul-c2'),
+    c2refFileDataName:      getFileName('ul-c2'),
     sceneRefFileData:   getFileData('ul-scene'),
+    sceneRefFileDataName:   getFileName('ul-scene'),
     musicRefFileData:   getFileData('ul-music-ref'),
+    musicRefFileDataName:   getFileName('ul-music-ref'),
   };
 }
 
@@ -2799,6 +2823,10 @@ function getFileData(uploadId) {
   if(data) console.log('[Textra] File found for', uploadId, ':', data.length, 'chars');
   else console.log('[Textra] No file for', uploadId);
   return data;
+}
+
+function getFileName(uploadId) {
+  return (window._uploadedFileNames && window._uploadedFileNames[uploadId]) || '';
 }
 
 
