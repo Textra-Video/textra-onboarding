@@ -346,23 +346,28 @@ function textraLogoBlob() {
   return Utilities.newBlob(Utilities.base64Decode(TEXTRA_LOGO_BASE64), 'image/png', 'textra-logo.png');
 }
 
-// Renders "Write Your Script" / "View My Data" as real buttons rather than
-// plain links - a two-column table (not flex/inline-block) since that's
-// the layout Outlook and other email clients actually render reliably.
-// Falls back to a single full-width button if only one link is present.
-function secondaryButton(href, label) {
-  return '<a href="' + href + '" style="display:block;box-sizing:border-box;width:100%;padding:11px 16px;background:#1A71B1;background:linear-gradient(135deg,#1A71B1,#66BCAD);color:#ffffff;border:none;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px;text-align:center;">' + label + '</a>';
+// Renders a button - a two-column table (not flex/inline-block) since
+// that's the layout Outlook and other email clients actually render
+// reliably.
+function ctaButton(href, label, fontSize) {
+  return '<a href="' + href + '" style="display:block;box-sizing:border-box;width:100%;padding:13px 12px;background:#1A71B1;background:linear-gradient(135deg,#1A71B1,#66BCAD);color:#ffffff;border:none;border-radius:8px;text-decoration:none;font-weight:bold;font-size:' + fontSize + 'px;text-align:center;">' + label + '</a>';
 }
 
-function secondaryButtonsRow(scriptLink, folderUrl) {
-  if (!scriptLink && !folderUrl) return '';
-  var cells = '';
-  if (scriptLink) cells += '<td style="padding:4px;width:50%;">' + secondaryButton(scriptLink, 'Write Your Script') + '</td>';
-  if (folderUrl) cells += '<td style="padding:4px;width:50%;">' + secondaryButton(folderUrl, 'View My Data') + '</td>';
-  return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:14px;"><tr>' + cells + '</tr></table>';
+// When both portalLink and scriptLink are present, they're shown side by
+// side at equal width. With only one, it gets a single full-width button.
+function ctaSection(portalLink, ctaLabel, scriptLink) {
+  if (portalLink && scriptLink) {
+    return '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:28px;"><tr>' +
+      '<td style="padding:0 4px 0 0;width:50%;">' + ctaButton(portalLink, ctaLabel || 'View Your Project', 13) + '</td>' +
+      '<td style="padding:0 0 0 4px;width:50%;">' + ctaButton(scriptLink, 'Write Your Script', 13) + '</td>' +
+      '</tr></table>';
+  }
+  var link = portalLink || scriptLink;
+  if (!link) return '';
+  return '<div style="margin-top:28px;">' + ctaButton(link, portalLink ? (ctaLabel || 'View Your Project') : 'Write Your Script', 14) + '</div>';
 }
 
-function brandedEmailHtml(heading, bodyHtml, portalLink, ctaLabel, folderUrl, scriptLink) {
+function brandedEmailHtml(heading, bodyHtml, portalLink, ctaLabel, scriptLink) {
   return '<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f7f9fc;font-family:Arial,Helvetica,sans-serif;">' +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f7f9fc;padding:32px 16px;">' +
     '<tr><td align="center">' +
@@ -373,12 +378,7 @@ function brandedEmailHtml(heading, bodyHtml, portalLink, ctaLabel, folderUrl, sc
     '<tr><td style="padding:32px;">' +
     '<h1 style="margin:0 0 16px;font-size:20px;color:#0d1b3e;font-family:Arial,Helvetica,sans-serif;">' + heading + '</h1>' +
     '<div style="font-size:14px;line-height:1.6;color:#334155;">' + bodyHtml + '</div>' +
-    (portalLink ? (
-      '<div style="margin-top:28px;">' +
-      '<a href="' + portalLink + '" style="display:block;box-sizing:border-box;width:100%;padding:13px 12px;background:linear-gradient(135deg,#1A71B1,#66BCAD);color:#ffffff;text-decoration:none;border-radius:8px;font-weight:bold;font-size:14px;text-align:center;">' + (ctaLabel || 'View Your Project') + '</a>' +
-      '</div>'
-    ) : '') +
-    secondaryButtonsRow(scriptLink, folderUrl) +
+    ctaSection(portalLink, ctaLabel, scriptLink) +
     '</td></tr>' +
     '<tr><td style="padding:16px 32px;background:#f7f9fc;text-align:center;font-size:11px;color:#94a3b8;">Textra Video - studio-quality animated videos, fast.</td></tr>' +
     '</table></td></tr></table></body></html>';
@@ -434,7 +434,7 @@ function sendClientConfirmationEmail(data, portalLink) {
       replyTo: 'onboarding@textra.video',
       subject: 'Your Textra Video brief has been received - ' + (data.companyName || data.projectName || data.fullName || 'New Project'),
       body: body,
-      htmlBody: brandedEmailHtml('Welcome to Textra Video!', bodyHtml, portalLink, 'View Your Project', null, scriptLink),
+      htmlBody: brandedEmailHtml('Welcome to Textra Video!', bodyHtml, portalLink, 'View Your Project', scriptLink),
       inlineImages: { logo: textraLogoBlob() }
     });
     Logger.log('Client confirmation email sent to ' + data.email);
