@@ -284,7 +284,39 @@ function handleSubmitScript(payload) {
   if (scriptLink) setColumnFormula(sheet, row, 'Script Sheet URL', '=HYPERLINK("' + scriptLink + '","[Script] Open Script")');
   setColumnValue(sheet, row, 'Status', 'Script submitted');
 
+  var clientEmail = getColumnValue(sheet, row, 'Email');
+  var fullName = getColumnValue(sheet, row, 'Full Name');
+  sendScriptConfirmationEmail(clientEmail, fullName, scriptLink);
+
   return jsonOut({ success: true, scriptLink: scriptLink });
+}
+
+// -- SCRIPT CONFIRMATION EMAIL (automatic, on script submission) -
+function sendScriptConfirmationEmail(email, fullName, scriptLink) {
+  try {
+    if (!email) return;
+    var greeting = fullName ? ('Hi ' + fullName + ',') : 'Hi,';
+    var bodyHtml = greeting + '<br><br>' +
+      'Thanks - your script has been received. Our team will review it and get started on production.' +
+      (scriptLink ? '<br><br>You can view or edit it any time using the link below. Every time you submit again, a new version is saved alongside the last one - nothing is ever overwritten.' : '') +
+      '<br><br>We will be in touch shortly.';
+    var body = greeting + '\n\n' +
+      'Thanks - your script has been received. Our team will review it and get started on production.\n\n' +
+      (scriptLink ? ('You can view or edit it any time using this link:\n\n' + scriptLink + '\n\nEvery time you submit again, a new version is saved alongside the last one - nothing is ever overwritten.\n\n') : '') +
+      'We will be in touch shortly.\n\n- Textra Onboarding';
+    MailApp.sendEmail({
+      to: email,
+      name: 'Textra Onboarding',
+      replyTo: 'onboarding@textra.video',
+      subject: 'Your Textra Video script has been received',
+      body: body,
+      htmlBody: brandedEmailHtml('Script Received!', bodyHtml, scriptLink, 'View Your Script'),
+      inlineImages: { logo: textraLogoBlob() }
+    });
+    Logger.log('Script confirmation email sent to ' + email);
+  } catch (e) {
+    Logger.log('Script confirmation email error: ' + e.toString());
+  }
 }
 
 // Reuses (or creates, on the first submission) a single spreadsheet per

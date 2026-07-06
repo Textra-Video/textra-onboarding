@@ -1168,6 +1168,12 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       No lines yet — click "Add Line" to start writing your script.
     </div>
 
+    <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;padding-top:16px;border-top:1.5px solid var(--border)">
+      <button class="btn btn-ghost" style="font-size:12px;padding:8px 14px" onclick="addScriptBlock('title')">+ Add Title</button>
+      <button class="btn btn-primary" style="font-size:12px;padding:8px 14px" onclick="addScriptBlock('line')">+ Add Line</button>
+      <button class="btn btn-ghost" style="font-size:12px;padding:8px 14px" onclick="addScriptBlock('endcredits')">+ Add End Credits</button>
+    </div>
+
     <div style="margin-top:20px">
       <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">Writing Tips</div>
       <ul style="font-size:12px;color:var(--text-muted);line-height:1.6;margin:0;padding-left:20px">
@@ -2489,7 +2495,17 @@ function submitScript(){
       return {kind:b.kind,character:b.character||'',text:b.text||'',transition:b.transition||'',transitionDuration:b.transitionDuration||0};
     })
   };
-  if(btn){btn.disabled=true;btn.textContent='Submitting…';}
+  if(btn){
+    btn.disabled=true;
+    var dots=0;
+    btn.innerHTML='Submitting<span id="scriptDots" style="display:inline-block;width:27px;text-align:left">.</span>';
+    var dotInterval=setInterval(function(){
+      dots=(dots+1)%4;
+      var dotsSpan=document.getElementById('scriptDots');
+      if(dotsSpan) dotsSpan.textContent='.'.repeat(dots);
+    },500);
+    window._scriptSubmitInterval=dotInterval;
+  }
   fetch(GOOGLE_SCRIPT_URL,{
     method:'POST',
     body:JSON.stringify(payload),
@@ -2499,6 +2515,7 @@ function submitScript(){
     headers:{'Content-Type':'text/plain;charset=utf-8'}
   }).then(function(r){ return r.text(); })
   .then(function(text){
+    if(window._scriptSubmitInterval) clearInterval(window._scriptSubmitInterval);
     var resp = null;
     try { resp = JSON.parse(text); } catch(e) {}
     // See finalSubmit() for why a non-JSON response is treated as success
@@ -2513,9 +2530,14 @@ function submitScript(){
     if(btn){btn.textContent='✓ Script submitted!';}
     setTimeout(function(){
       if(btn){btn.disabled=false;btn.textContent='Submit Script';}
+      var st=document.getElementById('successTitle');
+      var ss=document.getElementById('successSub');
+      if(st) st.textContent='Script Submitted!';
+      if(ss) ss.textContent='Check your inbox for the link to your script and next steps.';
       goTo(7);
     },1500);
   }).catch(function(err){
+    if(window._scriptSubmitInterval) clearInterval(window._scriptSubmitInterval);
     console.error('Error submitting script:',err);
     if(btn){btn.disabled=false;btn.textContent='Submit Script';}
     alert('There was an error submitting your script: '+err.message);
