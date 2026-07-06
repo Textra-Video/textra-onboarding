@@ -420,7 +420,7 @@ function saveScriptVersion(folder, clientLabel, lines, metadata) {
         Logger.log('Error saving overlay file: ' + e.toString());
       }
     }
-    tab.appendRow([
+    var rowData = [
       line.kind || '',
       line.character ? ('Character ' + line.character) : '',
       line.text || '',
@@ -428,7 +428,10 @@ function saveScriptVersion(folder, clientLabel, lines, metadata) {
       hasTransition ? (line.transitionDuration || '') : '',
       line.overlayPosition || '',
       overlayLink
-    ]);
+    ];
+    if (rowData && rowData.length > 0) {
+      tab.appendRow(rowData);
+    }
   });
 
   tab.setColumnWidths(1, 1, 90);
