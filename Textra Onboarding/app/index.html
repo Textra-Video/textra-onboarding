@@ -388,6 +388,37 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
   </div>
 </div>
 
+<!-- OVERLAY MODAL -->
+<div class="modal-overlay" id="overlayModal" style="display:none">
+  <div class="modal-box" style="max-width:600px">
+    <button class="modal-close" onclick="closeOverlayModal()">✕</button>
+    <div class="modal-title">Visual Upgrade</div>
+    <div class="modal-sub">Add a visual to enhance this line.</div>
+
+    <div style="margin:16px 0">
+      <div style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:10px">Overlay Position</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px">
+        <button class="overlay-pos-btn" data-pos="none" onclick="selectOverlayPos('none')" style="padding:12px;border:2px solid var(--border);border-radius:6px;font-size:11px;background:#fff;cursor:pointer">None</button>
+        <button class="overlay-pos-btn" data-pos="left-right" onclick="selectOverlayPos('left-right')" style="padding:12px;border:2px solid var(--border);border-radius:6px;font-size:11px;background:#fff;cursor:pointer">Left | Right</button>
+        <button class="overlay-pos-btn" data-pos="right-left" onclick="selectOverlayPos('right-left')" style="padding:12px;border:2px solid var(--border);border-radius:6px;font-size:11px;background:#fff;cursor:pointer">Right | Left</button>
+        <button class="overlay-pos-btn" data-pos="top-bottom" onclick="selectOverlayPos('top-bottom')" style="padding:12px;border:2px solid var(--border);border-radius:6px;font-size:11px;background:#fff;cursor:pointer">Top | Bottom</button>
+        <button class="overlay-pos-btn" data-pos="full" onclick="selectOverlayPos('full')" style="padding:12px;border:2px solid var(--border);border-radius:6px;font-size:11px;background:#fff;cursor:pointer">Full Screen</button>
+      </div>
+    </div>
+
+    <div style="margin:16px 0">
+      <div style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:10px">Upload File</div>
+      <input type="file" id="overlayFileInput" accept="image/*,video/*" style="display:block;width:100%;padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:12px" />
+      <div style="font-size:11px;color:var(--text-muted);margin-top:6px">Images or video files. Max 10MB.</div>
+    </div>
+
+    <div style="margin-top:20px;display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-ghost" onclick="closeOverlayModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveOverlay()">Add Overlay</button>
+    </div>
+  </div>
+</div>
+
 <!-- HEADER -->
 <div class="header">
   <div class="header-left">
@@ -1162,6 +1193,40 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       <button class="btn btn-ghost" style="font-size:12px;padding:8px 14px" onclick="addScriptBlock('endcredits')">+ Add End Credits</button>
     </div>
 
+    <div style="margin-bottom:20px;padding:16px;background:var(--bg);border:1.5px solid var(--border);border-radius:8px">
+      <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px">Video Settings</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Video Length</label>
+          <select id="videoLength" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif">
+            <option value="">Select length</option>
+            <option value="30sec">30 seconds</option>
+            <option value="60sec">60 seconds</option>
+            <option value="90sec">90 seconds</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Tone</label>
+          <select id="scriptTone" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif">
+            <option value="">Select tone</option>
+            <option value="light-hearted">Light Hearted</option>
+            <option value="serious">Serious</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Style</label>
+          <select id="scriptStyle" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif">
+            <option value="">Select style</option>
+            <option value="presenters">Presenters to Camera</option>
+            <option value="actors">Actors Roleplaying</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
     <div id="scriptBlocksContainer"></div>
 
     <div id="scriptBlocksEmpty" style="text-align:center;padding:24px 0;color:var(--text-muted);font-size:13px">
@@ -1256,8 +1321,12 @@ var GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxB5dZP6S9SBW65
 const state={
   brandMethod:'',charStyle:'',bgChoice:'',titleBg:'',music:'',font:'',
   colors:['#273572','#1A71B1','#66BCAD'],logoDataUrl:null,extractedTagline:'',extractedColors:[],
-  portalToken:'',scriptBlocks:[]
+  portalToken:'',scriptBlocks:[],
+  videoLength:'',scriptTone:'',scriptStyle:'',
+  scriptOverlays:{}
 };
+var _currentOverlayBlockId=null;
+var _selectedOverlayPos=null;
 
 // ── PORTAL TOKEN (magic-link access) ──────────────
 // Generated once per submission so the client can return to their
@@ -2418,6 +2487,56 @@ function scriptBlockDrop(e,targetId){
   renderScriptBlocks();
 }
 
+function openOverlayModal(blockId){
+  _currentOverlayBlockId=blockId;
+  _selectedOverlayPos=null;
+  document.getElementById('overlayFileInput').value='';
+  document.querySelectorAll('.overlay-pos-btn').forEach(function(btn){ btn.style.borderColor='var(--border)'; btn.style.background='#fff'; });
+  document.getElementById('overlayModal').style.display='flex';
+}
+
+function closeOverlayModal(){
+  document.getElementById('overlayModal').style.display='none';
+  _currentOverlayBlockId=null;
+  _selectedOverlayPos=null;
+}
+
+function selectOverlayPos(pos){
+  _selectedOverlayPos=pos;
+  document.querySelectorAll('.overlay-pos-btn').forEach(function(btn){
+    if(btn.dataset.pos===pos){ btn.style.borderColor='var(--blue)'; btn.style.background='#e8f2f9'; }
+    else { btn.style.borderColor='var(--border)'; btn.style.background='#fff'; }
+  });
+}
+
+function saveOverlay(){
+  if(!_selectedOverlayPos || !_currentOverlayBlockId){
+    alert('Please select an overlay position.');
+    return;
+  }
+  var fileInput=document.getElementById('overlayFileInput');
+  if(!fileInput.files || !fileInput.files[0]){
+    alert('Please select a file to upload.');
+    return;
+  }
+  var file=fileInput.files[0];
+  if(file.size>10*1024*1024){
+    alert('File size must be less than 10MB.');
+    return;
+  }
+  var reader=new FileReader();
+  reader.onload=function(e){
+    state.scriptOverlays[_currentOverlayBlockId]={
+      position:_selectedOverlayPos,
+      fileName:file.name,
+      fileData:e.target.result
+    };
+    renderScriptBlocks();
+    closeOverlayModal();
+  };
+  reader.readAsDataURL(file);
+}
+
 var SCRIPT_TRANSITIONS=['','Fade to Black','Cross Dissolve','Slide Left','Slide Right','Wipe Left','Wipe Right'];
 
 function renderScriptBlocks(){
@@ -2455,8 +2574,14 @@ function renderScriptBlocks(){
     }
 
     html+='</div>';
+    html+='<div style="display:flex;gap:6px">';
+    if(b.kind==='line'){
+      var overlayInfo=state.scriptOverlays[b.id];
+      html+='<button onclick="openOverlayModal('+b.id+')" title="Add visual upgrade" style="background:none;border:none;color:'+(overlayInfo?'var(--blue)':'var(--text-dim)');';
+      html+='cursor:pointer;font-size:16px;padding:4px">🎬</button>';
+    }
     html+='<button onclick="deleteScriptBlock('+b.id+')" title="Delete" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:16px;padding:4px">🗑️</button>';
-    html+='</div>';
+    html+='</div></div>';
 
     if(i<state.scriptBlocks.length-1){
       html+='<div style="display:flex;align-items:center;gap:10px;padding:8px 4px;margin-bottom:4px">';
@@ -2491,8 +2616,21 @@ function submitScript(){
     action:'submitScript',
     portalToken:getPortalToken(),
     scriptTitle:title,
+    videoLength:document.getElementById('videoLength').value||'',
+    scriptTone:document.getElementById('scriptTone').value||'',
+    scriptStyle:document.getElementById('scriptStyle').value||'',
     scriptLines: state.scriptBlocks.map(function(b){
-      return {kind:b.kind,character:b.character||'',text:b.text||'',transition:b.transition||'',transitionDuration:b.transitionDuration||0};
+      var overlayInfo=state.scriptOverlays[b.id];
+      return {
+        kind:b.kind,
+        character:b.character||'',
+        text:b.text||'',
+        transition:b.transition||'',
+        transitionDuration:b.transitionDuration||0,
+        overlayPosition:overlayInfo?overlayInfo.position:'',
+        overlayFileName:overlayInfo?overlayInfo.fileName:'',
+        overlayFileData:overlayInfo?overlayInfo.fileData:''
+      };
     })
   };
   if(btn){
@@ -2859,7 +2997,8 @@ function resetForm(){
   state.brandMethod=''; state.charStyle=''; state.bgChoice=''; state.music='';
   state.font=''; state.logoDataUrl=null; state.extractedTagline='';
   state.extractedColors=[];
-  state.portalToken=''; state.scriptBlocks=[];
+  state.portalToken=''; state.scriptBlocks=[]; state.videoLength=''; state.scriptTone=''; state.scriptStyle='';
+  state.scriptOverlays={};
   window._uploadedFiles={};
   // Reset uploads UI
   document.querySelectorAll('.upload-label').forEach(function(el){ el.classList.remove('has-file'); });

@@ -277,7 +277,13 @@ function handleSubmitScript(payload) {
   var clientLabel = getColumnValue(sheet, row, 'Company') || getColumnValue(sheet, row, 'Project') ||
                      getColumnValue(sheet, row, 'Full Name') || 'Client';
 
-  var scriptLink = saveScriptVersion(folder, clientLabel, payload.scriptLines || []);
+  var metadata = {
+    videoLength: payload.videoLength || '',
+    scriptTone: payload.scriptTone || '',
+    scriptStyle: payload.scriptStyle || ''
+  };
+
+  var scriptLink = saveScriptVersion(folder, clientLabel, payload.scriptLines || [], metadata);
 
   setColumnValue(sheet, row, 'Script Title', payload.scriptTitle || '');
   setColumnValue(sheet, row, 'Script Method', 'write');
@@ -324,7 +330,7 @@ function sendScriptConfirmationEmail(email, fullName, scriptLink) {
 // overwrites or deletes a prior one - so every past version of the script
 // stays intact and easy to compare. Newest version is inserted as the
 // leftmost/first tab so it's the one people land on.
-function saveScriptVersion(folder, clientLabel, lines) {
+function saveScriptVersion(folder, clientLabel, lines, metadata) {
   if (!folder) return '';
   var fileName = 'Script - ' + clientLabel;
   var isNewFile = true;
@@ -344,23 +350,48 @@ function saveScriptVersion(folder, clientLabel, lines) {
   var tabName = 'v' + versionNum + ' - ' + Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'd MMM HH:mm');
   var tab = ss.insertSheet(tabName, 0);
 
-  tab.appendRow(['Type', 'Character', 'Dialogue / Text', 'Transition Before Next', 'Transition Duration (s)']);
-  tab.getRange(1, 1, 1, 5).setFontWeight('bold');
+  // Add metadata row at top
+  var headerRow = 1;
+  if (metadata) {
+    tab.appendRow(['Video Length:', metadata.videoLength || '', 'Tone:', metadata.scriptTone || '', 'Style:', metadata.scriptStyle || '']);
+    tab.getRange(1, 1, 1, 6).setFontColor('#666666');
+    tab.appendRow([]);
+    headerRow = 3;
+  }
+
+  tab.appendRow(['Type', 'Character', 'Dialogue / Text', 'Transition Before Next', 'Transition Duration (s)', 'Visual Upgrade Position', 'Visual Upgrade File']);
+  tab.getRange(headerRow, 1, 1, 7).setFontWeight('bold');
+
   lines.forEach(function (line) {
     var hasTransition = line.transition && line.transition !== 'none';
+    var overlayLink = '';
+    if (line.overlayFileData && line.overlayFileName) {
+      try {
+        var overlayBlob = Utilities.newBlob(Utilities.base64Decode(line.overlayFileData.split(',')[1]), 'image/jpeg', line.overlayFileName);
+        var overlayFile = folder.createFile(overlayBlob);
+        overlayLink = '=HYPERLINK("' + overlayFile.getUrl() + '","' + line.overlayFileName + '")';
+      } catch (e) {
+        Logger.log('Error saving overlay file: ' + e.toString());
+      }
+    }
     tab.appendRow([
       line.kind || '',
       line.character ? ('Character ' + line.character) : '',
       line.text || '',
       hasTransition ? line.transition : '',
-      hasTransition ? (line.transitionDuration || '') : ''
+      hasTransition ? (line.transitionDuration || '') : '',
+      line.overlayPosition || '',
+      overlayLink
     ]);
   });
+
   tab.setColumnWidths(1, 1, 90);
   tab.setColumnWidths(2, 1, 110);
   tab.setColumnWidths(3, 1, 340);
   tab.setColumnWidths(4, 1, 140);
   tab.setColumnWidths(5, 1, 90);
+  tab.setColumnWidths(6, 1, 140);
+  tab.setColumnWidths(7, 1, 140);
 
   if (isNewFile) {
     var defaultSheet = ss.getSheetByName('Sheet1');
