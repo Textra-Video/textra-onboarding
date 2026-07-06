@@ -121,9 +121,6 @@ function doPost(e) {
     if (jsonPayload && jsonPayload.action === 'emailPortalLink') {
       return handleEmailPortalLink(jsonPayload);
     }
-    if (jsonPayload && jsonPayload.action === 'createScriptSheet') {
-      return handleCreateScriptSheet(jsonPayload);
-    }
 
     // Main brief submission - now sent as a JSON body via fetch() so the
     // frontend can actually verify success (see finalSubmit() in
@@ -263,6 +260,11 @@ function handleBriefSubmission(data) {
 }
 
 // -- SCRIPT SUBMISSION (separate step, same row via token) -----
+// The client always writes the script inline as structured lines (title /
+// dialogue / end-credits blocks with transitions between them) - no more
+// upload-a-file or paste-a-Google-Sheet-URL options. Every submission adds
+// a new tab to the client's script spreadsheet rather than overwriting the
+// last one, so earlier edits stay intact and reviewable.
 function handleSubmitScript(payload) {
   const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('Sheet1');
   const tokenCol = findColumnByHeader(sheet, 'Portal Token');
@@ -275,52 +277,65 @@ function handleSubmitScript(payload) {
   var clientLabel = getColumnValue(sheet, row, 'Company') || getColumnValue(sheet, row, 'Project') ||
                      getColumnValue(sheet, row, 'Full Name') || 'Client';
 
-  var scriptLink = '';
-  if (payload.scriptInputMethod === 'write' && payload.scriptText) {
-    var doc = DocumentApp.create(payload.scriptTitle || 'Script');
-    doc.getBody().setText(payload.scriptText);
-    var docFile = DriveApp.getFileById(doc.getId());
-    if (folder) docFile.moveTo(folder);
-    scriptLink = docFile.getUrl();
-  } else if (payload.scriptInputMethod === 'upload' && payload.scriptFileData) {
-    var file = folder ? saveBase64File(folder, payload.scriptFileData, payload.scriptFileDataName || payload.scriptTitle || 'script-upload', clientLabel) : null;
-    if (file) scriptLink = file.getUrl();
-  } else if (payload.scriptInputMethod === 'sheet' && payload.scriptSheetUrl) {
-    scriptLink = payload.scriptSheetUrl;
-  }
+  var scriptLink = saveScriptVersion(folder, clientLabel, payload.scriptLines || []);
 
   setColumnValue(sheet, row, 'Script Title', payload.scriptTitle || '');
-  setColumnValue(sheet, row, 'Script Method', payload.scriptInputMethod || '');
+  setColumnValue(sheet, row, 'Script Method', 'write');
   if (scriptLink) setColumnFormula(sheet, row, 'Script Sheet URL', '=HYPERLINK("' + scriptLink + '","[Script] Open Script")');
   setColumnValue(sheet, row, 'Status', 'Script submitted');
 
   return jsonOut({ success: true, scriptLink: scriptLink });
 }
 
-// -- SCRIPT SHEET CREATION ("sheet" method, before submitScript) --
-function handleCreateScriptSheet(payload) {
-  const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('Sheet1');
-  const tokenCol = findColumnByHeader(sheet, 'Portal Token');
-  if (tokenCol === -1) return jsonOut({ success: false, message: 'Portal Token column not found - submit a brief first.' });
+// Reuses (or creates, on the first submission) a single spreadsheet per
+// client inside their Drive folder. Each call adds a brand new tab - never
+// overwrites or deletes a prior one - so every past version of the script
+// stays intact and easy to compare. Newest version is inserted as the
+// leftmost/first tab so it's the one people land on.
+function saveScriptVersion(folder, clientLabel, lines) {
+  if (!folder) return '';
+  var fileName = 'Script - ' + clientLabel;
+  var isNewFile = true;
+  var ss;
+  var existing = folder.getFilesByName(fileName);
+  if (existing.hasNext()) {
+    ss = SpreadsheetApp.open(existing.next());
+    isNewFile = false;
+  } else {
+    ss = SpreadsheetApp.create(fileName);
+    var ssFile = DriveApp.getFileById(ss.getId());
+    folder.addFile(ssFile);
+    DriveApp.getRootFolder().removeFile(ssFile);
+  }
 
-  const row = findRowByColumnValue(sheet, tokenCol, payload.portalToken);
-  if (!row) return jsonOut({ success: false, message: 'No submission found for this token.' });
+  var versionNum = ss.getSheets().filter(function (s) { return /^v\d+ /.test(s.getName()); }).length + 1;
+  var tabName = 'v' + versionNum + ' - ' + Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'd MMM HH:mm');
+  var tab = ss.insertSheet(tabName, 0);
 
-  var folder = getFolderFromRow(sheet, row);
+  tab.appendRow(['Type', 'Character', 'Dialogue / Text', 'Transition Before Next', 'Transition Duration (s)']);
+  tab.getRange(1, 1, 1, 5).setFontWeight('bold');
+  lines.forEach(function (line) {
+    var hasTransition = line.transition && line.transition !== 'none';
+    tab.appendRow([
+      line.kind || '',
+      line.character ? ('Character ' + line.character) : '',
+      line.text || '',
+      hasTransition ? line.transition : '',
+      hasTransition ? (line.transitionDuration || '') : ''
+    ]);
+  });
+  tab.setColumnWidths(1, 1, 90);
+  tab.setColumnWidths(2, 1, 110);
+  tab.setColumnWidths(3, 1, 340);
+  tab.setColumnWidths(4, 1, 140);
+  tab.setColumnWidths(5, 1, 90);
 
-  var ss = SpreadsheetApp.create(payload.sheetName || 'Script');
-  var scriptSheet = ss.getActiveSheet();
-  scriptSheet.setName('Script');
-  scriptSheet.appendRow(['Line #', 'Speaker', 'Dialogue', 'Visual Notes']);
-  scriptSheet.getRange(1, 1, 1, 4).setFontWeight('bold');
-  scriptSheet.setColumnWidths(1, 1, 60);
-  scriptSheet.setColumnWidths(2, 1, 140);
-  scriptSheet.setColumnWidths(3, 2, 320);
+  if (isNewFile) {
+    var defaultSheet = ss.getSheetByName('Sheet1');
+    if (defaultSheet) ss.deleteSheet(defaultSheet);
+  }
 
-  var ssFile = DriveApp.getFileById(ss.getId());
-  if (folder) ssFile.moveTo(folder);
-
-  return jsonOut({ success: true, sheetUrl: ss.getUrl() });
+  return ss.getUrl() + '#gid=' + tab.getSheetId();
 }
 
 // -- PORTAL LOOKUP (magic link revisit) -------------------------
