@@ -2571,17 +2571,43 @@ function saveOverlay(){
     alert('File size must be less than 10MB.');
     return;
   }
+
   var reader=new FileReader();
   reader.onload=function(e){
-    state.scriptOverlays[_currentOverlayBlockId]={
-      position:_selectedOverlayPos,
-      name:nameInput.value.trim(),
-      description:document.getElementById('overlayDescription').value.trim()||'',
-      fileName:file.name,
-      fileData:e.target.result
+    var fileData=e.target.result;
+    // Send overlay to backend for immediate upload to Google Drive
+    var payload={
+      action:'uploadOverlay',
+      portalToken:getPortalToken(),
+      overlayName:nameInput.value.trim(),
+      overlayFileName:file.name,
+      overlayFileData:fileData
     };
-    renderScriptBlocks();
-    closeOverlayModal();
+
+    fetch(GOOGLE_SCRIPT_URL,{
+      method:'POST',
+      body:JSON.stringify(payload),
+      headers:{'Content-Type':'text/plain;charset=utf-8'}
+    }).then(function(r){ return r.text(); })
+    .then(function(text){
+      var resp = null;
+      try { resp = JSON.parse(text); } catch(e) {}
+      if(resp && resp.success && resp.fileUrl){
+        state.scriptOverlays[_currentOverlayBlockId]={
+          position:_selectedOverlayPos,
+          name:nameInput.value.trim(),
+          description:document.getElementById('overlayDescription').value.trim()||'',
+          fileName:file.name,
+          fileUrl:resp.fileUrl
+        };
+        renderScriptBlocks();
+        closeOverlayModal();
+      } else {
+        alert('Error uploading overlay: '+(resp?.message||'Unknown error'));
+      }
+    }).catch(function(err){
+      alert('Error uploading overlay: '+err.message);
+    });
   };
   reader.readAsDataURL(file);
 }
@@ -2591,6 +2617,7 @@ function previewOverlay(blockId){
   if(!overlayInfo) return;
   var preview='Overlay Details\n\nName: '+overlayInfo.name+'\nPosition: '+overlayInfo.position+'\nFile: '+overlayInfo.fileName;
   if(overlayInfo.description) preview+='\nDescription: '+overlayInfo.description;
+  if(overlayInfo.fileUrl) preview+='\n\nGoogle Drive Link: '+overlayInfo.fileUrl;
   alert(preview);
 }
 
@@ -2691,7 +2718,7 @@ function submitScript(){
         transitionDuration:b.transitionDuration||0,
         overlayPosition:overlayInfo?overlayInfo.position:'',
         overlayFileName:overlayInfo?overlayInfo.fileName:'',
-        overlayFileData:overlayInfo?overlayInfo.fileData:''
+        overlayFileUrl:overlayInfo?overlayInfo.fileUrl:''
       };
     })
   };

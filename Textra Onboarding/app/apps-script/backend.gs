@@ -118,6 +118,9 @@ function doPost(e) {
     if (jsonPayload && jsonPayload.action === 'submitScript') {
       return handleSubmitScript(jsonPayload);
     }
+    if (jsonPayload && jsonPayload.action === 'uploadOverlay') {
+      return handleUploadOverlay(jsonPayload);
+    }
     if (jsonPayload && jsonPayload.action === 'emailPortalLink') {
       return handleEmailPortalLink(jsonPayload);
     }
@@ -325,6 +328,36 @@ function sendScriptConfirmationEmail(email, fullName, scriptLink) {
   }
 }
 
+function handleUploadOverlay(payload) {
+  const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('Sheet1');
+  const tokenCol = findColumnByHeader(sheet, 'Portal Token');
+  if (tokenCol === -1) return jsonOut({ success: false, message: 'Portal Token column not found.' });
+
+  const row = findRowByColumnValue(sheet, tokenCol, payload.portalToken);
+  if (!row) return jsonOut({ success: false, message: 'No submission found for this token.' });
+
+  try {
+    var folder = getFolderFromRow(sheet, row);
+    if (!folder) return jsonOut({ success: false, message: 'Client folder not found.' });
+
+    // Decode base64 and create file in client folder
+    var fileData = payload.overlayFileData;
+    var mimeType = 'image/jpeg'; // Default - could be enhanced to detect
+    if (fileData.indexOf('image/png') >= 0) mimeType = 'image/png';
+    if (fileData.indexOf('image/gif') >= 0) mimeType = 'image/gif';
+    if (fileData.indexOf('video/mp4') >= 0) mimeType = 'video/mp4';
+
+    var base64Data = fileData.split(',')[1] || fileData;
+    var overlayBlob = Utilities.newBlob(Utilities.base64Decode(base64Data), mimeType, payload.overlayFileName);
+    var overlayFile = folder.createFile(overlayBlob);
+    var fileUrl = overlayFile.getUrl();
+
+    return jsonOut({ success: true, fileUrl: fileUrl });
+  } catch (err) {
+    return jsonOut({ success: false, message: 'Error uploading overlay: ' + err.toString() });
+  }
+}
+
 // Reuses (or creates, on the first submission) a single spreadsheet per
 // client inside their Drive folder. Each call adds a brand new tab - never
 // overwrites or deletes a prior one - so every past version of the script
@@ -365,7 +398,12 @@ function saveScriptVersion(folder, clientLabel, lines, metadata) {
   lines.forEach(function (line) {
     var hasTransition = line.transition && line.transition !== 'none';
     var overlayLink = '';
-    if (line.overlayFileData && line.overlayFileName) {
+    // Handle overlayFileUrl (new approach - file already uploaded)
+    if (line.overlayFileUrl && line.overlayFileName) {
+      overlayLink = '=HYPERLINK("' + line.overlayFileUrl + '","' + line.overlayFileName + '")';
+    }
+    // Fallback: handle overlayFileData (old approach - for backwards compatibility)
+    else if (line.overlayFileData && line.overlayFileName) {
       try {
         var overlayBlob = Utilities.newBlob(Utilities.base64Decode(line.overlayFileData.split(',')[1]), 'image/jpeg', line.overlayFileName);
         var overlayFile = folder.createFile(overlayBlob);
