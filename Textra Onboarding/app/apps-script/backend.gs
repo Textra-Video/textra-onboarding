@@ -390,7 +390,7 @@ function saveScriptVersion(folder, clientLabel, lines, metadata) {
   if (metadata) {
     tab.appendRow(['Video Length:', metadata.videoLength || '', 'Tone:', metadata.scriptTone || '', 'Style:', metadata.scriptStyle || '']);
     tab.getRange(1, 1, 1, 6).setFontColor('#666666');
-    tab.appendRow([]);
+    tab.appendRow(['', '', '', '', '', '', '']);
     headerRow = 3;
   }
 
