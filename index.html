@@ -1006,8 +1006,8 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       </button>
     </div>
 
-    <!-- Panel A: Describe your own (default visible) -->
-    <div id="sm-own" style="display:block">
+    <!-- Panel A: Describe your own (hidden until user selects) -->
+    <div id="sm-own" style="display:none">
       <div class="bg-grid" id="bgGrid">
         <div class="bg-opt" onclick="selBg(this,'Office / Workspace')"><div class="bg-thumb office">🖥️</div><div class="bg-name">Office / Workspace</div></div>
         <div class="bg-opt" onclick="selBg(this,'Classroom / Training')"><div class="bg-thumb classroom">📚</div><div class="bg-name">Classroom / Training</div></div>
@@ -1067,8 +1067,8 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       </button>
     </div>
 
-    <!-- Panel A: Describe your own (default visible) -->
-    <div id="tm-own" style="display:block">
+    <!-- Panel A: Describe your own (hidden until user selects) -->
+    <div id="tm-own" style="display:none">
       <div class="choice-grid c2" id="titleBgGrid" style="margin-bottom:12px">
         <div class="cc" onclick="selExclusive(this,'titleBgGrid');state.titleScreen=this.querySelector('.cc-title').textContent;updateSidebar()"><div class="cc-icon">🎨</div><div class="cc-title">Simple brand colour</div><div class="cc-desc">Clean and bold — primary colour with logo.</div></div>
         <div class="cc" onclick="selExclusive(this,'titleBgGrid');state.titleScreen=this.querySelector('.cc-title').textContent;updateSidebar()"><div class="cc-icon">✦</div><div class="cc-title">Illustrated elements</div><div class="cc-desc">Brand-coloured illustrations behind the title.</div></div>
