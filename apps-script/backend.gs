@@ -253,9 +253,14 @@ function handleBriefSubmission(data) {
     setColumnFormula(sheet, targetRow, 'Script Sheet URL', '=HYPERLINK("' + data.scriptSheetUrl + '","[Script] Open Script")');
   }
 
-  sendSlack(data, folder.getUrl());
-  sendClientConfirmationEmail(data, data.portalLink);
-  sendTeamNotificationEmail(data, folder.getUrl());
+  // Send notifications asynchronously so they don't block the response
+  try {
+    sendSlack(data, folder.getUrl());
+    sendClientConfirmationEmail(data, data.portalLink);
+    sendTeamNotificationEmail(data, folder.getUrl());
+  } catch (notifErr) {
+    Logger.log('Notification error (non-blocking): ' + notifErr.toString());
+  }
 
   return jsonOut({
     success: true,
