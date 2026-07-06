@@ -390,31 +390,56 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 
 <!-- OVERLAY MODAL -->
 <div class="modal-overlay" id="overlayModal" style="display:none">
-  <div class="modal-box" style="max-width:600px">
+  <div class="modal-box" style="max-width:600px;max-height:80vh;overflow-y:auto">
     <button class="modal-close" onclick="closeOverlayModal()">✕</button>
     <div class="modal-title">Visual Upgrade</div>
     <div class="modal-sub">Add a visual to enhance this line.</div>
 
     <div style="margin:16px 0">
-      <div style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:10px">Overlay Position</div>
+      <div style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:10px">Scene Layout & Media</div>
       <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px">
-        <button class="overlay-pos-btn" data-pos="none" onclick="selectOverlayPos('none')" style="padding:12px;border:2px solid var(--border);border-radius:6px;font-size:11px;background:#fff;cursor:pointer">None</button>
-        <button class="overlay-pos-btn" data-pos="left-right" onclick="selectOverlayPos('left-right')" style="padding:12px;border:2px solid var(--border);border-radius:6px;font-size:11px;background:#fff;cursor:pointer">Left | Right</button>
-        <button class="overlay-pos-btn" data-pos="right-left" onclick="selectOverlayPos('right-left')" style="padding:12px;border:2px solid var(--border);border-radius:6px;font-size:11px;background:#fff;cursor:pointer">Right | Left</button>
-        <button class="overlay-pos-btn" data-pos="top-bottom" onclick="selectOverlayPos('top-bottom')" style="padding:12px;border:2px solid var(--border);border-radius:6px;font-size:11px;background:#fff;cursor:pointer">Top | Bottom</button>
-        <button class="overlay-pos-btn" data-pos="full" onclick="selectOverlayPos('full')" style="padding:12px;border:2px solid var(--border);border-radius:6px;font-size:11px;background:#fff;cursor:pointer">Full Screen</button>
+        <button class="overlay-pos-btn" data-pos="none" onclick="selectOverlayPos('none')" style="padding:8px;border:2px solid var(--border);border-radius:6px;cursor:pointer;background:#fff;display:flex;flex-direction:column;align-items:center">
+          <div style="width:50px;height:40px;background:#ddd;border-radius:3px;margin-bottom:4px"></div>
+          <div style="font-size:10px;text-align:center;line-height:1.2">None</div>
+        </button>
+        <button class="overlay-pos-btn" data-pos="left-right" onclick="selectOverlayPos('left-right')" style="padding:8px;border:2px solid var(--border);border-radius:6px;cursor:pointer;background:#fff;display:flex;flex-direction:column;align-items:center">
+          <div style="width:50px;height:40px;display:flex;border-radius:3px;margin-bottom:4px"><div style="flex:1;background:#ddd"></div><div style="flex:1;background:#4da8e6"></div></div>
+          <div style="font-size:10px;text-align:center;line-height:1.2">Left | Right</div>
+        </button>
+        <button class="overlay-pos-btn" data-pos="right-left" onclick="selectOverlayPos('right-left')" style="padding:8px;border:2px solid var(--border);border-radius:6px;cursor:pointer;background:#fff;display:flex;flex-direction:column;align-items:center">
+          <div style="width:50px;height:40px;display:flex;border-radius:3px;margin-bottom:4px"><div style="flex:1;background:#4da8e6"></div><div style="flex:1;background:#ddd"></div></div>
+          <div style="font-size:10px;text-align:center;line-height:1.2">Right | Left</div>
+        </button>
+        <button class="overlay-pos-btn" data-pos="top-bottom" onclick="selectOverlayPos('top-bottom')" style="padding:8px;border:2px solid var(--border);border-radius:6px;cursor:pointer;background:#fff;display:flex;flex-direction:column;align-items:center">
+          <div style="width:50px;height:40px;display:flex;flex-direction:column;border-radius:3px;margin-bottom:4px"><div style="flex:1;background:#4da8e6"></div><div style="flex:1;background:#ddd"></div></div>
+          <div style="font-size:10px;text-align:center;line-height:1.2">Top | Bottom</div>
+        </button>
+        <button class="overlay-pos-btn" data-pos="full" onclick="selectOverlayPos('full')" style="padding:8px;border:2px solid var(--border);border-radius:6px;cursor:pointer;background:#fff;display:flex;flex-direction:column;align-items:center">
+          <div style="width:50px;height:40px;background:#4da8e6;border-radius:3px;margin-bottom:4px"></div>
+          <div style="font-size:10px;text-align:center;line-height:1.2">Full Screen</div>
+        </button>
       </div>
     </div>
 
     <div style="margin:16px 0">
-      <div style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:10px">Upload File</div>
+      <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Name <span style="color:#c0392b">*</span></label>
+      <input type="text" id="overlayName" placeholder="e.g., Product Screenshot" style="display:block;width:100%;padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;box-sizing:border-box" />
+    </div>
+
+    <div style="margin:16px 0">
+      <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Description <span style="font-size:11px;font-weight:400;color:var(--text-muted)">(optional)</span></label>
+      <textarea id="overlayDescription" placeholder="Brief description of this asset" style="display:block;width:100%;padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;box-sizing:border-box;resize:vertical;min-height:60px" rows="3"></textarea>
+    </div>
+
+    <div style="margin:16px 0">
+      <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Image File <span style="color:#c0392b">*</span></label>
       <input type="file" id="overlayFileInput" accept="image/*,video/*" style="display:block;width:100%;padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:12px" />
-      <div style="font-size:11px;color:var(--text-muted);margin-top:6px">Images or video files. Max 10MB.</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:6px">Max file size: 10MB</div>
     </div>
 
     <div style="margin-top:20px;display:flex;gap:8px;justify-content:flex-end">
       <button class="btn btn-ghost" onclick="closeOverlayModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveOverlay()">Add Overlay</button>
+      <button class="btn btn-primary" onclick="saveOverlay()">Apply</button>
     </div>
   </div>
 </div>
@@ -2494,6 +2519,8 @@ function openOverlayModal(blockId){
   _currentOverlayBlockId=blockId;
   _selectedOverlayPos=null;
   document.getElementById('overlayFileInput').value='';
+  document.getElementById('overlayName').value='';
+  document.getElementById('overlayDescription').value='';
   document.querySelectorAll('.overlay-pos-btn').forEach(function(btn){ btn.style.borderColor='var(--border)'; btn.style.background='#fff'; });
   document.getElementById('overlayModal').style.display='flex';
 }
@@ -2529,6 +2556,11 @@ function saveOverlay(){
     alert('Please select an overlay position.');
     return;
   }
+  var nameInput=document.getElementById('overlayName');
+  if(!nameInput.value.trim()){
+    alert('Please enter a name for the overlay.');
+    return;
+  }
   var fileInput=document.getElementById('overlayFileInput');
   if(!fileInput.files || !fileInput.files[0]){
     alert('Please select a file to upload.');
@@ -2543,6 +2575,8 @@ function saveOverlay(){
   reader.onload=function(e){
     state.scriptOverlays[_currentOverlayBlockId]={
       position:_selectedOverlayPos,
+      name:nameInput.value.trim(),
+      description:document.getElementById('overlayDescription').value.trim()||'',
       fileName:file.name,
       fileData:e.target.result
     };
@@ -2555,7 +2589,9 @@ function saveOverlay(){
 function previewOverlay(blockId){
   var overlayInfo=state.scriptOverlays[blockId];
   if(!overlayInfo) return;
-  alert('Overlay Position: '+overlayInfo.position+'\nFile: '+overlayInfo.fileName);
+  var preview='Overlay Details\n\nName: '+overlayInfo.name+'\nPosition: '+overlayInfo.position+'\nFile: '+overlayInfo.fileName;
+  if(overlayInfo.description) preview+='\nDescription: '+overlayInfo.description;
+  alert(preview);
 }
 
 var SCRIPT_TRANSITIONS=['','Fade to Black','Cross Dissolve','Slide Left','Slide Right','Wipe Left','Wipe Right'];
