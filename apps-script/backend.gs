@@ -413,14 +413,14 @@ function saveScriptVersion(folder, clientLabel, lines, metadata) {
   tab.appendRow(['Type', 'Character', 'Dialogue / Text', 'Transition Before Next', 'Transition Duration (s)', 'Visual Upgrade Position', 'Visual Upgrade File']);
   tab.getRange(headerRow, 1, 1, 7).setFontWeight('bold').setBackground('#f3f4f6');
 
-  // Set column widths for better readability
-  tab.setColumnWidth(1, 80);   // Type
-  tab.setColumnWidth(2, 110);  // Character
-  tab.setColumnWidth(3, 200);  // Dialogue/Text
-  tab.setColumnWidth(4, 160);  // Transition
-  tab.setColumnWidth(5, 80);   // Duration
-  tab.setColumnWidth(6, 140);  // Position
-  tab.setColumnWidth(7, 180);  // File
+  // Set column widths for clean readability - exact match to screenshot format
+  tab.setColumnWidth(1, 70);   // Type
+  tab.setColumnWidth(2, 120);  // Character
+  tab.setColumnWidth(3, 280);  // Dialogue/Text
+  tab.setColumnWidth(4, 180);  // Transition Before Next
+  tab.setColumnWidth(5, 70);   // Transition Duration (s)
+  tab.setColumnWidth(6, 150);  // Visual Upgrade Position
+  tab.setColumnWidth(7, 160);  // Visual Upgrade File
 
   // Enable text wrapping for all data rows
   tab.getRange(headerRow + 1, 1, tab.getMaxRows() - headerRow, 7).setWrap(true);
@@ -455,14 +455,6 @@ function saveScriptVersion(folder, clientLabel, lines, metadata) {
       tab.appendRow(rowData);
     }
   });
-
-  tab.setColumnWidths(1, 1, 90);
-  tab.setColumnWidths(2, 1, 110);
-  tab.setColumnWidths(3, 1, 340);
-  tab.setColumnWidths(4, 1, 140);
-  tab.setColumnWidths(5, 1, 90);
-  tab.setColumnWidths(6, 1, 140);
-  tab.setColumnWidths(7, 1, 140);
 
   if (isNewFile) {
     var defaultSheet = ss.getSheetByName('Sheet1');
