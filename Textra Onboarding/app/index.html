@@ -554,11 +554,11 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     </div>
     <!-- Two-option toggle -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px" id="brandMethodGrid">
-      <button id="tog-guidelines" onclick="brandMethod('guidelines',this)" style="padding:12px 16px;border:2px solid var(--teal2);border-radius:var(--radius-xs);background:var(--teal-soft);color:var(--navy);font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px">
-        <span style="font-size:16px">📄</span><span>Upload Guidelines</span>
-      </button>
-      <button id="tog-manual" onclick="brandMethod('manual',this)" style="padding:12px 16px;border:2px solid var(--border);border-radius:var(--radius-xs);background:#fff;color:var(--text-muted);font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px">
+      <button id="tog-manual" onclick="brandMethod('manual',this)" style="padding:12px 16px;border:2px solid var(--teal2);border-radius:var(--radius-xs);background:var(--teal-soft);color:var(--navy);font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px">
         <span style="font-size:16px">✏️</span><span>Fill In Manually</span>
+      </button>
+      <button id="tog-guidelines" onclick="brandMethod('guidelines',this)" style="padding:12px 16px;border:2px solid var(--border);border-radius:var(--radius-xs);background:#fff;color:var(--text-muted);font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px">
+        <span style="font-size:16px">📄</span><span>Upload Guidelines</span>
       </button>
     </div>
 
@@ -899,15 +899,15 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       <span class="tip" data-tip="Choose how your characters are designed. Pick from our library of ready-made characters, supply reference images, or let our team create something unique.">?</span>
     </div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
-      <button class="char-count-btn" id="csb-textra" onclick="setCharStyle('textra')">
-        <div style="font-size:24px;margin-bottom:6px">✨</div>
-        <div style="font-size:13px;font-weight:700;color:var(--navy)">Textra Creates</div>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:3px">We design from your brand brief</div>
-      </button>
       <button class="char-count-btn" id="csb-library" onclick="setCharStyle('library')">
         <div style="font-size:24px;margin-bottom:6px">📚</div>
         <div style="font-size:13px;font-weight:700;color:var(--navy)">Pick from Library</div>
         <div style="font-size:11px;color:var(--text-muted);margin-top:3px">Choose pre-built characters</div>
+      </button>
+      <button class="char-count-btn" id="csb-textra" onclick="setCharStyle('textra')">
+        <div style="font-size:24px;margin-bottom:6px">✨</div>
+        <div style="font-size:13px;font-weight:700;color:var(--navy)">Textra Creates</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:3px">We design from your brand brief</div>
       </button>
       <button class="char-count-btn" id="csb-reference" onclick="setCharStyle('reference')">
         <div style="font-size:24px;margin-bottom:6px">🎨</div>
@@ -998,11 +998,11 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 
     <!-- Two-option toggle (matches brand page pattern) -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px" id="sceneMethodGrid">
-      <button id="tog-scene-own" onclick="sceneMethod('own')" style="padding:12px 16px;border:2px solid var(--teal2);border-radius:var(--radius-xs);background:var(--teal-soft);color:var(--navy);font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px">
-        <span style="font-size:16px">✏️</span><span>Describe your own</span>
-      </button>
-      <button id="tog-scene-lib" onclick="sceneMethod('library')" style="padding:12px 16px;border:2px solid var(--border);border-radius:var(--radius-xs);background:#fff;color:var(--text-muted);font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px">
+      <button id="tog-scene-lib" onclick="sceneMethod('library')" style="padding:12px 16px;border:2px solid var(--teal2);border-radius:var(--radius-xs);background:var(--teal-soft);color:var(--navy);font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px">
         <span style="font-size:16px">📚</span><span>Choose from library</span>
+      </button>
+      <button id="tog-scene-own" onclick="sceneMethod('own')" style="padding:12px 16px;border:2px solid var(--border);border-radius:var(--radius-xs);background:#fff;color:var(--text-muted);font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px">
+        <span style="font-size:16px">✏️</span><span>Describe your own</span>
       </button>
     </div>
 
@@ -1059,11 +1059,11 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 
     <!-- Two-option toggle -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px" id="titleMethodGrid">
-      <button id="tog-title-own" onclick="titleMethod('own')" style="padding:12px 16px;border:2px solid var(--teal2);border-radius:var(--radius-xs);background:var(--teal-soft);color:var(--navy);font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px">
-        <span style="font-size:16px">✏️</span><span>Describe your own</span>
-      </button>
-      <button id="tog-title-lib" onclick="titleMethod('library')" style="padding:12px 16px;border:2px solid var(--border);border-radius:var(--radius-xs);background:#fff;color:var(--text-muted);font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px">
+      <button id="tog-title-lib" onclick="titleMethod('library')" style="padding:12px 16px;border:2px solid var(--teal2);border-radius:var(--radius-xs);background:var(--teal-soft);color:var(--navy);font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px">
         <span style="font-size:16px">📚</span><span>Choose from library</span>
+      </button>
+      <button id="tog-title-own" onclick="titleMethod('own')" style="padding:12px 16px;border:2px solid var(--border);border-radius:var(--radius-xs);background:#fff;color:var(--text-muted);font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px">
+        <span style="font-size:16px">✏️</span><span>Describe your own</span>
       </button>
     </div>
 
@@ -1157,6 +1157,10 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
   <div class="card" id="scriptWriteCard">
     <div class="card-head">How would you like to provide your script?</div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+      <button class="char-count-btn" id="sm-btn-sheet" onclick="scriptInputMethod('sheet')">
+        <div style="font-size:20px;margin-bottom:4px">📊</div>
+        <div style="font-size:13px;font-weight:700;color:var(--navy)">Use a Google Sheet</div>
+      </button>
       <button class="char-count-btn" id="sm-btn-write" onclick="scriptInputMethod('write')">
         <div style="font-size:20px;margin-bottom:4px">✍️</div>
         <div style="font-size:13px;font-weight:700;color:var(--navy)">Write it here</div>
@@ -1164,10 +1168,6 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       <button class="char-count-btn" id="sm-btn-upload" onclick="scriptInputMethod('upload')">
         <div style="font-size:20px;margin-bottom:4px">📄</div>
         <div style="font-size:13px;font-weight:700;color:var(--navy)">Upload a file</div>
-      </button>
-      <button class="char-count-btn" id="sm-btn-sheet" onclick="scriptInputMethod('sheet')">
-        <div style="font-size:20px;margin-bottom:4px">📊</div>
-        <div style="font-size:13px;font-weight:700;color:var(--navy)">Use a Google Sheet</div>
       </button>
     </div>
 
