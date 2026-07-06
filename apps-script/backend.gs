@@ -297,12 +297,15 @@ function handleSubmitScript(payload) {
 
   var clientEmail = getColumnValue(sheet, row, 'Email');
   var fullName = getColumnValue(sheet, row, 'Full Name');
+  var company = getColumnValue(sheet, row, 'Company');
+  var project = getColumnValue(sheet, row, 'Project');
 
-  // Send email asynchronously so it doesn't block the response
+  // Send email and Slack notification asynchronously
   try {
     sendScriptConfirmationEmail(clientEmail, fullName, scriptLink);
-  } catch (emailErr) {
-    Logger.log('Email send error (non-blocking): ' + emailErr.toString());
+    sendScriptSlackNotification(fullName, clientEmail, company, project, scriptLink);
+  } catch (err) {
+    Logger.log('Notification error (non-blocking): ' + err.toString());
   }
 
   return jsonOut({ success: true, scriptLink: scriptLink });
@@ -391,17 +394,31 @@ function saveScriptVersion(folder, clientLabel, lines, metadata) {
   var tabName = 'v' + versionNum + ' - ' + Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'd MMM HH:mm');
   var tab = ss.insertSheet(tabName, 0);
 
-  // Add metadata row at top
+  // Add metadata rows at top
   var headerRow = 1;
   if (metadata) {
-    tab.appendRow(['Video Length:', metadata.videoLength || '', 'Tone:', metadata.scriptTone || '', 'Style:', metadata.scriptStyle || '']);
-    tab.getRange(1, 1, 1, 6).setFontColor('#666666');
-    tab.appendRow(['', '', '', '', '', '', '']);
-    headerRow = 3;
+    tab.appendRow(['Video Length:', metadata.videoLength || '']);
+    tab.appendRow(['Tone:', metadata.scriptTone || '']);
+    tab.appendRow(['Style:', metadata.scriptStyle || '']);
+    tab.getRange(1, 1, 3, 2).setFontColor('#666666').setFontWeight('bold');
+    tab.appendRow(['', '']);
+    headerRow = 5;
   }
 
   tab.appendRow(['Type', 'Character', 'Dialogue / Text', 'Transition Before Next', 'Transition Duration (s)', 'Visual Upgrade Position', 'Visual Upgrade File']);
-  tab.getRange(headerRow, 1, 1, 7).setFontWeight('bold');
+  tab.getRange(headerRow, 1, 1, 7).setFontWeight('bold').setBackground('#f3f4f6');
+
+  // Set column widths for better readability
+  tab.setColumnWidth(1, 80);   // Type
+  tab.setColumnWidth(2, 110);  // Character
+  tab.setColumnWidth(3, 200);  // Dialogue/Text
+  tab.setColumnWidth(4, 160);  // Transition
+  tab.setColumnWidth(5, 80);   // Duration
+  tab.setColumnWidth(6, 140);  // Position
+  tab.setColumnWidth(7, 180);  // File
+
+  // Enable text wrapping for all data rows
+  tab.getRange(headerRow + 1, 1, tab.getMaxRows() - headerRow, 7).setWrap(true);
 
   lines.forEach(function (line) {
     var hasTransition = line.transition && line.transition !== 'none';
@@ -629,6 +646,40 @@ function sendSlack(data, folderUrl) {
     Logger.log('Slack notification sent');
   } catch (e) {
     Logger.log('Slack error: ' + e.toString());
+  }
+}
+
+function sendScriptSlackNotification(fullName, email, company, project, scriptLink) {
+  try {
+    if (!SLACK_WEBHOOK) {
+      return;
+    }
+    var nameVal = fullName || 'N/A';
+    var emailVal = email || 'N/A';
+    var companyVal = company || 'N/A';
+    var projectVal = project || 'N/A';
+
+    var textMsg = '🎬 *Script Submitted*\nName: ' + nameVal + '\nEmail: ' + emailVal + '\nCompany: ' + companyVal + '\nProject: ' + projectVal +
+      '\n\n<' + scriptLink + '|View Script Sheet>';
+
+    var message = {
+      text: 'Script Submission Alert',
+      blocks: [{
+        type: 'section',
+        text: { type: 'mrkdwn', text: textMsg }
+      }]
+    };
+
+    UrlFetchApp.fetch(SLACK_WEBHOOK, {
+      method: 'post',
+      payload: JSON.stringify(message),
+      headers: { 'Content-Type': 'application/json' },
+      muteHttpExceptions: true
+    });
+
+    Logger.log('Script Slack notification sent');
+  } catch (e) {
+    Logger.log('Script Slack error: ' + e.toString());
   }
 }
 

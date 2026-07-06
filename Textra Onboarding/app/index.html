@@ -2572,6 +2572,11 @@ function saveOverlay(){
     return;
   }
 
+  // Show upload progress
+  var applyBtn = document.querySelector('[onclick*="saveOverlay"]');
+  var originalText = applyBtn ? applyBtn.textContent : 'Apply';
+  if(applyBtn) applyBtn.disabled = true;
+
   var reader=new FileReader();
   reader.onload=function(e){
     var fileData=e.target.result;
@@ -2583,6 +2588,9 @@ function saveOverlay(){
       overlayFileName:file.name,
       overlayFileData:fileData
     };
+
+    // Show uploading progress
+    if(applyBtn) applyBtn.textContent = 'Uploading...';
 
     fetch(GOOGLE_SCRIPT_URL,{
       method:'POST',
@@ -2600,13 +2608,18 @@ function saveOverlay(){
           fileName:file.name,
           fileUrl:resp.fileUrl
         };
-        renderScriptBlocks();
-        closeOverlayModal();
+        if(applyBtn) applyBtn.textContent = '✓ Uploaded!';
+        setTimeout(function(){
+          renderScriptBlocks();
+          closeOverlayModal();
+        }, 500);
       } else {
         alert('Error uploading overlay: '+(resp?.message||'Unknown error'));
+        if(applyBtn) { applyBtn.disabled=false; applyBtn.textContent=originalText; }
       }
     }).catch(function(err){
       alert('Error uploading overlay: '+err.message);
+      if(applyBtn) { applyBtn.disabled=false; applyBtn.textContent=originalText; }
     });
   };
   reader.readAsDataURL(file);
@@ -2763,8 +2776,8 @@ function submitScript(){
       if(btn){btn.disabled=false;btn.textContent='Submit Script';}
       var st=document.getElementById('successTitle');
       var ss=document.getElementById('successSub');
-      if(st) st.textContent='Script Submitted!';
-      if(ss) ss.textContent='Check your inbox for the link to your script and next steps.';
+      if(st) st.textContent='Thank you for submitting your script!';
+      if(ss) ss.textContent='You will receive a confirmation email shortly. Our team will review your script and be in touch regarding next steps or if we need any additional information.';
       goTo(7);
     },1500);
   }).catch(function(err){
