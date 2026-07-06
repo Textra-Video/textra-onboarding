@@ -183,6 +183,12 @@ function handleBriefSubmission(data) {
   ];
   sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
 
+  // Hide the Full Data column (internal use only for portal data restoration)
+  var fullDataCol = findColumnByHeader(sheet, 'Full Data');
+  if (fullDataCol !== -1) {
+    sheet.hideColumns(fullDataCol, 1);
+  }
+
   var token = data.portalToken || Utilities.getUuid();
   var clientLabel = data.companyName || data.projectName || data.fullName || 'Client';
   var tokenCol = findColumnByHeader(sheet, 'Portal Token');
@@ -345,7 +351,7 @@ function textraLogoBlob() {
 // the layout Outlook and other email clients actually render reliably.
 // Falls back to a single full-width button if only one link is present.
 function secondaryButton(href, label) {
-  return '<a href="' + href + '" style="display:block;box-sizing:border-box;width:100%;padding:13px 12px;background:linear-gradient(135deg,#1A71B1,#66BCAD);color:#ffffff;border:none;border-radius:8px;text-decoration:none;font-weight:bold;font-size:14px;text-align:center;">' + label + '</a>';
+  return '<a href="' + href + '" style="display:block;box-sizing:border-box;width:100%;padding:10px 8px;background:linear-gradient(135deg,#1A71B1,#66BCAD);color:#ffffff;border:none;border-radius:8px;text-decoration:none;font-weight:bold;font-size:12px;text-align:center;">' + label + '</a>';
 }
 
 function secondaryButtonsRow(scriptLink, folderUrl) {
@@ -618,14 +624,18 @@ function generateBriefDocument(folder, data, clientLabel) {
 }
 
 function saveUploadedFiles(folder, data, clientLabel) {
+  Logger.log('saveUploadedFiles called for ' + clientLabel);
   FILE_FIELDS.forEach(function (key) {
     var value = data[key];
-    if (!value) return;
-    // FILE_NAME_FIELDS carries the browser's original filename per upload
-    // (e.g. "logoDataUrlName") - fall back to the field key if a client is
-    // still on an older cached frontend that doesn't send it.
+    if (!value) {
+      Logger.log('  ' + key + ': empty');
+      return;
+    }
+    Logger.log('  ' + key + ': ' + value.length + ' chars');
     var originalName = data[key + 'Name'] || key;
-    saveBase64File(folder, value, originalName, clientLabel);
+    var result = saveBase64File(folder, value, originalName, clientLabel);
+    if (result) Logger.log('    → saved as ' + result.getName());
+    else Logger.log('    → failed to save');
   });
 }
 
