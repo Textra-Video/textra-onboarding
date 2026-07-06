@@ -1198,31 +1198,34 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
         <div>
           <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Video Length</label>
-          <select id="videoLength" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif">
+          <select id="videoLength" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif" onchange="toggleCustomInput('videoLength','videoLengthCustom')">
             <option value="">Select length</option>
             <option value="30sec">30 seconds</option>
             <option value="60sec">60 seconds</option>
             <option value="90sec">90 seconds</option>
             <option value="other">Other</option>
           </select>
+          <input type="text" id="videoLengthCustom" placeholder="Enter custom length" style="display:none;width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;margin-top:6px;">
         </div>
         <div>
           <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Tone</label>
-          <select id="scriptTone" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif">
+          <select id="scriptTone" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif" onchange="toggleCustomInput('scriptTone','scriptToneCustom')">
             <option value="">Select tone</option>
             <option value="light-hearted">Light Hearted</option>
             <option value="serious">Serious</option>
             <option value="other">Other</option>
           </select>
+          <input type="text" id="scriptToneCustom" placeholder="Enter custom tone" style="display:none;width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;margin-top:6px;">
         </div>
         <div>
           <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Style</label>
-          <select id="scriptStyle" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif">
+          <select id="scriptStyle" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif" onchange="toggleCustomInput('scriptStyle','scriptStyleCustom')">
             <option value="">Select style</option>
             <option value="presenters">Presenters to Camera</option>
             <option value="actors">Actors Roleplaying</option>
             <option value="other">Other</option>
           </select>
+          <input type="text" id="scriptStyleCustom" placeholder="Enter custom style" style="display:none;width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;margin-top:6px;">
         </div>
       </div>
     </div>
@@ -2495,6 +2498,18 @@ function openOverlayModal(blockId){
   document.getElementById('overlayModal').style.display='flex';
 }
 
+function toggleCustomInput(selectId, inputId){
+  var selectEl = document.getElementById(selectId);
+  var inputEl = document.getElementById(inputId);
+  if(selectEl.value === 'other'){
+    inputEl.style.display = 'block';
+    inputEl.focus();
+  } else {
+    inputEl.style.display = 'none';
+    inputEl.value = '';
+  }
+}
+
 function closeOverlayModal(){
   document.getElementById('overlayModal').style.display='none';
   _currentOverlayBlockId=null;
@@ -2537,6 +2552,12 @@ function saveOverlay(){
   reader.readAsDataURL(file);
 }
 
+function previewOverlay(blockId){
+  var overlayInfo=state.scriptOverlays[blockId];
+  if(!overlayInfo) return;
+  alert('Overlay Position: '+overlayInfo.position+'\nFile: '+overlayInfo.fileName);
+}
+
 var SCRIPT_TRANSITIONS=['','Fade to Black','Cross Dissolve','Slide Left','Slide Right','Wipe Left','Wipe Right'];
 
 function renderScriptBlocks(){
@@ -2577,7 +2598,8 @@ function renderScriptBlocks(){
     html+='<div style="display:flex;gap:6px">';
     if(b.kind==='line'){
       var overlayInfo=state.scriptOverlays[b.id];
-      html+='<button onclick="openOverlayModal('+b.id+')" title="Add visual upgrade" style="background:none;border:none;color:'+(overlayInfo?'var(--blue)':'var(--text-dim)')+';cursor:pointer;font-size:16px;padding:4px">🎬</button>';
+      var overlayTitle = overlayInfo ? ('Overlay: '+overlayInfo.position+' • '+overlayInfo.fileName) : 'Add visual upgrade';
+      html+='<button onclick="'+(overlayInfo?'previewOverlay('+b.id+')':'openOverlayModal('+b.id+')')+'" title="'+overlayTitle+'" style="background:none;border:none;color:'+(overlayInfo?'var(--blue)':'var(--text-dim)')+';cursor:pointer;font-size:16px;padding:4px;font-weight:'+(overlayInfo?'700':'400')+'">🎬</button>';
     }
     html+='<button onclick="deleteScriptBlock('+b.id+')" title="Delete" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:16px;padding:4px">🗑️</button>';
     html+='</div></div>';
@@ -2611,13 +2633,17 @@ function submitScript(){
     alert('Please add at least one line before submitting.');
     return;
   }
+  var videoLengthVal = document.getElementById('videoLength').value;
+  var tonalVal = document.getElementById('scriptTone').value;
+  var styleVal = document.getElementById('scriptStyle').value;
+
   var payload={
     action:'submitScript',
     portalToken:getPortalToken(),
     scriptTitle:title,
-    videoLength:document.getElementById('videoLength').value||'',
-    scriptTone:document.getElementById('scriptTone').value||'',
-    scriptStyle:document.getElementById('scriptStyle').value||'',
+    videoLength:(videoLengthVal==='other' ? document.getElementById('videoLengthCustom').value : videoLengthVal)||'',
+    scriptTone:(tonalVal==='other' ? document.getElementById('scriptToneCustom').value : tonalVal)||'',
+    scriptStyle:(styleVal==='other' ? document.getElementById('scriptStyleCustom').value : styleVal)||'',
     scriptLines: state.scriptBlocks.map(function(b){
       var overlayInfo=state.scriptOverlays[b.id];
       return {
