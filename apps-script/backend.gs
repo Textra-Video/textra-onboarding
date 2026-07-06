@@ -113,7 +113,9 @@ const TEXTRA_LOGO_BASE64 = 'iVBORw0KGgoAAAANSUhEUgAAAcsAAABACAYAAAB1AlzoAAABCGlD
 function doPost(e) {
   try {
     var jsonPayload = null;
-    try { if (e.postData && e.postData.contents) jsonPayload = JSON.parse(e.postData.contents); } catch (err) {}
+    try { if (e.postData && e.postData.contents) jsonPayload = JSON.parse(e.postData.contents); } catch (err) {
+      Logger.log('JSON parse error: ' + err.toString());
+    }
 
     if (jsonPayload && jsonPayload.action === 'submitScript') {
       return handleSubmitScript(jsonPayload);
@@ -134,7 +136,7 @@ function doPost(e) {
     }
     return handleBriefSubmission(e.parameter);
   } catch (error) {
-    Logger.log('ERROR: ' + error.toString());
+    Logger.log('ERROR in doPost: ' + error.toString());
     return ContentService.createTextOutput(JSON.stringify({
       success: false,
       message: error.toString()
