@@ -2577,8 +2577,7 @@ function renderScriptBlocks(){
     html+='<div style="display:flex;gap:6px">';
     if(b.kind==='line'){
       var overlayInfo=state.scriptOverlays[b.id];
-      html+='<button onclick="openOverlayModal('+b.id+')" title="Add visual upgrade" style="background:none;border:none;color:'+(overlayInfo?'var(--blue)':'var(--text-dim)');';
-      html+='cursor:pointer;font-size:16px;padding:4px">🎬</button>';
+      html+='<button onclick="openOverlayModal('+b.id+')" title="Add visual upgrade" style="background:none;border:none;color:'+(overlayInfo?'var(--blue)':'var(--text-dim)')+';cursor:pointer;font-size:16px;padding:4px">🎬</button>';
     }
     html+='<button onclick="deleteScriptBlock('+b.id+')" title="Delete" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:16px;padding:4px">🗑️</button>';
     html+='</div></div>';
