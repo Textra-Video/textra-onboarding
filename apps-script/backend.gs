@@ -351,7 +351,7 @@ function textraLogoBlob() {
 // the layout Outlook and other email clients actually render reliably.
 // Falls back to a single full-width button if only one link is present.
 function secondaryButton(href, label) {
-  return '<a href="' + href + '" style="display:block;box-sizing:border-box;width:100%;padding:10px 8px;background:linear-gradient(135deg,#1A71B1,#66BCAD);color:#ffffff;border:none;border-radius:8px;text-decoration:none;font-weight:bold;font-size:12px;text-align:center;">' + label + '</a>';
+  return '<a href="' + href + '" style="display:block;box-sizing:border-box;width:100%;padding:11px 16px;background:#1A71B1;background:linear-gradient(135deg,#1A71B1,#66BCAD);color:#ffffff;border:none;border-radius:8px;text-decoration:none;font-weight:bold;font-size:13px;text-align:center;">' + label + '</a>';
 }
 
 function secondaryButtonsRow(scriptLink, folderUrl) {
