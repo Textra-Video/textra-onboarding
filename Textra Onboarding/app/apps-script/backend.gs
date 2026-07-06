@@ -179,7 +179,7 @@ function handleBriefSubmission(data) {
     'Character B Accent', 'Character B Clothing', 'Character B Notes',
     'Background', 'Scene Notes', 'Title Screen', 'Music',
     'Script Title', 'Script Method', 'Deadline',
-    'Portal Token', 'Status', 'Client Folder'
+    'Portal Token', 'Status', 'Client Folder', 'Full Data'
   ];
   sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
 
@@ -225,7 +225,8 @@ function handleBriefSubmission(data) {
     data.deadline || '',
     token,
     'Brief submitted',
-    ''
+    '',
+    JSON.stringify(data)
   ];
 
   if (existingRow) {
@@ -344,7 +345,7 @@ function textraLogoBlob() {
 // the layout Outlook and other email clients actually render reliably.
 // Falls back to a single full-width button if only one link is present.
 function secondaryButton(href, label) {
-  return '<a href="' + href + '" style="display:block;box-sizing:border-box;width:100%;padding:13px 12px;background:#ffffff;border:1.5px solid #e2e8f0;border-radius:8px;color:#0d1b3e;text-decoration:none;font-weight:bold;font-size:14px;text-align:center;">' + label + '</a>';
+  return '<a href="' + href + '" style="display:block;box-sizing:border-box;width:100%;padding:13px 12px;background:linear-gradient(135deg,#1A71B1,#66BCAD);color:#ffffff;border:none;border-radius:8px;text-decoration:none;font-weight:bold;font-size:14px;text-align:center;">' + label + '</a>';
 }
 
 function secondaryButtonsRow(scriptLink, folderUrl) {
@@ -372,11 +373,6 @@ function brandedEmailHtml(heading, bodyHtml, portalLink, ctaLabel, folderUrl, sc
       '</div>'
     ) : '') +
     secondaryButtonsRow(scriptLink, folderUrl) +
-    (portalLink ? (
-      '<div style="margin-top:16px;text-align:center;font-size:12px;color:#64748b;">Want to make edits? ' +
-      '<a href="' + portalLink + '" style="color:#1A71B1;font-weight:bold;text-decoration:none;">Update your brief</a>' +
-      ' - this updates your existing project, it won\'t create a new one.</div>'
-    ) : '') +
     '</td></tr>' +
     '<tr><td style="padding:16px 32px;background:#f7f9fc;text-align:center;font-size:11px;color:#94a3b8;">Textra Video - studio-quality animated videos, fast.</td></tr>' +
     '</table></td></tr></table></body></html>';
