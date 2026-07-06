@@ -2636,7 +2636,7 @@ function renderScriptBlocks(){
       var overlayInfo=state.scriptOverlays[b.id];
       var overlayTitle = overlayInfo ? ('Overlay: '+overlayInfo.position+' • '+overlayInfo.fileName) : 'Add visual upgrade';
       var overlayIcon = overlayInfo ? '✓' : '🎬';
-      html+='<button onclick="'+(overlayInfo?'previewOverlay('+b.id+')':'openOverlayModal('+b.id+')')+'" title="'+overlayTitle+'" style="background:none;border:none;color:'+(overlayInfo?'var(--blue)':'var(--text-dim)')+';cursor:pointer;font-size:16px;padding:4px;font-weight:'+(overlayInfo?'700':'400');background-color:'+(overlayInfo?'#e8f2f9':'transparent')+';border-radius:4px;padding:4px 6px">'+overlayIcon+'</button>';
+      html+='<button onclick="'+(overlayInfo?'previewOverlay('+b.id+')':'openOverlayModal('+b.id+')')+'" title="'+overlayTitle+'" style="background:none;border:none;color:'+(overlayInfo?'var(--blue)':'var(--text-dim)')+';cursor:pointer;font-size:16px;padding:4px;font-weight:'+(overlayInfo?'700':'400')+';background-color:'+(overlayInfo?'#e8f2f9':'transparent')+';border-radius:4px;padding:4px 6px">'+overlayIcon+'</button>';
     }
     html+='<button onclick="deleteScriptBlock('+b.id+')" title="Delete" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:16px;padding:4px">🗑️</button>';
     html+='</div></div>';
