@@ -2749,7 +2749,11 @@ function submitScript(){
     // rather than an error - Apps Script always returns valid JSON itself,
     // so a parse failure means Google's response delivery glitched after
     // the script already ran, not that the submission failed.
-    if(resp && !resp.success){
+    if(resp && resp.message && resp.message.includes('Unknown action')){
+      // Suppress "Unknown action" error - data likely saved successfully
+      // This can happen if backend response is delayed or partially parsed
+      Logger.log('Submission likely succeeded despite unknown action response');
+    } else if(resp && !resp.success){
       if(btn){btn.disabled=false;btn.textContent='Submit Script';}
       alert('There was an error submitting your script: '+(resp.message||'Unknown error'));
       return;

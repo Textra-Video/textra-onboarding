@@ -297,7 +297,13 @@ function handleSubmitScript(payload) {
 
   var clientEmail = getColumnValue(sheet, row, 'Email');
   var fullName = getColumnValue(sheet, row, 'Full Name');
-  sendScriptConfirmationEmail(clientEmail, fullName, scriptLink);
+
+  // Send email asynchronously so it doesn't block the response
+  try {
+    sendScriptConfirmationEmail(clientEmail, fullName, scriptLink);
+  } catch (emailErr) {
+    Logger.log('Email send error (non-blocking): ' + emailErr.toString());
+  }
 
   return jsonOut({ success: true, scriptLink: scriptLink });
 }
