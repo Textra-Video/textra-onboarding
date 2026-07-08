@@ -412,26 +412,23 @@ function saveScriptVersion(folder, clientLabel, lines, metadata) {
   }
 
   tab.appendRow(['Type', 'Character', 'Dialogue / Text', 'Transition Before Next', 'Transition Duration (s)', 'Visual Upgrade Position', 'Visual Upgrade File']);
-  tab.getRange(headerRow, 1, 1, 7).setFontWeight('bold').setBackground('#f3f4f6');
+  var headerRange = tab.getRange(headerRow, 1, 1, 7);
+  headerRange.setFontWeight('bold').setBackground('#f3f4f6').setWrap(true).setVerticalAlignment('middle');
 
-  // Set column widths for clean readability - exact match to screenshot format
-  tab.setColumnWidth(1, 70);   // Type
-  tab.setColumnWidth(2, 120);  // Character
-  tab.setColumnWidth(3, 280);  // Dialogue/Text
-  tab.setColumnWidth(4, 180);  // Transition Before Next
-  tab.setColumnWidth(5, 70);   // Transition Duration (s)
-  tab.setColumnWidth(6, 150);  // Visual Upgrade Position
-  tab.setColumnWidth(7, 160);  // Visual Upgrade File
+  // Set column widths to match design spec
+  tab.setColumnWidth(1, 105);   // Type
+  tab.setColumnWidth(2, 108);   // Character
+  tab.setColumnWidth(3, 250);   // Dialogue/Text
+  tab.setColumnWidth(4, 162);   // Transition Before Next
+  tab.setColumnWidth(5, 109);   // Transition Duration (s)
+  tab.setColumnWidth(6, 135);   // Visual Upgrade Position
+  tab.setColumnWidth(7, 144);   // Visual Upgrade File
 
-  // Enable text wrapping for all data rows
-  tab.getRange(headerRow + 1, 1, tab.getMaxRows() - headerRow, 7).setWrap(true);
+  // Enable text wrapping for all data rows - no vertical centering for data rows per spec
+  tab.getRange(headerRow + 1, 1, tab.getMaxRows() - headerRow, 7).setWrap(true).setHorizontalAlignment('left');
 
-  // Alternating row colors for characters: light blue for A, light gray for B, light green for other
-  var colorMap = {
-    'A': '#e8f2f9',  // Light blue
-    'B': '#f0f0f0',  // Light gray
-    'default': '#f5f5f5'  // Light gray-green
-  };
+  // Track character A count for alternating colors
+  var charACount = 0;
 
   lines.forEach(function (line, index) {
     var hasTransition = line.transition && line.transition !== 'none';
@@ -461,10 +458,22 @@ function saveScriptVersion(folder, clientLabel, lines, metadata) {
     ];
     if (rowData && rowData.length > 0) {
       tab.appendRow(rowData);
-      // Apply alternating colors based on character
       var currentRow = headerRow + 1 + index;
-      var charLetter = line.character;
-      var bgColor = colorMap[charLetter] || colorMap['default'];
+      var bgColor = '#f3f4f6';  // default title color
+
+      // Determine background color based on type and character
+      if (line.kind === 'title') {
+        bgColor = '#f3f4f6';  // Light gray for title
+      } else if (line.kind === 'endcredits') {
+        bgColor = '#f0f0f0';  // Light gray for end credits
+      } else if (line.character === 'A') {
+        // Character A alternates between two grays
+        bgColor = (charACount % 2 === 0) ? '#f5f5f5' : '#f0f0f0';
+        charACount++;
+      } else if (line.character === 'B') {
+        bgColor = '#e8f2f9';  // Light blue for Character B
+      }
+
       tab.getRange(currentRow, 1, 1, 7).setBackground(bgColor);
     }
   });
