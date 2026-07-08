@@ -2518,6 +2518,9 @@ function openOverlayModal(blockId){
   document.getElementById('overlayName').value='';
   document.getElementById('overlayDescription').value='';
   document.querySelectorAll('.overlay-pos-btn').forEach(function(btn){ btn.style.borderColor='var(--border)'; btn.style.background='#fff'; });
+  // Reset button state for new upload
+  var applyBtn = document.querySelector('[onclick*="saveOverlay"]');
+  if(applyBtn){ applyBtn.textContent='Apply'; applyBtn.disabled=false; }
   document.getElementById('overlayModal').style.display='flex';
 }
 
