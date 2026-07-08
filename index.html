@@ -1993,7 +1993,13 @@ function submitForm(){
   goTo(6);
 }
 
+var _isSubmittingBrief = false;
+
 function finalSubmit(){
+  // Prevent double-submit: if already submitting, ignore this call
+  if(_isSubmittingBrief) return;
+  _isSubmittingBrief = true;
+
   var btn = document.getElementById('submitBtn');
   if(btn) {
     btn.disabled = true;
@@ -2044,11 +2050,13 @@ function finalSubmit(){
       goTo(7);
     } else {
       if(btn) btn.textContent = 'Submit Brief';
+      _isSubmittingBrief = false;
       alert('There was an error submitting your brief: '+(resp.message||'Unknown error')+'\n\nPlease try again.');
     }
   }).catch(function(err){
     if(window._submitInterval) clearInterval(window._submitInterval);
     if(btn){ btn.disabled = false; btn.textContent = 'Submit Brief'; }
+    _isSubmittingBrief = false;
     alert('There was an error submitting your brief: '+err.message+'\n\nPlease try again.');
   });
 }
@@ -2700,14 +2708,22 @@ function renderScriptBlocks(){
   container.innerHTML=html;
 }
 
+var _isSubmittingScript = false;
+
 function submitScript(){
+  // Prevent double-submit: if already submitting, ignore this call
+  if(_isSubmittingScript) return;
+  _isSubmittingScript = true;
+
   var btn=document.getElementById('submitScriptBtn');
   var title=document.getElementById('scriptTitlePage8')&&document.getElementById('scriptTitlePage8').value;
   if(!title||!title.trim()){
+    _isSubmittingScript = false;
     alert('Please add a video title before submitting.');
     return;
   }
   if(!state.scriptBlocks.length){
+    _isSubmittingScript = false;
     alert('Please add at least one line before submitting.');
     return;
   }
@@ -2769,6 +2785,7 @@ function submitScript(){
       Logger.log('Submission likely succeeded despite unknown action response');
     } else if(resp && !resp.success){
       if(btn){btn.disabled=false;btn.textContent='Submit Script';}
+      _isSubmittingScript = false;
       alert('There was an error submitting your script: '+(resp.message||'Unknown error'));
       return;
     }
@@ -2785,6 +2802,7 @@ function submitScript(){
     if(window._scriptSubmitInterval) clearInterval(window._scriptSubmitInterval);
     console.error('Error submitting script:',err);
     if(btn){btn.disabled=false;btn.textContent='Submit Script';}
+    _isSubmittingScript = false;
     alert('There was an error submitting your script: '+err.message);
   });
 }
