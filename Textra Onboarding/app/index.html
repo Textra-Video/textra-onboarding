@@ -758,200 +758,9 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     <p class="s-desc">Your characters present your content. Tell us who they are and our designers bring them to life.</p>
   </div>
 
-  <!-- How many characters -->
-  <div class="card" id="charCountCard">
-    <div class="card-head"><span class="step-pill">01</span> How many characters do you need?
-      <span class="tip" data-tip="Textra templates have a character on the left and right, and the camera cuts between them as they speak. They can address the audience directly, or talk to each other. Choose one if you only need a single narrator.">?</span>
-    </div>
-    <div class="char-count-grid">
-      <button class="char-count-btn" id="ccb1" onclick="setCharCount(1)">
-        <div class="ccb-num">1</div>
-        <div class="ccb-lbl">1 Character</div>
-      </button>
-      <button class="char-count-btn" id="ccb2" onclick="setCharCount(2)">
-        <div class="ccb-num">2</div>
-        <div class="ccb-lbl">2 Characters</div>
-      </button>
-    </div>
-  </div>
-
-  <!-- Character 1 -->
-  <div class="card" id="charACard" style="display:none">
-    <div class="card-head"><span class="step-pill">02</span> Character 1</div>
-    <div id="libSelA_wrap" style="display:none;margin-bottom:14px">
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:8px">Library Character</div>
-      <div id="libSelA_display" style="display:none;align-items:center;gap:10px;padding:10px;background:var(--teal-soft);border:1.5px solid var(--teal2);border-radius:var(--radius-xs);margin-bottom:8px"></div>
-
-    </div>
-
-    <div class="form-row c2">
-      <div class="field field-with-other">
-        <label>Gender <span class="tip" data-tip="Choose the gender presentation for this character.">?</span></label>
-        <select id="c1gender" onchange="handleOther(this,'c1gender_other');updateSidebar()">
-          <option value="">— Select —</option>
-          <option>Female</option><option>Male</option><option>Non-binary</option>
-          <option>Let Textra decide</option><option value="other">Other — describe below</option>
-        </select>
-        <div class="other-input" id="c1gender_other"><input type="text" placeholder="Describe gender presentation…" oninput="updateSidebar()"></div>
-      </div>
-      <div class="field field-with-other">
-        <label>Age Range <span class="tip" data-tip="The approximate age of the character. This affects face design, posture and clothing style.">?</span></label>
-        <select id="c1age" onchange="handleOther(this,'c1age_other');updateSidebar()">
-          <option value="">— Select —</option>
-          <option>18–25</option><option>26–35</option><option>36–45</option><option>46–55</option><option>55+</option>
-          <option>Let Textra decide</option><option value="other">Other — describe below</option>
-        </select>
-        <div class="other-input" id="c1age_other"><input type="text" placeholder="Describe age range…" oninput="updateSidebar()"></div>
-      </div>
-    </div>
-    <div class="form-row c2">
-      <div class="field field-with-other">
-        <label>Ethnicity <span class="tip" data-tip="Helps our designers create a character that reflects the diversity of your audience or team.">?</span></label>
-        <select id="c1eth" onchange="handleOther(this,'c1eth_other');updateSidebar()">
-          <option value="">— Select —</option>
-          <option>East Asian</option><option>South Asian</option><option>Black / African</option>
-          <option>Mixed / Multiracial</option><option>White / European</option>
-          <option>Hispanic / Latino</option><option>Middle Eastern</option>
-          <option>Let Textra decide</option><option value="other">Other — describe below</option>
-        </select>
-        <div class="other-input" id="c1eth_other"><input type="text" placeholder="Describe ethnicity…" oninput="updateSidebar()"></div>
-      </div>
-      <div class="field field-with-other">
-        <label>Voice Accent <span class="tip" data-tip="The accent used when this character speaks. Used for voice generation.">?</span></label>
-        <select id="c1accent" onchange="handleOther(this,'c1accent_other');updateSidebar()">
-          <option value="">— Select —</option>
-          <option>British (Standard)</option><option>American (Neutral)</option>
-          <option>Australian</option><option>Irish</option><option>South African</option>
-          <option>Let Textra decide</option><option value="other">Other — describe below</option>
-        </select>
-        <div class="other-input" id="c1accent_other"><input type="text" placeholder="Describe accent…" oninput="updateSidebar()"></div>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="field field-with-other">
-        <label>Clothing <span class="tip" data-tip="What the character wears. Smart/formal works well for corporate brands; casual suits softer tones.">?</span></label>
-        <select id="c1clothing" onchange="handleOther(this,'c1clothing_other');updateSidebar()">
-          <option value="">— Select —</option>
-          <option>Smart / Business formal</option><option>Business casual</option>
-          <option>Casual / Everyday</option><option>Uniform</option>
-          <option>Industry-specific</option>
-          <option>Let Textra decide</option><option value="other">Other — describe below</option>
-        </select>
-        <div class="other-input" id="c1clothing_other"><input type="text" placeholder="Describe clothing…" oninput="updateSidebar()"></div>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="field">
-        <label>Additional Notes <span class="tip" data-tip="Hair colour, glasses, accessories, skin tone details, body type — anything specific you want our designers to know.">?</span></label>
-        <textarea id="c1notes" placeholder="e.g. Short dark hair, glasses, slim build, warm skin tone…" oninput="updateSidebar()"></textarea>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="field">
-        <label>Reference Track URL <span class="hint">— optional</span> <span class="tip" data-tip="Audio reference (e.g. YouTube, Vimeo, SoundCloud) showing the voice tone, accent, or speech pattern you want for this character.">?</span></label>
-        <input type="url" id="c1trackUrl" placeholder="https://youtube.com/watch?v=... or https://soundcloud.com/..." oninput="updateSidebar()">
-      </div>
-    </div>
-    <div class="field">
-      <label>Reference Image <span class="hint">— optional</span> <span class="tip" data-tip="Upload a photo, illustration or screenshot showing the look you have in mind.">?</span></label>
-      <label class="upload-label" id="ul-ca" style="padding:12px">
-        <input type="file" accept="image/*" style="display:none" onchange="handleUpload(this,'ul-ca','fn-ca')">
-        <div class="upload-txt" style="font-size:11px">Click to upload reference image</div>
-        <div class="upload-fn" id="fn-ca"></div>
-      </label>
-    </div>
-  </div>
-
-  <!-- Character 2 -->
-  <div class="card" id="charBCard" style="display:none">
-    <div class="card-head"><span class="step-pill">03</span> Character 2</div>
-    <div id="libSelB_wrap" style="display:none;margin-bottom:14px">
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:8px">Library Character</div>
-      <div id="libSelB_display" style="display:none;align-items:center;gap:10px;padding:10px;background:var(--teal-soft);border:1.5px solid var(--teal2);border-radius:var(--radius-xs);margin-bottom:8px"></div>
-
-    </div>
-
-    <div class="form-row c2">
-      <div class="field field-with-other">
-        <label>Gender <span class="tip" data-tip="Choose the gender presentation for this character.">?</span></label>
-        <select id="c2gender" onchange="handleOther(this,'c2gender_other');updateSidebar()">
-          <option value="">— Select —</option>
-          <option>Female</option><option>Male</option><option>Non-binary</option>
-          <option>Let Textra decide</option><option value="other">Other — describe below</option>
-        </select>
-        <div class="other-input" id="c2gender_other"><input type="text" placeholder="Describe gender presentation…" oninput="updateSidebar()"></div>
-      </div>
-      <div class="field field-with-other">
-        <label>Age Range <span class="tip" data-tip="The approximate age of the character. This affects face design, posture and clothing style.">?</span></label>
-        <select id="c2age" onchange="handleOther(this,'c2age_other');updateSidebar()">
-          <option value="">— Select —</option>
-          <option>18–25</option><option>26–35</option><option>36–45</option><option>46–55</option><option>55+</option>
-          <option>Let Textra decide</option><option value="other">Other — describe below</option>
-        </select>
-        <div class="other-input" id="c2age_other"><input type="text" placeholder="Describe age range…" oninput="updateSidebar()"></div>
-      </div>
-    </div>
-    <div class="form-row c2">
-      <div class="field field-with-other">
-        <label>Ethnicity <span class="tip" data-tip="Helps our designers create a character that reflects the diversity of your audience or team.">?</span></label>
-        <select id="c2eth" onchange="handleOther(this,'c2eth_other');updateSidebar()">
-          <option value="">— Select —</option>
-          <option>East Asian</option><option>South Asian</option><option>Black / African</option>
-          <option>Mixed / Multiracial</option><option>White / European</option>
-          <option>Hispanic / Latino</option><option>Middle Eastern</option>
-          <option>Let Textra decide</option><option value="other">Other — describe below</option>
-        </select>
-        <div class="other-input" id="c2eth_other"><input type="text" placeholder="Describe ethnicity…" oninput="updateSidebar()"></div>
-      </div>
-      <div class="field field-with-other">
-        <label>Voice Accent <span class="tip" data-tip="The accent used when this character speaks. Used for voice generation.">?</span></label>
-        <select id="c2accent" onchange="handleOther(this,'c2accent_other');updateSidebar()">
-          <option value="">— Select —</option>
-          <option>British (Standard)</option><option>American (Neutral)</option>
-          <option>Australian</option><option>Irish</option><option>South African</option>
-          <option>Let Textra decide</option><option value="other">Other — describe below</option>
-        </select>
-        <div class="other-input" id="c2accent_other"><input type="text" placeholder="Describe accent…" oninput="updateSidebar()"></div>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="field field-with-other">
-        <label>Clothing <span class="tip" data-tip="What the character wears. Smart/formal works well for corporate brands; casual suits softer tones.">?</span></label>
-        <select id="c2clothing" onchange="handleOther(this,'c2clothing_other');updateSidebar()">
-          <option value="">— Select —</option>
-          <option>Smart / Business formal</option><option>Business casual</option>
-          <option>Casual / Everyday</option><option>Uniform</option>
-          <option>Industry-specific</option>
-          <option>Let Textra decide</option><option value="other">Other — describe below</option>
-        </select>
-        <div class="other-input" id="c2clothing_other"><input type="text" placeholder="Describe clothing…" oninput="updateSidebar()"></div>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="field">
-        <label>Additional Notes <span class="tip" data-tip="Hair colour, glasses, accessories, skin tone details, body type — anything specific you want our designers to know.">?</span></label>
-        <textarea id="c2notes" placeholder="e.g. Short dark hair, glasses, slim build, warm skin tone…" oninput="updateSidebar()"></textarea>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="field">
-        <label>Reference Track URL <span class="hint">— optional</span> <span class="tip" data-tip="Audio reference (e.g. YouTube, Vimeo, SoundCloud) showing the voice tone, accent, or speech pattern you want for this character.">?</span></label>
-        <input type="url" id="c2trackUrl" placeholder="https://youtube.com/watch?v=... or https://soundcloud.com/..." oninput="updateSidebar()">
-      </div>
-    </div>
-    <div class="field">
-      <label>Reference Image <span class="hint">— optional</span> <span class="tip" data-tip="Upload a photo, illustration or screenshot showing the look you have in mind.">?</span></label>
-      <label class="upload-label" id="ul-cb" style="padding:12px">
-        <input type="file" accept="image/*" style="display:none" onchange="handleUpload(this,'ul-cb','fn-cb')">
-        <div class="upload-txt" style="font-size:11px">Click to upload reference image</div>
-        <div class="upload-fn" id="fn-cb"></div>
-      </label>
-    </div>
-  </div>
-
   <!-- Illustration style -->
   <div class="card" id="charStyleCard">
-    <div class="card-head"><span class="step-pill" id="charStyleStepPill">03</span> Illustration Style
+    <div class="card-head"><span class="step-pill" id="charStyleStepPill">01</span> Illustration Style
       <span class="tip" data-tip="Choose how your characters are designed. Pick from our library of ready-made characters, supply reference images, or let our team create something unique.">?</span>
     </div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
@@ -1027,6 +836,199 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
         <button onclick="lib_changeB()" style="background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px;color:var(--text-muted);cursor:pointer">Change</button>
       </div>
 
+    </div>
+  </div>
+
+
+
+  <!-- How many characters -->
+  <div class="card" id="charCountCard">
+    <div class="card-head"><span class="step-pill">02</span> How many characters do you need?
+      <span class="tip" data-tip="Textra templates have a character on the left and right, and the camera cuts between them as they speak. They can address the audience directly, or talk to each other. Choose one if you only need a single narrator.">?</span>
+    </div>
+    <div class="char-count-grid">
+      <button class="char-count-btn" id="ccb1" onclick="setCharCount(1)">
+        <div class="ccb-num">1</div>
+        <div class="ccb-lbl">1 Character</div>
+      </button>
+      <button class="char-count-btn" id="ccb2" onclick="setCharCount(2)">
+        <div class="ccb-num">2</div>
+        <div class="ccb-lbl">2 Characters</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Character 1 -->
+  <div class="card" id="charACard" style="display:none">
+    <div class="card-head"><span class="step-pill">03</span> Character 1</div>
+    <div id="libSelA_wrap" style="display:none;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:8px">Library Character</div>
+      <div id="libSelA_display" style="display:none;align-items:center;gap:10px;padding:10px;background:var(--teal-soft);border:1.5px solid var(--teal2);border-radius:var(--radius-xs);margin-bottom:8px"></div>
+
+    </div>
+
+    <div class="form-row c2">
+      <div class="field field-with-other">
+        <label>Gender <span class="tip" data-tip="Choose the gender presentation for this character.">?</span></label>
+        <select id="c1gender" onchange="handleOther(this,'c1gender_other');updateSidebar()">
+          <option value="">— Select —</option>
+          <option>Female</option><option>Male</option><option>Non-binary</option>
+          <option>Let Textra decide</option><option value="other">Other — describe below</option>
+        </select>
+        <div class="other-input" id="c1gender_other"><input type="text" placeholder="Describe gender presentation…" oninput="updateSidebar()"></div>
+      </div>
+      <div class="field field-with-other">
+        <label>Age Range <span class="tip" data-tip="The approximate age of the character. This affects face design, posture and clothing style.">?</span></label>
+        <select id="c1age" onchange="handleOther(this,'c1age_other');updateSidebar()">
+          <option value="">— Select —</option>
+          <option>18–25</option><option>26–35</option><option>36–45</option><option>46–55</option><option>55+</option>
+          <option>Let Textra decide</option><option value="other">Other — describe below</option>
+        </select>
+        <div class="other-input" id="c1age_other"><input type="text" placeholder="Describe age range…" oninput="updateSidebar()"></div>
+      </div>
+    </div>
+    <div class="form-row c2">
+      <div class="field field-with-other">
+        <label>Ethnicity <span class="tip" data-tip="Helps our designers create a character that reflects the diversity of your audience or team.">?</span></label>
+        <select id="c1eth" onchange="handleOther(this,'c1eth_other');updateSidebar()">
+          <option value="">— Select —</option>
+          <option>East Asian</option><option>South Asian</option><option>Black / African</option>
+          <option>Mixed / Multiracial</option><option>White / European</option>
+          <option>Hispanic / Latino</option><option>Middle Eastern</option>
+          <option>Let Textra decide</option><option value="other">Other — describe below</option>
+        </select>
+        <div class="other-input" id="c1eth_other"><input type="text" placeholder="Describe ethnicity…" oninput="updateSidebar()"></div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="field field-with-other">
+        <label>Clothing <span class="tip" data-tip="What the character wears. Smart/formal works well for corporate brands; casual suits softer tones.">?</span></label>
+        <select id="c1clothing" onchange="handleOther(this,'c1clothing_other');updateSidebar()">
+          <option value="">— Select —</option>
+          <option>Smart / Business formal</option><option>Business casual</option>
+          <option>Casual / Everyday</option><option>Uniform</option>
+          <option>Industry-specific</option>
+          <option>Let Textra decide</option><option value="other">Other — describe below</option>
+        </select>
+        <div class="other-input" id="c1clothing_other"><input type="text" placeholder="Describe clothing…" oninput="updateSidebar()"></div>
+      </div>
+    </div>
+    <div class="form-row c2">
+      <div class="field field-with-other">
+        <label>Voice Accent <span class="tip" data-tip="The accent used when this character speaks. Used for voice generation.">?</span></label>
+        <select id="c1accent" onchange="handleOther(this,'c1accent_other');updateSidebar()">
+          <option value="">— Select —</option>
+          <option>British (Standard)</option><option>American (Neutral)</option>
+          <option>Australian</option><option>Irish</option><option>South African</option>
+          <option>Let Textra decide</option><option value="other">Other — describe below</option>
+        </select>
+        <div class="other-input" id="c1accent_other"><input type="text" placeholder="Describe accent…" oninput="updateSidebar()"></div>
+      </div>
+      <div class="field">
+        <label>Reference Track URL <span class="hint">— optional</span> <span class="tip" data-tip="Audio reference (e.g. YouTube, Vimeo, SoundCloud) showing the voice tone, accent, or speech pattern you want for this character.">?</span></label>
+        <input type="url" id="c1trackUrl" placeholder="https://youtube.com/watch?v=... or https://soundcloud.com/..." oninput="updateSidebar()">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="field">
+        <label>Additional Notes <span class="tip" data-tip="Hair colour, glasses, accessories, skin tone details, body type — anything specific you want our designers to know.">?</span></label>
+        <textarea id="c1notes" placeholder="e.g. Short dark hair, glasses, slim build, warm skin tone…" oninput="updateSidebar()"></textarea>
+      </div>
+    </div>
+    <div class="field">
+      <label>Reference Image <span class="hint">— optional</span> <span class="tip" data-tip="Upload a photo, illustration or screenshot showing the look you have in mind.">?</span></label>
+      <label class="upload-label" id="ul-ca" style="padding:12px">
+        <input type="file" accept="image/*" style="display:none" onchange="handleUpload(this,'ul-ca','fn-ca')">
+        <div class="upload-txt" style="font-size:11px">Click to upload reference image</div>
+        <div class="upload-fn" id="fn-ca"></div>
+      </label>
+    </div>
+  </div>
+
+  <!-- Character 2 -->
+  <div class="card" id="charBCard" style="display:none">
+    <div class="card-head"><span class="step-pill">04</span> Character 2</div>
+    <div id="libSelB_wrap" style="display:none;margin-bottom:14px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-dim);margin-bottom:8px">Library Character</div>
+      <div id="libSelB_display" style="display:none;align-items:center;gap:10px;padding:10px;background:var(--teal-soft);border:1.5px solid var(--teal2);border-radius:var(--radius-xs);margin-bottom:8px"></div>
+
+    </div>
+
+    <div class="form-row c2">
+      <div class="field field-with-other">
+        <label>Gender <span class="tip" data-tip="Choose the gender presentation for this character.">?</span></label>
+        <select id="c2gender" onchange="handleOther(this,'c2gender_other');updateSidebar()">
+          <option value="">— Select —</option>
+          <option>Female</option><option>Male</option><option>Non-binary</option>
+          <option>Let Textra decide</option><option value="other">Other — describe below</option>
+        </select>
+        <div class="other-input" id="c2gender_other"><input type="text" placeholder="Describe gender presentation…" oninput="updateSidebar()"></div>
+      </div>
+      <div class="field field-with-other">
+        <label>Age Range <span class="tip" data-tip="The approximate age of the character. This affects face design, posture and clothing style.">?</span></label>
+        <select id="c2age" onchange="handleOther(this,'c2age_other');updateSidebar()">
+          <option value="">— Select —</option>
+          <option>18–25</option><option>26–35</option><option>36–45</option><option>46–55</option><option>55+</option>
+          <option>Let Textra decide</option><option value="other">Other — describe below</option>
+        </select>
+        <div class="other-input" id="c2age_other"><input type="text" placeholder="Describe age range…" oninput="updateSidebar()"></div>
+      </div>
+    </div>
+    <div class="form-row c2">
+      <div class="field field-with-other">
+        <label>Ethnicity <span class="tip" data-tip="Helps our designers create a character that reflects the diversity of your audience or team.">?</span></label>
+        <select id="c2eth" onchange="handleOther(this,'c2eth_other');updateSidebar()">
+          <option value="">— Select —</option>
+          <option>East Asian</option><option>South Asian</option><option>Black / African</option>
+          <option>Mixed / Multiracial</option><option>White / European</option>
+          <option>Hispanic / Latino</option><option>Middle Eastern</option>
+          <option>Let Textra decide</option><option value="other">Other — describe below</option>
+        </select>
+        <div class="other-input" id="c2eth_other"><input type="text" placeholder="Describe ethnicity…" oninput="updateSidebar()"></div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="field field-with-other">
+        <label>Clothing <span class="tip" data-tip="What the character wears. Smart/formal works well for corporate brands; casual suits softer tones.">?</span></label>
+        <select id="c2clothing" onchange="handleOther(this,'c2clothing_other');updateSidebar()">
+          <option value="">— Select —</option>
+          <option>Smart / Business formal</option><option>Business casual</option>
+          <option>Casual / Everyday</option><option>Uniform</option>
+          <option>Industry-specific</option>
+          <option>Let Textra decide</option><option value="other">Other — describe below</option>
+        </select>
+        <div class="other-input" id="c2clothing_other"><input type="text" placeholder="Describe clothing…" oninput="updateSidebar()"></div>
+      </div>
+    </div>
+    <div class="form-row c2">
+      <div class="field field-with-other">
+        <label>Voice Accent <span class="tip" data-tip="The accent used when this character speaks. Used for voice generation.">?</span></label>
+        <select id="c2accent" onchange="handleOther(this,'c2accent_other');updateSidebar()">
+          <option value="">— Select —</option>
+          <option>British (Standard)</option><option>American (Neutral)</option>
+          <option>Australian</option><option>Irish</option><option>South African</option>
+          <option>Let Textra decide</option><option value="other">Other — describe below</option>
+        </select>
+        <div class="other-input" id="c2accent_other"><input type="text" placeholder="Describe accent…" oninput="updateSidebar()"></div>
+      </div>
+      <div class="field">
+        <label>Reference Track URL <span class="hint">— optional</span> <span class="tip" data-tip="Audio reference (e.g. YouTube, Vimeo, SoundCloud) showing the voice tone, accent, or speech pattern you want for this character.">?</span></label>
+        <input type="url" id="c2trackUrl" placeholder="https://youtube.com/watch?v=... or https://soundcloud.com/..." oninput="updateSidebar()">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="field">
+        <label>Additional Notes <span class="tip" data-tip="Hair colour, glasses, accessories, skin tone details, body type — anything specific you want our designers to know.">?</span></label>
+        <textarea id="c2notes" placeholder="e.g. Short dark hair, glasses, slim build, warm skin tone…" oninput="updateSidebar()"></textarea>
+      </div>
+    </div>
+    <div class="field">
+      <label>Reference Image <span class="hint">— optional</span> <span class="tip" data-tip="Upload a photo, illustration or screenshot showing the look you have in mind.">?</span></label>
+      <label class="upload-label" id="ul-cb" style="padding:12px">
+        <input type="file" accept="image/*" style="display:none" onchange="handleUpload(this,'ul-cb','fn-cb')">
+        <div class="upload-txt" style="font-size:11px">Click to upload reference image</div>
+        <div class="upload-fn" id="fn-cb"></div>
+      </label>
     </div>
   </div>
 
