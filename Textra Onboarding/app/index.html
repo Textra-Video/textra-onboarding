@@ -603,7 +603,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     <p class="s-desc">We apply your colours, fonts and logo to every frame — consistently, across every video. Share your brand below and we'll take care of the rest.</p>
   </div>
   <div class="card">
-    <div class="card-head"><span class="step-pill">01</span> How would you like to share your brand?</div>
+    <div class="card-head"><span class="step-pill">02</span> How would you like to share your brand?</div>
     <!-- Intro tip -->
     <div style="background:var(--teal-soft);border:1px solid rgba(102,188,173,.3);border-radius:var(--radius-xs);padding:10px 13px;font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:14px">
       💡 <strong style="color:var(--navy)">Most companies already have a brand guidelines document</strong> — a PDF or Word doc with your logo, colours and fonts. If you have one, upload it below. If not, fill in the details manually — it only takes 2 minutes.
@@ -760,7 +760,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 
   <!-- Illustration style -->
   <div class="card" id="charStyleCard">
-    <div class="card-head"><span class="step-pill" id="charStyleStepPill">01</span> Illustration Style
+    <div class="card-head"><span class="step-pill" id="charStyleStepPill">03</span> Illustration Style
       <span class="tip" data-tip="Choose how your characters are designed. Pick from our library of ready-made characters, supply reference images, or let our team create something unique.">?</span>
     </div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
@@ -3250,10 +3250,10 @@ function submitBrief(){
 }
 
 function rv(val){
-  return val&&String(val).trim()?'<div class="review-value">'+String(val)+'</div>':'<div class="review-value review-empty">Not provided</div>';
+  return val&&String(val).trim()?'<div class="review-value">'+String(val)+'</div>':'<div class="review-value review-empty">No user input</div>';
 }
 function rvDate(val){
-  if(!val||!val.trim())return '<div class="review-value review-empty">Not provided</div>';
+  if(!val||!val.trim())return '<div class="review-value review-empty">No user input</div>';
   try{var d=new Date(val+'T00:00:00');return '<div class="review-value">'+d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})+'</div>';}
   catch(e){return '<div class="review-value">'+val+'</div>';}
 }
