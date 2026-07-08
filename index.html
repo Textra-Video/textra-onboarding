@@ -3250,12 +3250,12 @@ function submitBrief(){
 }
 
 function rv(val){
-  return val&&String(val).trim()?'<div class="review-value">'+String(val)+'</div>':'<div class="review-value review-empty">No user input</div>';
+  return val&&String(val).trim()?'<div class="review-value">'+escapeHtml(String(val))+'</div>':'<div class="review-value review-empty">No user input</div>';
 }
 function rvDate(val){
   if(!val||!val.trim())return '<div class="review-value review-empty">No user input</div>';
-  try{var d=new Date(val+'T00:00:00');return '<div class="review-value">'+d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})+'</div>';}
-  catch(e){return '<div class="review-value">'+val+'</div>';}
+  try{var d=new Date(val+'T00:00:00');return '<div class="review-value">'+escapeHtml(d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}))+'</div>';}
+  catch(e){return '<div class="review-value">'+escapeHtml(val)+'</div>';}
 }
 function editBtn(pageNum,label){
   return '<button class="review-edit-btn" onclick="editStep('+pageNum+')">&#9999;&#65039; Edit</button>';

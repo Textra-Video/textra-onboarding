@@ -156,13 +156,64 @@ function doGet(e) {
 }
 
 // -- BRIEF SUBMISSION (existing logic, extended) ---------------
+// Validate input data before processing
+function validateInput(data) {
+  // Email validation
+  if (!data.email || !data.email.trim()) {
+    throw new Error('Email is required');
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+    throw new Error('Invalid email format');
+  }
+
+  // Name validation
+  if (!data.fullName || !data.fullName.trim()) {
+    throw new Error('Full name is required');
+  }
+
+  // Company validation
+  if (!data.companyName || !data.companyName.trim()) {
+    throw new Error('Company name is required');
+  }
+
+  // Project name validation
+  if (!data.projectName || !data.projectName.trim()) {
+    throw new Error('Project name is required');
+  }
+}
+
+// Validate script submission data
+function validateScriptInput(data) {
+  if (!data.portalToken) {
+    throw new Error('Portal token is required');
+  }
+
+  // Character count validation
+  var charCount = data.charCount;
+  if (charCount !== 1 && charCount !== 2) {
+    throw new Error('Character count must be 1 or 2');
+  }
+
+  // Metadata validation
+  if (data.videoLength && !['30sec', '60sec', '90sec'].includes(data.videoLength) && !data.videoLength.startsWith('other:')) {
+    throw new Error('Invalid video length');
+  }
+
+  if (data.scriptTone && !['light-hearted', 'serious'].includes(data.scriptTone) && !data.scriptTone.startsWith('other:')) {
+    throw new Error('Invalid tone');
+  }
+
+  if (data.scriptStyle && !['presenters', 'actors'].includes(data.scriptStyle) && !data.scriptStyle.startsWith('other:')) {
+    throw new Error('Invalid style');
+  }
+}
+
 function handleBriefSubmission(data) {
   Logger.log('Request received');
   Logger.log('Data: ' + JSON.stringify(data));
 
-  if (!data.email) {
-    throw new Error('Email is required');
-  }
+  // Validate input before processing
+  validateInput(data);
 
   const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('Sheet1');
 
@@ -276,6 +327,13 @@ function handleBriefSubmission(data) {
 // a new tab to the client's script spreadsheet rather than overwriting the
 // last one, so earlier edits stay intact and reviewable.
 function handleSubmitScript(payload) {
+  // Validate script submission input
+  try {
+    validateScriptInput(payload);
+  } catch (err) {
+    return jsonOut({ success: false, message: err.message });
+  }
+
   const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('Sheet1');
   const tokenCol = findColumnByHeader(sheet, 'Portal Token');
   if (tokenCol === -1) return jsonOut({ success: false, message: 'Portal Token column not found - submit a brief first.' });
