@@ -405,7 +405,8 @@ function saveScriptVersion(folder, clientLabel, lines, metadata) {
     tab.appendRow(['Video Length:', metadata.videoLength || '']);
     tab.appendRow(['Tone:', metadata.scriptTone || '']);
     tab.appendRow(['Style:', metadata.scriptStyle || '']);
-    tab.getRange(1, 1, 3, 2).setFontColor('#666666').setFontWeight('bold');
+    // Bold only column A (labels), keep column B (values) normal
+    tab.getRange(1, 1, 3, 1).setFontWeight('bold');
     tab.appendRow(['', '']);
     headerRow = 5;
   }
@@ -425,7 +426,14 @@ function saveScriptVersion(folder, clientLabel, lines, metadata) {
   // Enable text wrapping for all data rows
   tab.getRange(headerRow + 1, 1, tab.getMaxRows() - headerRow, 7).setWrap(true);
 
-  lines.forEach(function (line) {
+  // Alternating row colors for characters: light blue for A, light gray for B, light green for other
+  var colorMap = {
+    'A': '#e8f2f9',  // Light blue
+    'B': '#f0f0f0',  // Light gray
+    'default': '#f5f5f5'  // Light gray-green
+  };
+
+  lines.forEach(function (line, index) {
     var hasTransition = line.transition && line.transition !== 'none';
     var overlayLink = '';
     // Handle overlayFileUrl (new approach - file already uploaded)
@@ -453,6 +461,11 @@ function saveScriptVersion(folder, clientLabel, lines, metadata) {
     ];
     if (rowData && rowData.length > 0) {
       tab.appendRow(rowData);
+      // Apply alternating colors based on character
+      var currentRow = headerRow + 1 + index;
+      var charLetter = line.character;
+      var bgColor = colorMap[charLetter] || colorMap['default'];
+      tab.getRange(currentRow, 1, 1, 7).setBackground(bgColor);
     }
   });
 
