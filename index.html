@@ -1416,6 +1416,39 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 
 // ── NAVIGATION ────────────────────────────────────
+// Initialize default template selections when reaching each page
+function initDefaultBrandMethod(){
+  // Page 2: Brand - default to "Fill in manually"
+  if(!state.brandMethod){
+    var btn=document.getElementById('tog-manual');
+    if(btn)brandMethod('manual',btn);
+  }
+}
+
+function initDefaultCharStyle(){
+  // Page 3: Characters - default to "Pick from Library"
+  if(!state.charStyle){
+    var btn=document.getElementById('csb-library');
+    if(btn)setCharStyle('library');
+  }
+}
+
+function initDefaultSceneDefaults(){
+  // Page 4: Scene & Music - default to "Choose from Library" for both background and title
+  if(!state.bgChoice){
+    var firstSceneCard=document.querySelector('#sceneLibGrid .scene-lib-card');
+    if(firstSceneCard){
+      firstSceneCard.click();
+    }
+  }
+  if(!state.titleBg){
+    var firstTitleCard=document.querySelector('#titleLibGrid .scene-lib-card');
+    if(firstTitleCard){
+      firstTitleCard.click();
+    }
+  }
+}
+
 function goTo(n){
   if(cur!==n){try{var iframe=document.getElementById('textraVimeo');if(iframe){new Vimeo.Player(iframe).pause();}}catch(e){}}
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -1439,6 +1472,10 @@ function goTo(n){
   if(n===6){buildReview();cameFromReview=false;}
   if(n===7)renderPortalPage();
   if(n===8)initScriptPage();
+  // Initialize default template selections
+  if(n===2)initDefaultBrandMethod();  // Page 2: Brand - default to "Fill in manually"
+  if(n===3)initDefaultCharStyle();     // Page 3: Characters - default to "Pick from Library"
+  if(n===4)initDefaultSceneDefaults(); // Page 4: Scene & Music - default to "Choose from Library"
   window.scrollTo({top:0,behavior:'smooth'});
   window._sbCollapse={};
   updateSidebar();
