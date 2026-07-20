@@ -847,10 +847,6 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       <span class="tip" data-tip="Textra templates have a character on the left and right, and the camera cuts between them as they speak. They can address the audience directly, or talk to each other. Choose one if you only need a single narrator.">?</span>
     </div>
     <div class="char-count-grid">
-      <button class="char-count-btn" id="ccb1" onclick="setCharCount(1)">
-        <div class="ccb-num">1</div>
-        <div class="ccb-lbl">1 Character</div>
-      </button>
       <button class="char-count-btn" id="ccb2" onclick="setCharCount(2)">
         <div class="ccb-num">2</div>
         <div class="ccb-lbl">2 Characters</div>
@@ -1426,7 +1422,10 @@ function initDefaultBrandMethod(){
 }
 
 function initDefaultCharStyle(){
-  // Page 3: Characters - default to "Pick from Library"
+  // Page 3: Characters - default to 2 characters and "Pick from Library"
+  if(!_charCount){
+    setCharCount(2);
+  }
   if(!state.charStyle){
     var btn=document.getElementById('csb-library');
     if(btn)setCharStyle('library');
