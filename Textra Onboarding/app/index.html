@@ -2722,7 +2722,7 @@ function renderScriptBlocks(){
     if(b.kind==='line'){
       html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">';
       html+='<div style="width:26px;height:26px;border-radius:50%;background:'+accent+';color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">'+(b.character||'A')+'</div>';
-      html+='<select onchange="updateScriptBlockField('+b.id+',\'character\',this.value)" style="width:auto;max-width:160px;padding:6px 10px;font-size:13px;font-weight:600">';
+      html+='<select onchange="updateScriptBlockField('+b.id+',\'character\',this.value)" style="width:auto;max-width:160px;padding:6px 10px;padding-right:24px;font-size:13px;font-weight:600">';
       html+='<option value="A"'+(b.character==='A'?' selected':'')+'>Character A</option>';
       html+='<option value="B"'+(b.character==='B'?' selected':'')+'>Character B</option>';
       html+='</select></div>';
@@ -2749,7 +2749,7 @@ function renderScriptBlocks(){
     if(i<state.scriptBlocks.length-1){
       html+='<div style="display:flex;align-items:center;gap:10px;padding:8px 4px;margin-bottom:4px">';
       html+='<div style="flex:1;height:1px;background:var(--border)"></div>';
-      html+='<select onchange="updateScriptBlockField('+b.id+',\'transition\',this.value);if(!this.value)updateScriptBlockField('+b.id+',\'transitionDuration\',0)" style="width:auto;padding:6px 10px;font-size:12px">';
+      html+='<select onchange="updateScriptBlockField('+b.id+',\'transition\',this.value);if(!this.value)updateScriptBlockField('+b.id+',\'transitionDuration\',0)" style="width:auto;padding:6px 10px;padding-right:20px;font-size:12px">';
       SCRIPT_TRANSITIONS.forEach(function(t){
         html+='<option value="'+t+'"'+(b.transition===t?' selected':'')+'>'+(t||'— No Transition —')+'</option>';
       });
