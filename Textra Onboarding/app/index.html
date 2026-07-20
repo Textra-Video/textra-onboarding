@@ -1209,11 +1209,20 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 
   <div class="card" id="scriptWriteCard">
     <div class="card-head">Script</div>
-    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
-      <button class="btn btn-ghost" style="font-size:12px;padding:8px 14px" onclick="addScriptBlock('title')">+ Add Title</button>
-      <button class="btn btn-primary" style="font-size:12px;padding:8px 14px" onclick="addScriptBlock('line')">+ Add Line</button>
-      <button class="btn btn-ghost" style="font-size:12px;padding:8px 14px" onclick="addScriptBlock('endcredits')">+ Add End Credits</button>
+
+    <!-- Script Mode Tabs -->
+    <div style="display:flex;gap:0;margin-bottom:16px;border-bottom:2px solid var(--border)">
+      <button id="scriptTabOwn" onclick="switchScriptMode('own')" style="flex:1;padding:12px;background:none;border:none;border-bottom:3px solid var(--teal);color:var(--teal);font-weight:700;font-size:13px;cursor:pointer">Write your own script</button>
+      <button id="scriptTabAI" onclick="switchScriptMode('ai')" style="flex:1;padding:12px;background:none;border:none;border-bottom:3px solid transparent;color:var(--text-muted);font-weight:700;font-size:13px;cursor:pointer">Done for you</button>
     </div>
+
+    <!-- Write Your Own Script Tab -->
+    <div id="scriptModeOwn">
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+        <button class="btn btn-ghost" style="font-size:12px;padding:8px 14px" onclick="addScriptBlock('title')">+ Add Title</button>
+        <button class="btn btn-primary" style="font-size:12px;padding:8px 14px" onclick="addScriptBlock('line')">+ Add Line</button>
+        <button class="btn btn-ghost" style="font-size:12px;padding:8px 14px" onclick="addScriptBlock('endcredits')">+ Add End Credits</button>
+      </div>
 
     <div style="margin-bottom:20px;padding:16px;background:var(--bg);border:1.5px solid var(--border);border-radius:8px">
       <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px">Video Settings</div>
@@ -1274,6 +1283,64 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
         <li>Add visual descriptions for on-screen upgrades</li>
       </ul>
     </div>
+    </div><!-- /scriptModeOwn -->
+
+    <!-- Done for You Tab -->
+    <div id="scriptModeAI" style="display:none">
+      <div style="margin-bottom:16px">
+        <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:8px">Script Title</label>
+        <input type="text" id="aiScriptTitle" placeholder="e.g. Welcome to the Team" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:Arial,sans-serif">
+      </div>
+
+      <div style="margin-bottom:16px">
+        <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:8px">Your Content</label>
+        <textarea id="aiScriptDocument" placeholder="Paste your document, article, or content here. We'll use AI to convert it into a video script." style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:Arial,sans-serif;min-height:200px;resize:vertical;line-height:1.5"></textarea>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:6px">Supports: plain text, articles, product descriptions, marketing copy</div>
+      </div>
+
+      <div style="margin-bottom:20px;padding:16px;background:var(--bg);border:1.5px solid var(--border);border-radius:8px">
+        <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px">AI Generation Settings</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+          <div>
+            <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Video Length</label>
+            <select id="aiVideoLength" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif">
+              <option value="">Select length</option>
+              <option value="30sec">30 seconds</option>
+              <option value="60sec">60 seconds</option>
+              <option value="90sec">90 seconds</option>
+              <option value="other">Other</option>
+            </select>
+            <input type="text" id="aiVideoLengthCustom" placeholder="Enter custom length" style="display:none;width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;margin-top:6px;">
+          </div>
+          <div>
+            <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Tone</label>
+            <select id="aiScriptTone" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif">
+              <option value="">Select tone</option>
+              <option value="light-hearted">Light Hearted</option>
+              <option value="serious">Serious</option>
+              <option value="other">Other</option>
+            </select>
+            <input type="text" id="aiScriptToneCustom" placeholder="Enter custom tone" style="display:none;width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;margin-top:6px;">
+          </div>
+          <div>
+            <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Style</label>
+            <select id="aiScriptStyle" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif">
+              <option value="">Select style</option>
+              <option value="presenters">Presenters to Camera</option>
+              <option value="actors">Actors Roleplaying</option>
+              <option value="other">Other</option>
+            </select>
+            <input type="text" id="aiScriptStyleCustom" placeholder="Enter custom style" style="display:none;width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;margin-top:6px;">
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px">
+        <button id="aiGenerateBtn" onclick="generateScriptFromAI()" style="flex:1;padding:12px 24px;background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer">✨ Generate Script</button>
+        <button class="btn btn-ghost" style="padding:12px 24px;font-size:13px" onclick="clearAIForm()">Clear</button>
+      </div>
+      <div id="aiGenerateStatus" style="margin-top:12px;padding:12px;border-radius:6px;display:none;font-size:12px"></div>
+    </div><!-- /scriptModeAI -->
   </div>
 
   <div style="margin-top:20px;text-align:center">
@@ -2836,6 +2903,126 @@ function submitScript(){
     _isSubmittingScript = false;
     alert('There was an error submitting your script: '+err.message);
   });
+}
+
+// ── SCRIPT MODE TABS ─────────────────────────────
+function switchScriptMode(mode){
+  var ownTab = document.getElementById('scriptTabOwn');
+  var aiTab = document.getElementById('scriptTabAI');
+  var ownContent = document.getElementById('scriptModeOwn');
+  var aiContent = document.getElementById('scriptModeAI');
+
+  if(mode==='own'){
+    ownTab.style.borderBottomColor = 'var(--teal)';
+    ownTab.style.color = 'var(--teal)';
+    aiTab.style.borderBottomColor = 'transparent';
+    aiTab.style.color = 'var(--text-muted)';
+    ownContent.style.display = 'block';
+    aiContent.style.display = 'none';
+  } else {
+    ownTab.style.borderBottomColor = 'transparent';
+    ownTab.style.color = 'var(--text-muted)';
+    aiTab.style.borderBottomColor = 'var(--teal)';
+    aiTab.style.color = 'var(--teal)';
+    ownContent.style.display = 'none';
+    aiContent.style.display = 'block';
+  }
+}
+
+function generateScriptFromAI(){
+  var title = document.getElementById('aiScriptTitle').value.trim();
+  var document_text = document.getElementById('aiScriptDocument').value.trim();
+  var videoLength = document.getElementById('aiVideoLength').value || '';
+  var tone = document.getElementById('aiScriptTone').value || '';
+  var style = document.getElementById('aiScriptStyle').value || '';
+  var customLength = document.getElementById('aiVideoLengthCustom').value || '';
+  var customTone = document.getElementById('aiScriptToneCustom').value || '';
+  var customStyle = document.getElementById('aiScriptStyleCustom').value || '';
+
+  if(!title || !document_text){
+    alert('Please enter both a script title and your content.');
+    return;
+  }
+
+  var statusDiv = document.getElementById('aiGenerateStatus');
+  var btn = document.getElementById('aiGenerateBtn');
+
+  statusDiv.style.display = 'block';
+  statusDiv.style.background = 'var(--bg)';
+  statusDiv.style.border = '1.5px solid var(--border)';
+  statusDiv.style.color = 'var(--navy)';
+  statusDiv.textContent = '⏳ Generating script... This may take a moment.';
+  btn.disabled = true;
+
+  var payload = {
+    action: 'generateScriptFromDocument',
+    title: title,
+    document: document_text,
+    videoLength: videoLength || customLength,
+    tone: tone || customTone,
+    style: style || customStyle,
+    charCount: state.charCount || 2,
+    charStyle: state.charStyle || 'library'
+  };
+
+  fetch(GOOGLE_SCRIPT_URL, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    headers: {'Content-Type': 'text/plain;charset=utf-8'}
+  })
+  .then(function(r){ return r.text(); })
+  .then(function(text){
+    var resp = null;
+    try { resp = JSON.parse(text); } catch(e) {}
+
+    if(resp && resp.success && resp.scriptBlocks){
+      state.scriptBlocks = resp.scriptBlocks;
+      renderScriptBlocks();
+
+      statusDiv.style.background = '#d4edda';
+      statusDiv.style.border = '1.5px solid #28a745';
+      statusDiv.style.color = '#155724';
+      statusDiv.textContent = '✓ Script generated successfully! Scroll down to review and edit.';
+
+      setTimeout(function(){
+        document.getElementById('scriptBlocksContainer').scrollIntoView({behavior:'smooth',block:'start'});
+      }, 500);
+
+      setTimeout(function(){
+        statusDiv.style.display = 'none';
+        btn.disabled = false;
+      }, 3000);
+    } else {
+      statusDiv.style.background = '#f8d7da';
+      statusDiv.style.border = '1.5px solid #f5c6cb';
+      statusDiv.style.color = '#721c24';
+      statusDiv.textContent = '✗ Error: '+(resp && resp.message ? resp.message : 'Could not generate script');
+      btn.disabled = false;
+    }
+  })
+  .catch(function(err){
+    statusDiv.style.background = '#f8d7da';
+    statusDiv.style.border = '1.5px solid #f5c6cb';
+    statusDiv.style.color = '#721c24';
+    statusDiv.textContent = '✗ Error: '+err.message;
+    btn.disabled = false;
+  });
+}
+
+function clearAIForm(){
+  document.getElementById('aiScriptTitle').value = '';
+  document.getElementById('aiScriptDocument').value = '';
+  document.getElementById('aiVideoLength').value = '';
+  document.getElementById('aiVideoLengthCustom').value = '';
+  document.getElementById('aiVideoLengthCustom').style.display = 'none';
+  document.getElementById('aiScriptTone').value = '';
+  document.getElementById('aiScriptToneCustom').value = '';
+  document.getElementById('aiScriptToneCustom').style.display = 'none';
+  document.getElementById('aiScriptStyle').value = '';
+  document.getElementById('aiScriptStyleCustom').value = '';
+  document.getElementById('aiScriptStyleCustom').style.display = 'none';
+  document.getElementById('aiGenerateStatus').style.display = 'none';
+  document.getElementById('aiScriptTitle').focus();
 }
 
 // ── SIDEBAR COLLAPSE ─────────────────────────────

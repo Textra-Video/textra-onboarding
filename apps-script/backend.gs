@@ -123,6 +123,9 @@ function doPost(e) {
     if (jsonPayload && jsonPayload.action === 'uploadOverlay') {
       return handleUploadOverlay(jsonPayload);
     }
+    if (jsonPayload && jsonPayload.action === 'generateScriptFromDocument') {
+      return handleGenerateScriptFromDocument(jsonPayload);
+    }
     if (jsonPayload && jsonPayload.action === 'emailPortalLink') {
       return handleEmailPortalLink(jsonPayload);
     }
@@ -603,6 +606,59 @@ function brandedEmailHtml(heading, bodyHtml, portalLink, ctaLabel, scriptLink) {
     '</td></tr>' +
     '<tr><td style="padding:16px 32px;background:#f7f9fc;text-align:center;font-size:11px;color:#94a3b8;">Textra Video - studio-quality animated videos, fast.</td></tr>' +
     '</table></td></tr></table></body></html>';
+}
+
+// -- GENERATE SCRIPT FROM DOCUMENT (AI-powered script generation) ----
+function handleGenerateScriptFromDocument(payload) {
+  if (!payload.document || !payload.title) {
+    return jsonOut({ success: false, message: 'Missing document or title' });
+  }
+
+  try {
+    var scriptBlocks = [];
+
+    // Add title block
+    scriptBlocks.push({
+      kind: 'title',
+      id: Date.now(),
+      text: payload.title
+    });
+
+    // TODO: Integrate with AI service (Claude, OpenAI, etc.)
+    // For now, this is a placeholder that returns a simple parsed version
+    // Once integrated with AI, the backend will:
+    // 1. Send the document + context to Claude/OpenAI API
+    // 2. Get back structured script blocks
+    // 3. Return them here
+
+    // Placeholder: Split document into lines as script blocks
+    var lines = payload.document.split('\n').filter(function(line) {
+      return line.trim().length > 0;
+    });
+
+    for (var i = 0; i < Math.min(lines.length, 20); i++) {
+      var line = lines[i].trim();
+      if (line.length > 0) {
+        scriptBlocks.push({
+          kind: 'line',
+          id: Date.now() + i,
+          character: i % 2 === 0 ? 'A' : 'B',
+          text: line
+        });
+      }
+    }
+
+    return jsonOut({
+      success: true,
+      message: 'Script generated (basic mode - AI integration needed)',
+      scriptBlocks: scriptBlocks
+    });
+  } catch (error) {
+    return jsonOut({
+      success: false,
+      message: 'Error generating script: ' + error.toString()
+    });
+  }
 }
 
 // -- EMAIL PORTAL LINK (manual "Email it to me" button) ---------
