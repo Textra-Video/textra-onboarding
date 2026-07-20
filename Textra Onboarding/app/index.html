@@ -1436,16 +1436,12 @@ function initDefaultCharStyle(){
 function initDefaultSceneDefaults(){
   // Page 4: Scene & Music - default to "Choose from Library" for both background and title
   if(!state.bgChoice){
-    var firstSceneCard=document.querySelector('#sceneLibGrid .scene-lib-card');
-    if(firstSceneCard){
-      firstSceneCard.click();
-    }
+    var btn=document.getElementById('tog-scene-lib');
+    if(btn)sceneMethod('library');
   }
   if(!state.titleBg){
-    var firstTitleCard=document.querySelector('#titleLibGrid .scene-lib-card');
-    if(firstTitleCard){
-      firstTitleCard.click();
-    }
+    var btn=document.getElementById('tog-title-lib');
+    if(btn)titleMethod('library');
   }
 }
 
