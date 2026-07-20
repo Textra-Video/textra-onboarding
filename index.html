@@ -3502,7 +3502,20 @@ function buildReview(){
 
   var charStyleMap={'library':'Pick from Library','textra':'Textra Creates','reference':'Supply a Style'};
   var charStyleLabel=charStyleMap[state.charStyle]||'';
+
+  // Build character selection details
+  var charSelDetails = '';
+  if(state.charStyle==='library'){
+    var charA_name = document.getElementById('libSelA_display')&&document.getElementById('libSelA_display').style.display!=='none'?document.getElementById('libSelA_display').textContent.trim():'';
+    var charB_name = document.getElementById('libSelB_display')&&document.getElementById('libSelB_display').style.display!=='none'?document.getElementById('libSelB_display').textContent.trim():'';
+    if(charA_name || charB_name){
+      charSelDetails = ' — '+[charA_name,charB_name].filter(Boolean).join(', ');
+    }
+  }
+  var charStyleLabelWithDetails = charStyleLabel + charSelDetails;
+
   var selBgEl=document.querySelector('#bgGrid .bg-opt.sel .bg-name');
+  var bgLabel=selBgEl?selBgEl.textContent:(state.bgChoice||'');
   var _tlEl=document.querySelector('#titleBgGrid .cc.sel .cc-title'); var _tlLib=document.querySelector('#titleLibGrid .scene-lib-card.sel'); var selTitleBg=_tlEl||(_tlLib?{textContent:_tlLib.dataset.name}:null);
   var selMusic=document.querySelector('#musicGrid .music-opt.sel .music-lbl');
 
@@ -3547,7 +3560,7 @@ function buildReview(){
 
     '<div class="review-section">'+
     '<div class="review-section-title"><span class="step-pill">03</span> Characters '+editBtn(3,'Characters')+'</div>'+
-    '<div class="review-item" style="margin-bottom:8px"><div class="review-label">Illustration Style</div>'+rv(charStyleLabel)+'</div>'+
+    '<div class="review-item" style="margin-bottom:8px"><div class="review-label">Illustration Style</div>'+rv(charStyleLabelWithDetails)+'</div>'+
     '<div style="display:grid;grid-template-columns:'+(_charCount===2?'1fr 1fr':'1fr')+';gap:12px;margin-top:8px">'+
       '<div style="background:var(--teal-soft);border:1px solid rgba(102,188,173,.3);border-radius:var(--radius-sm);padding:12px 14px">'+
         '<div style="font-size:11px;font-weight:800;color:var(--teal2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;display:flex;align-items:center;gap:6px">'+
@@ -3584,7 +3597,7 @@ function buildReview(){
     '<div class="review-section">'+
     '<div class="review-section-title"><span class="step-pill">04</span> Scene & Music '+editBtn(4,'Scene')+'</div>'+
     '<div class="review-grid">'+
-      '<div class="review-item"><div class="review-label">Background</div>'+rv(selBgEl?selBgEl.textContent:'')+'</div>'+
+      '<div class="review-item"><div class="review-label">Background</div>'+rv(bgLabel)+'</div>'+
       '<div class="review-item"><div class="review-label">Scene Notes</div>'+rv(document.getElementById('scenedesc').value)+'</div>'+
       '<div class="review-item"><div class="review-label">Title Screen</div>'+rv(selTitleBg?selTitleBg.textContent:'')+'</div>'+
       '<div class="review-item"><div class="review-label">Music</div>'+rv(selMusic?selMusic.textContent:'')+'</div>'+
