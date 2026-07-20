@@ -3315,7 +3315,8 @@ function buildReview(){
   var sb=document.getElementById('sidebarCol');
   if(sb) sb.style.display='none';
 
-  var selCharStyle=document.querySelector('#charStyleGrid .cc.sel .cc-title');
+  var charStyleMap={'library':'Pick from Library','textra':'Textra Creates','reference':'Supply a Style'};
+  var charStyleLabel=charStyleMap[state.charStyle]||'';
   var selBgEl=document.querySelector('#bgGrid .bg-opt.sel .bg-name');
   var _tlEl=document.querySelector('#titleBgGrid .cc.sel .cc-title'); var _tlLib=document.querySelector('#titleLibGrid .scene-lib-card.sel'); var selTitleBg=_tlEl||(_tlLib?{textContent:_tlLib.dataset.name}:null);
   var selMusic=document.querySelector('#musicGrid .music-opt.sel .music-lbl');
@@ -3361,7 +3362,7 @@ function buildReview(){
 
     '<div class="review-section">'+
     '<div class="review-section-title"><span class="step-pill">03</span> Characters '+editBtn(3,'Characters')+'</div>'+
-    '<div class="review-item" style="margin-bottom:8px"><div class="review-label">Illustration Style</div>'+rv(selCharStyle?selCharStyle.textContent:'')+'</div>'+
+    '<div class="review-item" style="margin-bottom:8px"><div class="review-label">Illustration Style</div>'+rv(charStyleLabel)+'</div>'+
     '<div style="display:grid;grid-template-columns:'+(_charCount===2?'1fr 1fr':'1fr')+';gap:12px;margin-top:8px">'+
       '<div style="background:var(--teal-soft);border:1px solid rgba(102,188,173,.3);border-radius:var(--radius-sm);padding:12px 14px">'+
         '<div style="font-size:11px;font-weight:800;color:var(--teal2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px;display:flex;align-items:center;gap:6px">'+
@@ -3418,7 +3419,8 @@ function renderPortalPage(){
   // portal-link input field.
   getPortalToken();
 
-  var selCharStyle=document.querySelector('#charStyleGrid .cc.sel .cc-title');
+  var charStyleMap={'library':'Pick from Library','textra':'Textra Creates','reference':'Supply a Style'};
+  var charStyleLabel=charStyleMap[state.charStyle]||'Not set';
   var selBgEl=document.querySelector('#bgGrid .bg-opt.sel .bg-name');
   var selMusic=document.querySelector('#musicGrid .music-opt.sel .music-lbl');
   var c1g=document.getElementById('c1gender'), c2g=document.getElementById('c2gender');
@@ -3426,7 +3428,7 @@ function renderPortalPage(){
   var rows=[];
   rows.push(['🎨 Brand', state.brandMethod?({website:'Website extraction',manual:'Manual entry',guidelines:'Guidelines uploaded'}[state.brandMethod]||state.brandMethod):'Not set']);
   if(state.font) rows.push(['🔤 Font', state.font]);
-  rows.push(['👥 Characters', (_charCount||'?')+' — '+(selCharStyle?selCharStyle.textContent:(state.charStyle||'Not set'))]);
+  rows.push(['👥 Characters', (_charCount||'?')+' — '+charStyleLabel]);
   if(c1g&&c1g.value) rows.push(['① Character 1', c1g.value+(document.getElementById('c1age').value?', '+document.getElementById('c1age').value:'')]);
   if(_charCount===2&&c2g&&c2g.value) rows.push(['② Character 2', c2g.value+(document.getElementById('c2age').value?', '+document.getElementById('c2age').value:'')]);
   rows.push(['🖼️ Scene', selBgEl?selBgEl.textContent:(state.bgChoice||'Not set')]);
