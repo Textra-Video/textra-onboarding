@@ -2753,7 +2753,7 @@ function renderScriptBlocks(){
         html+='<option value="'+t+'"'+(b.transition===t?' selected':'')+'>'+(t||'— No Transition —')+'</option>';
       });
       html+='</select>';
-      html+='<input type="number" min="0" step="0.1" value="'+(b.transitionDuration!=null?b.transitionDuration:0.5)+'" onchange="updateScriptBlockField('+b.id+',\'transitionDuration\',this.value)" style="width:56px;padding:6px;font-size:12px;text-align:center">';
+      html+='<input type="number" min="0" step="0.1" value="'+(b.transition?b.transitionDuration!=null?b.transitionDuration:0.5:0)+'" onchange="updateScriptBlockField('+b.id+',\'transitionDuration\',this.value)" style="width:56px;padding:6px;font-size:12px;text-align:center">';
       html+='<span style="font-size:12px;color:var(--text-muted)">s</span>';
       html+='<div style="flex:1;height:1px;background:var(--border)"></div>';
       html+='</div>';
