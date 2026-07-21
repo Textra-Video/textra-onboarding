@@ -3117,7 +3117,7 @@ function updateSidebar(){
 
   // ── SCRIPT ───────────────────────────────────────────────
   const st=gv('scriptTitlePage8');
-  if(cur>=5&&(st||state.scriptBlocks.length)){
+  if(cur>=6&&(st||state.scriptBlocks.length)){
     var lineCount=state.scriptBlocks.filter(function(b){return b.kind==='line';}).length;
     sections.push('<div class="sb-section"><div class="sb-label">Script</div>'+
       (st ? sbRow('\uD83D\uDCDD',st) : '')+
@@ -3135,9 +3135,9 @@ function updateSidebar(){
   // Wrap each section with collapsible header
   const sbc=window._sbCollapse||{};
   // Map section label to page for auto-collapse
-  var sectionPageMap={'Contact':1.5,'Brand':2,'Scene & Music':4,'Script':5};
+  var sectionPageMap={'Contact':1.5,'Brand':2,'Style':3,'Scene & Music':5,'Script':8};
     function getSectionPage(lbl){
-      if(lbl.indexOf('Characters')===0)return 3;
+      if(lbl.indexOf('Characters')===0)return 4;
       return sectionPageMap[lbl]||1;
     }
   var wrapped=sections.map(function(html,i){
@@ -3463,7 +3463,7 @@ function buildReview(){
 
   document.getElementById('reviewCard').innerHTML=
     '<div class="review-section">'+
-    '<div class="review-section-title"><span class="step-pill">01</span> Contact & Project '+editBtn(1,'Contact')+'</div>'+
+    '<div class="review-section-title"><span class="step-pill">01</span> Contact & Project '+editBtn(1.5,'Contact')+'</div>'+
     '<div class="review-grid">'+
       '<div class="review-item"><div class="review-label">Name</div>'+rv(document.getElementById('fullName').value)+'</div>'+
       '<div class="review-item"><div class="review-label">Company</div>'+rv(document.getElementById('companyName').value)+'</div>'+
@@ -3476,7 +3476,12 @@ function buildReview(){
     '<div class="review-grid">'+brandSummary+'</div></div>'+
 
     '<div class="review-section">'+
-    '<div class="review-section-title"><span class="step-pill">03</span> Characters '+editBtn(3,'Characters')+'</div>'+
+    '<div class="review-section-title"><span class="step-pill">03</span> Style '+editBtn(3,'Style')+'</div>'+
+    '<div class="review-item"><div class="review-label">Selected Style</div>'+rv(state.selectedStyle||'')+'</div>'+
+    '</div>'+
+
+    '<div class="review-section">'+
+    '<div class="review-section-title"><span class="step-pill">04</span> Characters '+editBtn(4,'Characters')+'</div>'+
     '<div class="review-item" style="margin-bottom:8px"><div class="review-label">Illustration Style</div>'+rv(charStyleLabelWithDetails)+'</div>'+
     '<div style="display:grid;grid-template-columns:'+(_charCount===2?'1fr 1fr':'1fr')+';gap:12px;margin-top:8px">'+
       '<div style="background:var(--teal-soft);border:1px solid rgba(102,188,173,.3);border-radius:var(--radius-sm);padding:12px 14px">'+
@@ -3512,7 +3517,7 @@ function buildReview(){
     '</div></div>'+
 
     '<div class="review-section">'+
-    '<div class="review-section-title"><span class="step-pill">04</span> Scene & Music '+editBtn(4,'Scene')+'</div>'+
+    '<div class="review-section-title"><span class="step-pill">05</span> Scene & Music '+editBtn(5,'Scene')+'</div>'+
     '<div class="review-grid">'+
       '<div class="review-item"><div class="review-label">Background</div>'+rv(bgLabel)+'</div>'+
       '<div class="review-item"><div class="review-label">Scene Notes</div>'+rv(document.getElementById('scenedesc').value)+'</div>'+
