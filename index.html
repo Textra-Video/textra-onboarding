@@ -1128,10 +1128,6 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     <p class="s-desc">This is submitted separately from your brand brief — it goes straight into the same project.</p>
   </div>
 
-  <div class="card">
-    <div class="field"><label>Video Title</label><input type="text" id="scriptTitlePage8" placeholder="e.g. Welcome to the Team" oninput="updateSidebar()"></div>
-  </div>
-
   <div class="card" id="scriptWriteCard">
     <div class="card-head">Script</div>
 
@@ -1143,6 +1139,11 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 
     <!-- Write Your Own Script Tab -->
     <div id="scriptModeOwn">
+      <div style="margin-bottom:24px">
+        <label style="display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">Video Title</label>
+        <input type="text" id="scriptTitlePage8" placeholder="e.g. Welcome to the Team" oninput="updateSidebar()" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:Arial,sans-serif">
+      </div>
+
       <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
         <button class="btn btn-ghost" style="font-size:12px;padding:8px 14px" onclick="addScriptBlock('title')">+ Add Title</button>
         <button class="btn btn-primary" style="font-size:12px;padding:8px 14px" onclick="addScriptBlock('line')">+ Add Line</button>
