@@ -1152,18 +1152,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 
     <div style="margin-bottom:20px;padding:16px;background:var(--bg);border:1.5px solid var(--border);border-radius:8px">
       <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px">Video Settings</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
-        <div>
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Video Length</label>
-          <select id="videoLength" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif" onchange="toggleCustomInput('videoLength','videoLengthCustom')">
-            <option value="">Select length</option>
-            <option value="30sec">30 seconds</option>
-            <option value="60sec">60 seconds</option>
-            <option value="90sec">90 seconds</option>
-            <option value="other">Other</option>
-          </select>
-          <input type="text" id="videoLengthCustom" placeholder="Enter custom length" style="display:none;width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;margin-top:6px;">
-        </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
         <div>
           <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Tone</label>
           <select id="scriptTone" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif" onchange="toggleCustomInput('scriptTone','scriptToneCustom')">
