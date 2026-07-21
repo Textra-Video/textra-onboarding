@@ -467,9 +467,10 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     <div class="progress-fill" id="progFill"></div>
     <div class="ps active"><div class="ps-node">1</div><div class="ps-lbl">Welcome</div></div>
     <div class="ps"><div class="ps-node">2</div><div class="ps-lbl">Brand</div></div>
-    <div class="ps"><div class="ps-node">3</div><div class="ps-lbl">Characters</div></div>
-    <div class="ps"><div class="ps-node">4</div><div class="ps-lbl">Scene</div></div>
-    <div class="ps"><div class="ps-node">5</div><div class="ps-lbl">Review</div></div>
+    <div class="ps"><div class="ps-node">3</div><div class="ps-lbl">Style</div></div>
+    <div class="ps"><div class="ps-node">4</div><div class="ps-lbl">Characters</div></div>
+    <div class="ps"><div class="ps-node">5</div><div class="ps-lbl">Scene</div></div>
+    <div class="ps"><div class="ps-node">6</div><div class="ps-lbl">Review</div></div>
     <div class="ps"><div class="ps-node">✓</div><div class="ps-lbl">Done</div></div>
   </div>
 </div>
@@ -1449,7 +1450,7 @@ function editStep(n){cameFromReview=true;goTo(n);}
 
 function updProg(n){
   const steps=document.querySelectorAll('.ps');
-  var prog=(n===1)?1:(n===1.5)?1:(n>=2&&n<=4)?n:(n===6)?5:6;
+  var prog=(n===1)?1:(n===1.5)?1:(n>=2&&n<=5)?n:(n===6)?6:7;
   steps.forEach((el,i)=>{
     const s=i+1; el.classList.remove('active','done');
     if(s<prog)el.classList.add('done');
