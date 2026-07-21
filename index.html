@@ -1493,8 +1493,10 @@ function brandMethod(m,el){
   // Toggle button styling — active = teal, inactive = grey border
   var btnG=document.getElementById('tog-guidelines');
   var btnM=document.getElementById('tog-manual');
+  var btnW=document.getElementById('tog-website');
   if(btnG){btnG.style.borderColor=m==='guidelines'?'var(--teal2)':'var(--border)';btnG.style.background=m==='guidelines'?'var(--teal-soft)':' #fff';btnG.style.color=m==='guidelines'?'var(--navy)':'var(--text-muted)';btnG.style.fontWeight=m==='guidelines'?'700':'600';}
   if(btnM){btnM.style.borderColor=m==='manual'?'var(--teal2)':'var(--border)';btnM.style.background=m==='manual'?'var(--teal-soft)':'#fff';btnM.style.color=m==='manual'?'var(--navy)':'var(--text-muted)';btnM.style.fontWeight=m==='manual'?'700':'600';}
+  if(btnW){btnW.style.borderColor=m==='website'?'var(--teal2)':'var(--border)';btnW.style.background=m==='website'?'var(--teal-soft)':'#fff';btnW.style.color=m==='website'?'var(--navy)':'var(--text-muted)';btnW.style.fontWeight=m==='website'?'700':'600';}
   // Show/hide sections
   ['bm-guidelines','bm-website','bm-manual'].forEach(function(id){
     var el=document.getElementById(id);
