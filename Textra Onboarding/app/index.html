@@ -404,26 +404,22 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 
     <div style="margin:16px 0">
       <div style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:10px">Scene Layout & Media</div>
-      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
         <button class="overlay-pos-btn" data-pos="none" onclick="selectOverlayPos('none')" style="padding:8px;border:2px solid var(--border);border-radius:6px;cursor:pointer;background:#fff;display:flex;flex-direction:column;align-items:center">
           <div style="width:50px;height:40px;background:#ddd;border-radius:3px;margin-bottom:4px"></div>
           <div style="font-size:10px;text-align:center;line-height:1.2">None</div>
         </button>
         <button class="overlay-pos-btn" data-pos="left-right" onclick="selectOverlayPos('left-right')" style="padding:8px;border:2px solid var(--border);border-radius:6px;cursor:pointer;background:#fff;display:flex;flex-direction:column;align-items:center">
           <div style="width:50px;height:40px;display:flex;border-radius:3px;margin-bottom:4px"><div style="flex:1;background:#ddd"></div><div style="flex:1;background:#4da8e6"></div></div>
-          <div style="font-size:10px;text-align:center;line-height:1.2">Left | Right</div>
+          <div style="font-size:10px;text-align:center;line-height:1.2">Screen left</div>
         </button>
         <button class="overlay-pos-btn" data-pos="right-left" onclick="selectOverlayPos('right-left')" style="padding:8px;border:2px solid var(--border);border-radius:6px;cursor:pointer;background:#fff;display:flex;flex-direction:column;align-items:center">
           <div style="width:50px;height:40px;display:flex;border-radius:3px;margin-bottom:4px"><div style="flex:1;background:#4da8e6"></div><div style="flex:1;background:#ddd"></div></div>
-          <div style="font-size:10px;text-align:center;line-height:1.2">Right | Left</div>
-        </button>
-        <button class="overlay-pos-btn" data-pos="top-bottom" onclick="selectOverlayPos('top-bottom')" style="padding:8px;border:2px solid var(--border);border-radius:6px;cursor:pointer;background:#fff;display:flex;flex-direction:column;align-items:center">
-          <div style="width:50px;height:40px;display:flex;flex-direction:column;border-radius:3px;margin-bottom:4px"><div style="flex:1;background:#4da8e6"></div><div style="flex:1;background:#ddd"></div></div>
-          <div style="font-size:10px;text-align:center;line-height:1.2">Top | Bottom</div>
+          <div style="font-size:10px;text-align:center;line-height:1.2">Screen right</div>
         </button>
         <button class="overlay-pos-btn" data-pos="full" onclick="selectOverlayPos('full')" style="padding:8px;border:2px solid var(--border);border-radius:6px;cursor:pointer;background:#fff;display:flex;flex-direction:column;align-items:center">
           <div style="width:50px;height:40px;background:#4da8e6;border-radius:3px;margin-bottom:4px"></div>
-          <div style="font-size:10px;text-align:center;line-height:1.2">Full Screen</div>
+          <div style="font-size:10px;text-align:center;line-height:1.2">Full screen</div>
         </button>
       </div>
     </div>
