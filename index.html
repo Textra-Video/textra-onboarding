@@ -32,7 +32,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
 
 /* ── PROGRESS ── */
-.progress-outer{background:#fff;border-bottom:1px solid var(--border);padding:12px 32px 16px;position:relative;z-index:1}
+.progress-outer{background:#fff;border-bottom:1px solid var(--border);padding:12px 32px 16px;position:sticky;top:60px;z-index:200}
 .progress-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;position:relative}
 .progress-track{position:absolute;top:13px;left:14px;right:14px;height:2px;background:var(--border);z-index:0}
 .progress-fill{position:absolute;top:13px;left:14px;height:2px;background:linear-gradient(90deg,var(--blue),var(--teal));z-index:1;border-radius:2px;box-shadow:0 0 8px rgba(102,188,173,.4);width:0%}
