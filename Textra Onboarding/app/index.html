@@ -483,7 +483,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 <div class="page active" id="page1">
   <div class="section-head">
     <div class="s-eyebrow">Welcome</div>
-    <h1 class="s-title">Welcome to Textra Video</h1>
+    <h1 class="s-title">Welcome to Textra Video — let's get you onboarded!</h1>
     <p class="s-desc">From brief to branded, studio-quality animated video in under 1 hour once your brand elements are approved. Tell us about your brand once — our engine and creative team apply your colours, fonts and characters consistently across every video, in over 40 languages.</p>
   </div>
   <div class="hero-stats">
@@ -612,7 +612,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
   <div class="card">
     <div class="card-head"><span class="step-pill">02</span> How would you like to share your brand?</div>
     <!-- Intro tip -->
-    <div style="background:var(--teal-soft);border:1px solid rgba(102,188,173,.3);border-radius:var(--radius-xs);padding:10px 13px;font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:14px">
+    <div id="brandGuidelinesTip" style="background:var(--teal-soft);border:1px solid rgba(102,188,173,.3);border-radius:var(--radius-xs);padding:10px 13px;font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:14px;display:none">
       💡 <strong style="color:var(--navy)">Most companies already have a brand guidelines document</strong> — a PDF or Word doc with your logo, colours and fonts. If you have one, upload it below. If not, fill in the details manually — it only takes 2 minutes.
     </div>
     <!-- Three-option toggle -->
@@ -830,12 +830,12 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
   <!-- How many characters -->
   <div class="card" id="charCountCard">
     <div class="card-head"><span class="step-pill">04</span> Define your characters</div>
-    <div class="char-count-grid">
-      <button class="char-count-btn" id="ccb2" onclick="setCharCount(2)">
-        <div style="font-size:24px;margin-bottom:6px">👥</div>
+    <div style="margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <div style="font-size:24px">👥</div>
         <div style="font-size:13px;font-weight:700;color:var(--navy)">Define Characters</div>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:3px">Textra templates have a character on the left and right, and the camera cuts between them as they speak. They can address the audience directly, or talk to each other.</div>
-      </button>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);line-height:1.5">Textra templates have a character on the left and right, and the camera cuts between them as they speak. They can address the audience directly, or talk to each other.</div>
     </div>
   </div>
 
@@ -1502,6 +1502,9 @@ function brandMethod(m,el){
   var section=document.getElementById('bm-'+m);
   if(section)section.classList.add('vis');
   state.brandMethod=m;
+  // Show/hide guidelines tip
+  var tip=document.getElementById('brandGuidelinesTip');
+  if(tip)tip.style.display=(m==='guidelines')?'block':'none';
   // Manual preview
   var mp=document.getElementById('manual-brand-preview');
   if(mp)mp.style.display=(m==='manual')?'block':'none';
