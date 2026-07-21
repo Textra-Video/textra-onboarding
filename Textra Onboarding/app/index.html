@@ -614,10 +614,13 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     <div style="background:var(--teal-soft);border:1px solid rgba(102,188,173,.3);border-radius:var(--radius-xs);padding:10px 13px;font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:14px">
       💡 <strong style="color:var(--navy)">Most companies already have a brand guidelines document</strong> — a PDF or Word doc with your logo, colours and fonts. If you have one, upload it below. If not, fill in the details manually — it only takes 2 minutes.
     </div>
-    <!-- Two-option toggle -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px" id="brandMethodGrid">
+    <!-- Three-option toggle -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px" id="brandMethodGrid">
       <button id="tog-manual" onclick="brandMethod('manual',this)" style="padding:12px 16px;border:2px solid var(--teal2);border-radius:var(--radius-xs);background:var(--teal-soft);color:var(--navy);font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px">
         <span style="font-size:16px">✏️</span><span>Fill In Manually</span>
+      </button>
+      <button id="tog-website" onclick="brandMethod('website',this)" style="padding:12px 16px;border:2px solid var(--border);border-radius:var(--radius-xs);background:#fff;color:var(--text-muted);font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px">
+        <span style="font-size:16px">🌐</span><span>Extract from URL</span>
       </button>
       <button id="tog-guidelines" onclick="brandMethod('guidelines',this)" style="padding:12px 16px;border:2px solid var(--border);border-radius:var(--radius-xs);background:#fff;color:var(--text-muted);font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px">
         <span style="font-size:16px">📄</span><span>Upload Guidelines</span>
@@ -662,8 +665,14 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       </div>
     </div>
 
-    <!-- Website section removed -->
-    <div class="cond" id="bm-website"></div>
+    <!-- Website: Extract from URL -->
+    <div class="cond" id="bm-website" style="margin-top:4px">
+      <div class="field">
+        <label style="margin-bottom:6px">Brand Website URL</label>
+        <input type="url" id="websiteUrl" placeholder="Enter your brand URL - your web domain, or any link and we will extract your brand from it." style="width:100%;padding:10px 13px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-xs);font-family:'Inter',sans-serif;font-size:14px;color:var(--text);outline:none;box-sizing:border-box">
+        <div style="font-size:11px;color:var(--text-muted);margin-top:6px">💡 We'll analyze your website to extract colours, fonts, logo and brand style</div>
+      </div>
+    </div>
 
     <!-- C: Manual -->
     <div class="cond" id="bm-manual" style="margin-top:4px">
