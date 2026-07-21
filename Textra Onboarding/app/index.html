@@ -1806,6 +1806,20 @@ function handleOther(sel, wrapperId){
   if(wrap)wrap.style.display=sel.value==='other'?'block':'none';
 }
 
+function selectStyle(btn){
+  // Remove selection from all style buttons
+  document.querySelectorAll('[onclick="selectStyle(this)"]').forEach(function(b){
+    b.style.borderColor='var(--border)';
+    b.style.background='#fff';
+  });
+  // Select this button
+  btn.style.borderColor='var(--teal2)';
+  btn.style.background='var(--teal-soft)';
+  // Store selection
+  state.selectedStyle = btn.querySelector('[style*="font-weight:600"]').textContent;
+  updateSidebar();
+}
+
 // ── Library selection (inline two-step) ──────────
 function openLibraryModal(forChar){
   _libFor = forChar || 'a';
