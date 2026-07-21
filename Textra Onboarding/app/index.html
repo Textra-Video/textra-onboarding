@@ -1213,11 +1213,6 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     <!-- Done for You Tab - Give us your brief -->
     <div id="scriptModeAI" style="display:none">
       <div style="margin-bottom:24px">
-        <label style="display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">Video Title</label>
-        <input type="text" id="aiBriefTitle" placeholder="e.g. Product Launch Video" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:Arial,sans-serif">
-      </div>
-
-      <div style="margin-bottom:24px">
         <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px">Give us your brief</div>
         <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Share your content as a document, link, or describe it in the text box below. We'll transform it into a script.</div>
 
@@ -2834,7 +2829,7 @@ function submitScriptOwn(btn){
 }
 
 function submitScriptBrief(btn){
-  var title = document.getElementById('aiBriefTitle') && document.getElementById('aiBriefTitle').value.trim();
+  var title = document.getElementById('scriptTitlePage8') && document.getElementById('scriptTitlePage8').value.trim();
   var briefDesc = document.getElementById('briefDescription') && document.getElementById('briefDescription').value.trim();
   var briefLink = document.getElementById('briefLink') && document.getElementById('briefLink').value.trim();
   var briefDoc = document.getElementById('briefDocUpload');
@@ -2842,7 +2837,7 @@ function submitScriptBrief(btn){
 
   if(!title){
     _isSubmittingScript = false;
-    alert('Please add a video title for your brief.');
+    alert('Please add a video title at the top before submitting your brief.');
     return;
   }
   if(!briefDesc && !briefLink && !hasUpload){
