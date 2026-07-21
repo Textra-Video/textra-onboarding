@@ -44,7 +44,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .ps.active .ps-lbl{color:var(--blue)}.ps.done .ps-lbl{color:var(--teal2)}
 
 /* ── TWO-COLUMN LAYOUT ── */
-.layout{display:flex;gap:0;max-width:1100px;margin:0 auto;padding:32px 24px 80px;position:relative;z-index:1;align-items:flex-start}
+.layout{display:flex;gap:0;max-width:1300px;margin:0 auto;padding:32px 24px 80px;position:relative;z-index:1;align-items:flex-start}
 .form-col{flex:1;min-width:0;padding-right:28px}
 .sidebar-col{width:var(--sidebar);flex-shrink:0;position:sticky;top:118px;max-height:calc(100vh - 130px);display:none;flex-direction:column}
 
@@ -287,10 +287,10 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 .tl-text strong{color:var(--navy);font-weight:600}
 @media(max-width:640px){.timeline{flex-direction:column;max-width:380px}.tl-item{border-top:none;border-left:2px solid var(--border);margin-left:11px;padding:11px 0 11px 18px}.tl-item::before{left:-4px;top:16px}}
 
-@media(max-width:860px){
+@media(max-width:768px){
   .sidebar-col{display:none}
   .form-col{padding-right:0}
-  .layout{padding:24px 16px 60px}
+  .layout{padding:24px 16px 60px;max-width:100%}
 }
 @media(max-width:640px){
   .header{padding:0 16px}.progress-outer{padding:10px 16px 14px}
