@@ -1210,17 +1210,39 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     </div>
     </div><!-- /scriptModeOwn -->
 
-    <!-- Done for You Tab - Coming Soon -->
-    <div id="scriptModeAI" style="display:none;padding:40px 20px;text-align:center">
-      <div style="max-width:500px;margin:0 auto">
-        <div style="font-size:48px;margin-bottom:16px">✨</div>
-        <div style="font-size:24px;font-weight:700;color:var(--navy);margin-bottom:12px">Coming Soon</div>
-        <div style="font-size:15px;color:var(--text-muted);line-height:1.6;margin-bottom:20px">
-          AI-powered script generation is coming soon! We're building an intelligent system that transforms your content into engaging video scripts in seconds.
+    <!-- Done for You Tab - Give us your brief -->
+    <div id="scriptModeAI" style="display:none">
+      <div style="margin-bottom:24px">
+        <label style="display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">Video Title</label>
+        <input type="text" id="aiBriefTitle" placeholder="e.g. Product Launch Video" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:Arial,sans-serif">
+      </div>
+
+      <div style="margin-bottom:24px">
+        <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px">Give us your brief</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Share your content as a document, link, or describe it in the text box below. We'll transform it into a script.</div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+          <div>
+            <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:8px">📄 Upload Document</label>
+            <input type="file" id="briefDocUpload" accept=".pdf,.doc,.docx,.txt,.md" style="width:100%;padding:10px;border:1.5px dashed var(--border);border-radius:6px;font-size:12px;cursor:pointer" onchange="handleBriefUpload(this)">
+            <div id="briefUploadName" style="font-size:11px;color:var(--text-muted);margin-top:6px"></div>
+          </div>
+          <div>
+            <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:8px">🔗 Or Paste Link</label>
+            <input type="url" id="briefLink" placeholder="https://..." style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif">
+          </div>
         </div>
-        <div style="font-size:13px;color:var(--text-muted);padding:16px;background:var(--bg);border-radius:8px;border:1.5px solid var(--border)">
-          For now, use <strong>Write your own script</strong> to manually create your script, or contact our team for custom script writing services.
+
+        <div>
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:8px">✍️ Or Describe Your Content</label>
+          <textarea id="briefDescription" placeholder="Describe the video topic, key messages, target audience, tone, any specific points you want covered..." style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif;min-height:120px;resize:vertical"></textarea>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:6px" id="briefCharCount">0 characters</div>
         </div>
+      </div>
+
+      <div style="margin-bottom:16px;padding:12px;background:var(--bg);border-radius:6px;border:1.5px solid var(--border)">
+        <div style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">💡 Tip</div>
+        <div style="font-size:12px;color:var(--text-muted)">The more details you provide about your audience, tone, and message, the better our AI can tailor your script.</div>
       </div>
     </div><!-- /scriptModeAI -->
   </div>
@@ -2718,6 +2740,17 @@ function submitScript(){
   _isSubmittingScript = true;
 
   var btn=document.getElementById('submitScriptBtn');
+  var modeOwnContent = document.getElementById('scriptModeOwn');
+  var isOwnMode = modeOwnContent && modeOwnContent.style.display !== 'none';
+
+  if(isOwnMode){
+    submitScriptOwn(btn);
+  } else {
+    submitScriptBrief(btn);
+  }
+}
+
+function submitScriptOwn(btn){
   var title=document.getElementById('scriptTitlePage8')&&document.getElementById('scriptTitlePage8').value;
   if(!title||!title.trim()){
     _isSubmittingScript = false;
@@ -2768,22 +2801,13 @@ function submitScript(){
   fetch(GOOGLE_SCRIPT_URL,{
     method:'POST',
     body:JSON.stringify(payload),
-    // text/plain avoids a CORS preflight (OPTIONS) that Apps Script Web
-    // Apps don't handle — the backend still parses it as JSON regardless
-    // of the declared content type.
     headers:{'Content-Type':'text/plain;charset=utf-8'}
   }).then(function(r){ return r.text(); })
   .then(function(text){
     if(window._scriptSubmitInterval) clearInterval(window._scriptSubmitInterval);
     var resp = null;
     try { resp = JSON.parse(text); } catch(e) {}
-    // See finalSubmit() for why a non-JSON response is treated as success
-    // rather than an error - Apps Script always returns valid JSON itself,
-    // so a parse failure means Google's response delivery glitched after
-    // the script already ran, not that the submission failed.
     if(resp && resp.message && resp.message.includes('Unknown action')){
-      // Suppress "Unknown action" error - data likely saved successfully
-      // This can happen if backend response is delayed or partially parsed
       Logger.log('Submission likely succeeded despite unknown action response');
     } else if(resp && !resp.success){
       if(btn){btn.disabled=false;btn.textContent='Submit Script';}
@@ -2809,7 +2833,106 @@ function submitScript(){
   });
 }
 
+function submitScriptBrief(btn){
+  var title = document.getElementById('aiBriefTitle') && document.getElementById('aiBriefTitle').value.trim();
+  var briefDesc = document.getElementById('briefDescription') && document.getElementById('briefDescription').value.trim();
+  var briefLink = document.getElementById('briefLink') && document.getElementById('briefLink').value.trim();
+  var briefDoc = document.getElementById('briefDocUpload');
+  var hasUpload = briefDoc && briefDoc.files && briefDoc.files[0];
+
+  if(!title){
+    _isSubmittingScript = false;
+    alert('Please add a video title for your brief.');
+    return;
+  }
+  if(!briefDesc && !briefLink && !hasUpload){
+    _isSubmittingScript = false;
+    alert('Please provide your brief content: describe it, paste a link, or upload a document.');
+    return;
+  }
+
+  var payload = {
+    action: 'submitScriptBrief',
+    portalToken: getPortalToken(),
+    scriptTitle: title,
+    briefDescription: briefDesc || '',
+    briefLink: briefLink || '',
+    uploadFileName: hasUpload ? briefDoc.files[0].name : '',
+  };
+
+  if(btn){
+    btn.disabled = true;
+    var dots = 0;
+    btn.innerHTML = 'Submitting<span id="scriptDots" style="display:inline-block;width:27px;text-align:left">.</span>';
+    var dotInterval = setInterval(function(){
+      dots = (dots + 1) % 4;
+      var dotsSpan = document.getElementById('scriptDots');
+      if(dotsSpan) dotsSpan.textContent = '.'.repeat(dots);
+    }, 500);
+    window._scriptSubmitInterval = dotInterval;
+  }
+
+  var formData = new FormData();
+  formData.append('payload', JSON.stringify(payload));
+  if(hasUpload){
+    formData.append('file', briefDoc.files[0]);
+  }
+
+  fetch(GOOGLE_SCRIPT_URL, {
+    method: 'POST',
+    body: formData
+  }).then(function(r){ return r.text(); })
+  .then(function(text){
+    if(window._scriptSubmitInterval) clearInterval(window._scriptSubmitInterval);
+    var resp = null;
+    try { resp = JSON.parse(text); } catch(e) {}
+    if(resp && resp.message && resp.message.includes('Unknown action')){
+      Logger.log('Brief submission likely succeeded despite unknown action response');
+    } else if(resp && !resp.success){
+      if(btn){btn.disabled=false;btn.textContent='Submit Brief';}
+      _isSubmittingScript = false;
+      alert('There was an error submitting your brief: '+(resp.message||'Unknown error'));
+      return;
+    }
+    if(btn){btn.textContent='✓ Brief submitted!';}
+    setTimeout(function(){
+      if(btn){btn.disabled=false;btn.textContent='Submit Script';}
+      var st=document.getElementById('successTitle');
+      var ss=document.getElementById('successSub');
+      if(st) st.textContent='Thank you for submitting your brief!';
+      if(ss) ss.textContent='Our AI team is reviewing your content. You will receive a confirmation email shortly with your script.';
+      goTo(7);
+    },1500);
+  }).catch(function(err){
+    if(window._scriptSubmitInterval) clearInterval(window._scriptSubmitInterval);
+    console.error('Error submitting brief:',err);
+    if(btn){btn.disabled=false;btn.textContent='Submit Script';}
+    _isSubmittingScript = false;
+    alert('There was an error submitting your brief: '+err.message);
+  });
+}
+
+// ── BRIEF HANDLING ──────────────────────────────
+function handleBriefUpload(input){
+  var nameDiv = document.getElementById('briefUploadName');
+  if(input.files && input.files[0]){
+    nameDiv.textContent = '✓ ' + input.files[0].name;
+  } else {
+    nameDiv.textContent = '';
+  }
+}
+
 // ── SCRIPT MODE TABS ─────────────────────────────
+document.addEventListener('DOMContentLoaded', function(){
+  var descInput = document.getElementById('briefDescription');
+  if(descInput){
+    descInput.addEventListener('input', function(){
+      var charCount = document.getElementById('briefCharCount');
+      if(charCount) charCount.textContent = this.value.length + ' characters';
+    });
+  }
+});
+
 function switchScriptMode(mode){
   var ownTab = document.getElementById('scriptTabOwn');
   var aiTab = document.getElementById('scriptTabAI');
