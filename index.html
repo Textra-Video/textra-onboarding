@@ -439,6 +439,17 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     </div>
 
     <div style="margin:16px 0">
+      <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Visual Style <span style="font-size:11px;font-weight:400;color:var(--text-muted)">(optional)</span></label>
+      <select id="overlayStyle" style="display:block;width:100%;padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif;box-sizing:border-box">
+        <option value="">Select a style</option>
+        <option value="icon">Icon</option>
+        <option value="flat-illustration">Flat Illustration</option>
+        <option value="detailed-illustration">Detailed Illustration</option>
+        <option value="photographic">Photographic</option>
+      </select>
+    </div>
+
+    <div style="margin:16px 0">
       <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Image File <span style="font-size:11px;font-weight:400;color:var(--text-muted)">(optional)</span></label>
       <input type="file" id="overlayFileInput" accept="image/*,video/*" style="display:block;width:100%;padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:12px" />
       <div style="font-size:11px;color:var(--text-muted);margin-top:6px">Max file size: 10MB</div>
@@ -2541,6 +2552,7 @@ function openOverlayModal(blockId){
   document.getElementById('overlayFileInput').value='';
   document.getElementById('overlayName').value='';
   document.getElementById('overlayDescription').value='';
+  document.getElementById('overlayStyle').value='';
   document.querySelectorAll('.overlay-pos-btn').forEach(function(btn){ btn.style.borderColor='var(--border)'; btn.style.background='#fff'; });
   // Reset button state for new upload
   var applyBtn = document.querySelector('[onclick*="saveOverlay"]');
@@ -2603,13 +2615,15 @@ function saveOverlay(){
   var reader=new FileReader();
   reader.onload=function(e){
     var fileData=e.target.result;
+    var styleInput=document.getElementById('overlayStyle');
     // Send overlay to backend for immediate upload to Google Drive
     var payload={
       action:'uploadOverlay',
       portalToken:getPortalToken(),
       overlayName:nameInput.value.trim(),
       overlayFileName:file.name,
-      overlayFileData:fileData
+      overlayFileData:fileData,
+      overlayStyle:styleInput.value||''
     };
 
     // Show uploading progress
@@ -2628,6 +2642,7 @@ function saveOverlay(){
           position:_selectedOverlayPos,
           name:nameInput.value.trim(),
           description:document.getElementById('overlayDescription').value.trim()||'',
+          style:styleInput.value||'',
           fileName:file.name,
           fileUrl:resp.fileUrl
         };
