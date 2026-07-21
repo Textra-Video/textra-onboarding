@@ -86,7 +86,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── SECTION HEADER ── */
-.section-head{margin-bottom:24px}
+.section-head{margin-bottom:24px;position:sticky;top:60px;background:var(--bg);z-index:100;padding:16px 0;border-bottom:1px solid var(--border)}
 .s-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--teal2);margin-bottom:8px}
 .s-eyebrow::before{content:'';display:inline-block;width:14px;height:2px;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:2px}
 .s-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;color:var(--navy);line-height:1.2;margin-bottom:5px;letter-spacing:-.4px}
