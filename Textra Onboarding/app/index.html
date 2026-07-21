@@ -3062,6 +3062,13 @@ function updateSidebar(){
   if(state.logoDataUrl) brandParts.push('<div class="sb-row"><span class="sb-icon">\uD83D\uDDBC\uFE0F</span><img src="'+state.logoDataUrl+'" class="sb-logo-preview" alt="Logo"></div>');
   if(brandParts.length) sections.push('<div class="sb-section"><div class="sb-label">Brand</div>'+brandParts.join('')+'</div>');
 
+  // ── STYLE ────────────────────────────────────────────────
+  if(state.selectedStyle){
+    sections.push('<div class="sb-section"><div class="sb-label">Style</div>'+
+      sbRow('🎨',state.selectedStyle)+
+    '</div>');
+  }
+
   // ── CHARACTERS ───────────────────────────────────────────
   var cag=gv('c1gender'),caa=gv('c1age'),caeth=gv('c1eth'),caacc=gv('c1accent'),cacl=gv('c1clothing'),can=gv('c1notes');
   var cbg=gv('c2gender'),cba=gv('c2age'),cbeth=gv('c2eth'),cbacc=gv('c2accent'),cbcl=gv('c2clothing'),cbn=gv('c2notes');
