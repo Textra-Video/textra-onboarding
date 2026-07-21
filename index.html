@@ -255,6 +255,8 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 .review-edit-btn{margin-left:auto;padding:4px 10px;background:var(--blue-soft);border:1px solid rgba(26,113,177,.2);border-radius:6px;font-size:11px;font-weight:600;color:var(--blue);cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
 .review-edit-btn:hover{background:var(--teal-soft);border-color:var(--teal2);color:var(--teal2)}
 .review-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.review-item.filled{background:var(--teal-soft);border:1px solid rgba(102,188,173,.3);border-radius:var(--radius-xs);padding:8px;font-weight:500}
+.review-item.empty{opacity:0.4;background:transparent;border:1px dashed var(--border);border-radius:var(--radius-xs);padding:8px;font-style:italic}
 .review-item{background:var(--bg);border-radius:var(--radius-xs);padding:9px 11px}
 .review-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-dim);margin-bottom:2px}
 .review-value{font-size:12px;color:var(--navy);font-weight:500}
@@ -3410,6 +3412,11 @@ function rvDate(val){
 function editBtn(pageNum,label){
   return '<button class="review-edit-btn" onclick="editStep('+pageNum+')">&#9999;&#65039; Edit</button>';
 }
+function reviewItem(label,value){
+  var isFilled=value.indexOf('review-empty')===-1;
+  var cls=isFilled?'filled':'empty';
+  return '<div class="review-item '+cls+'"><div class="review-label">'+label+'</div>'+value+'</div>';
+}
 function buildReview(){
   var sb=document.getElementById('sidebarCol');
   if(sb) sb.style.display='none';
@@ -3462,10 +3469,10 @@ function buildReview(){
     '<div class="review-section">'+
     '<div class="review-section-title"><span class="step-pill">01</span> Contact & Project '+editBtn(1.5,'Contact')+'</div>'+
     '<div class="review-grid">'+
-      '<div class="review-item"><div class="review-label">Name</div>'+rv(document.getElementById('fullName').value)+'</div>'+
-      '<div class="review-item"><div class="review-label">Company</div>'+rv(document.getElementById('companyName').value)+'</div>'+
-      '<div class="review-item"><div class="review-label">Email</div>'+rv(document.getElementById('email').value)+'</div>'+
-      '<div class="review-item"><div class="review-label">Project</div>'+rv(document.getElementById('projectName').value)+'</div>'+
+      reviewItem('Name',rv(document.getElementById('fullName').value))+
+      reviewItem('Company',rv(document.getElementById('companyName').value))+
+      reviewItem('Email',rv(document.getElementById('email').value))+
+      reviewItem('Project',rv(document.getElementById('projectName').value))+
     '</div></div>'+
 
     '<div class="review-section">'+
@@ -3474,8 +3481,7 @@ function buildReview(){
 
     '<div class="review-section">'+
     '<div class="review-section-title"><span class="step-pill">03</span> Style '+editBtn(3,'Style')+'</div>'+
-    '<div class="review-item"><div class="review-label">Selected Style</div>'+rv(state.selectedStyle||'')+'</div>'+
-    '</div>'+
+    '<div class="review-grid">'+reviewItem('Selected Style',rv(state.selectedStyle||''))+'</div></div>'+
 
     '<div class="review-section">'+
     '<div class="review-section-title"><span class="step-pill">04</span> Characters '+editBtn(4,'Characters')+'</div>'+
