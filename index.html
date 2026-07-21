@@ -1409,9 +1409,12 @@ function goTo(n){
   cur=n; updProg(n);
   var stepLabel;
   if(n===1)stepLabel='Welcome';
-  else if(n===1.5)stepLabel='Step 1 of 5';
-  else if(n<=5)stepLabel='Step '+(n-1)+' of 5';
-  else if(n===6)stepLabel='Review';
+  else if(n===1.5)stepLabel='Step 1 of 7 — Brand';
+  else if(n===2)stepLabel='Step 2 of 7 — Brand';
+  else if(n===3)stepLabel='Step 3 of 7 — Style';
+  else if(n===4)stepLabel='Step 4 of 7 — Characters';
+  else if(n===5)stepLabel='Step 5 of 7 — Scene & Music';
+  else if(n===6)stepLabel='Step 6 of 7 — Review';
   else if(n===8)stepLabel='Script';
   else stepLabel='Done';
   var hs=document.getElementById('hdr-step');
