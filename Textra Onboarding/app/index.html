@@ -605,7 +605,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 <!-- ══ PAGE 2: BRAND ══ -->
 <div class="page" id="page2">
   <div class="section-head">
-    <div class="s-eyebrow">Step 2 of 6 — Brand</div>
+    <div class="s-eyebrow">Step 2 of 5 — Brand</div>
     <h1 class="s-title">Let's gather your brand details</h1>
     <p class="s-desc">We apply your colours, fonts and logo to every frame — consistently, across every video. Share your brand below and we'll take care of the rest.</p>
   </div>
@@ -769,7 +769,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 <!-- ══ PAGE 3: STYLE ══ -->
 <div class="page" id="page3">
   <div class="section-head">
-    <div class="s-eyebrow">Step 3 of 6 — Your Style</div>
+    <div class="s-eyebrow">Step 3 of 5 — Your Style</div>
     <h1 class="s-title">Choose Your Style</h1>
     <p class="s-desc">Select the design style that best matches your brand aesthetic. Our team will bring your content to life with your chosen style.</p>
   </div>
@@ -822,7 +822,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 <div class="page" id="page4">
   <!-- ══ CHARACTERS SECTION ══ -->
   <div class="section-head">
-    <div class="s-eyebrow">Step 4 of 6 — Characters</div>
+    <div class="s-eyebrow">Step 4 of 5 — Characters</div>
     <h1 class="s-title">Define Your Characters</h1>
     <p class="s-desc">Tell us about the characters who will present your content. Our team will bring them to life.</p>
   </div>
@@ -1023,7 +1023,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 <!-- ══ PAGE 5: SCENE + MUSIC ══ -->
 <div class="page" id="page5">
   <div class="section-head">
-    <div class="s-eyebrow">Step 5 of 6 — Scene &amp; Music</div>
+    <div class="s-eyebrow">Step 5 of 5 — Scene &amp; Music</div>
     <h1 class="s-title">Scene &amp; Music</h1>
     <p class="s-desc">Set the stage for your video and choose a music mood.</p>
   </div>
@@ -1115,7 +1115,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 <!-- ══ PAGE 6: REVIEW ══ -->
 <div class="page" id="page6">
   <div class="section-head">
-    <div class="s-eyebrow">Step 6 of 6 — Review</div>
+    <div class="s-eyebrow">Review</div>
     <h1 class="s-title">Review Your Brief</h1>
     <p class="s-desc">Check everything looks right before we send it to the team.</p>
   </div>
@@ -1410,12 +1410,12 @@ function goTo(n){
   cur=n; updProg(n);
   var stepLabel;
   if(n===1)stepLabel='Welcome';
-  else if(n===1.5)stepLabel='Step 1 of 7 — Brand';
-  else if(n===2)stepLabel='Step 2 of 7 — Brand';
-  else if(n===3)stepLabel='Step 3 of 7 — Style';
-  else if(n===4)stepLabel='Step 4 of 7 — Characters';
-  else if(n===5)stepLabel='Step 5 of 7 — Scene & Music';
-  else if(n===6)stepLabel='Step 6 of 7 — Review';
+  else if(n===1.5)stepLabel='Step 1 of 5 — Your Details';
+  else if(n===2)stepLabel='Step 2 of 5 — Brand';
+  else if(n===3)stepLabel='Step 3 of 5 — Style';
+  else if(n===4)stepLabel='Step 4 of 5 — Characters';
+  else if(n===5)stepLabel='Step 5 of 5 — Scene & Music';
+  else if(n===6)stepLabel='Review';
   else if(n===8)stepLabel='Script';
   else stepLabel='Done';
   var hs=document.getElementById('hdr-step');
