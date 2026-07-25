@@ -786,38 +786,54 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
   <!-- Your Style -->
   <div class="card">
     <div class="card-head"><span class="step-pill">03</span> Choose Your Style</div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px">
-      <button onclick="selectStyle(this)" style="padding:16px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px">
-        <div style="font-size:32px;margin-bottom:8px">1️⃣</div>
-        <div style="font-size:12px;font-weight:600;color:var(--navy)">Style 1</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:16px">
+      <button onclick="selectStyle(this, 'Brand Colours', './styles/Style-_0000_brand-colours.jpg')" style="padding:0;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;text-align:center;display:flex;flex-direction:column;overflow:hidden;transition:all .2s;position:relative">
+        <img src="./styles/Style-_0000_brand-colours.jpg" style="width:100%;height:140px;object-fit:cover;display:block" alt="Brand Colours">
+        <div style="padding:12px;flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="font-size:13px;font-weight:600;color:var(--navy)">Brand Colours</div>
+        </div>
       </button>
-      <button onclick="selectStyle(this)" style="padding:16px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px">
-        <div style="font-size:32px;margin-bottom:8px">2️⃣</div>
-        <div style="font-size:12px;font-weight:600;color:var(--navy)">Style 2</div>
+      <button onclick="selectStyle(this, 'Modern Shaded', './styles/Style-_0001_Modern-shaded.jpg')" style="padding:0;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;text-align:center;display:flex;flex-direction:column;overflow:hidden;transition:all .2s;position:relative">
+        <img src="./styles/Style-_0001_Modern-shaded.jpg" style="width:100%;height:140px;object-fit:cover;display:block" alt="Modern Shaded">
+        <div style="padding:12px;flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="font-size:13px;font-weight:600;color:var(--navy)">Modern Shaded</div>
+        </div>
       </button>
-      <button onclick="selectStyle(this)" style="padding:16px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px">
-        <div style="font-size:32px;margin-bottom:8px">3️⃣</div>
-        <div style="font-size:12px;font-weight:600;color:var(--navy)">Style 3</div>
+      <button onclick="selectStyle(this, 'Minimalist', './styles/Style-_0002_Minimalist.jpg')" style="padding:0;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;text-align:center;display:flex;flex-direction:column;overflow:hidden;transition:all .2s;position:relative">
+        <img src="./styles/Style-_0002_Minimalist.jpg" style="width:100%;height:140px;object-fit:cover;display:block" alt="Minimalist">
+        <div style="padding:12px;flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="font-size:13px;font-weight:600;color:var(--navy)">Minimalist</div>
+        </div>
       </button>
-      <button onclick="selectStyle(this)" style="padding:16px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px">
-        <div style="font-size:32px;margin-bottom:8px">4️⃣</div>
-        <div style="font-size:12px;font-weight:600;color:var(--navy)">Style 4</div>
+      <button onclick="selectStyle(this, 'Modern Round', './styles/Style-_0003_Modern-round.jpg')" style="padding:0;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;text-align:center;display:flex;flex-direction:column;overflow:hidden;transition:all .2s;position:relative">
+        <img src="./styles/Style-_0003_Modern-round.jpg" style="width:100%;height:140px;object-fit:cover;display:block" alt="Modern Round">
+        <div style="padding:12px;flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="font-size:13px;font-weight:600;color:var(--navy)">Modern Round</div>
+        </div>
       </button>
-      <button onclick="selectStyle(this)" style="padding:16px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px">
-        <div style="font-size:32px;margin-bottom:8px">5️⃣</div>
-        <div style="font-size:12px;font-weight:600;color:var(--navy)">Style 5</div>
+      <button onclick="selectStyle(this, 'Collage Cutout', './styles/Style-_0004_Collage_Cutout.jpg')" style="padding:0;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;text-align:center;display:flex;flex-direction:column;overflow:hidden;transition:all .2s;position:relative">
+        <img src="./styles/Style-_0004_Collage_Cutout.jpg" style="width:100%;height:140px;object-fit:cover;display:block" alt="Collage Cutout">
+        <div style="padding:12px;flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="font-size:13px;font-weight:600;color:var(--navy)">Collage Cutout</div>
+        </div>
       </button>
-      <button onclick="selectStyle(this)" style="padding:16px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px">
-        <div style="font-size:32px;margin-bottom:8px">6️⃣</div>
-        <div style="font-size:12px;font-weight:600;color:var(--navy)">Style 6</div>
+      <button onclick="selectStyle(this, 'Cartoon', './styles/Style-_0005_Cartoon-style.jpg')" style="padding:0;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;text-align:center;display:flex;flex-direction:column;overflow:hidden;transition:all .2s;position:relative">
+        <img src="./styles/Style-_0005_Cartoon-style.jpg" style="width:100%;height:140px;object-fit:cover;display:block" alt="Cartoon">
+        <div style="padding:12px;flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="font-size:13px;font-weight:600;color:var(--navy)">Cartoon</div>
+        </div>
       </button>
-      <button onclick="selectStyle(this)" style="padding:16px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px">
-        <div style="font-size:32px;margin-bottom:8px">7️⃣</div>
-        <div style="font-size:12px;font-weight:600;color:var(--navy)">Style 7</div>
+      <button onclick="selectStyle(this, 'Illustrated', './styles/Style-_0006_Illustrated-refined.jpg')" style="padding:0;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;text-align:center;display:flex;flex-direction:column;overflow:hidden;transition:all .2s;position:relative">
+        <img src="./styles/Style-_0006_Illustrated-refined.jpg" style="width:100%;height:140px;object-fit:cover;display:block" alt="Illustrated">
+        <div style="padding:12px;flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="font-size:13px;font-weight:600;color:var(--navy)">Illustrated</div>
+        </div>
       </button>
-      <button onclick="selectStyle(this)" style="padding:16px;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:120px">
-        <div style="font-size:32px;margin-bottom:8px">8️⃣</div>
-        <div style="font-size:12px;font-weight:600;color:var(--navy)">Style 8</div>
+      <button onclick="selectStyle(this, 'Angular', './styles/Style-_0007_Angular.jpg')" style="padding:0;border:2px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;text-align:center;display:flex;flex-direction:column;overflow:hidden;transition:all .2s;position:relative">
+        <img src="./styles/Style-_0007_Angular.jpg" style="width:100%;height:140px;object-fit:cover;display:block" alt="Angular">
+        <div style="padding:12px;flex:1;display:flex;align-items:center;justify-content:center">
+          <div style="font-size:13px;font-weight:600;color:var(--navy)">Angular</div>
+        </div>
       </button>
     </div>
   </div>
@@ -1825,18 +1841,65 @@ function handleOther(sel, wrapperId){
   if(wrap)wrap.style.display=sel.value==='other'?'block':'none';
 }
 
-function selectStyle(btn){
+var _stylesList = [
+  {name:'Brand Colours', path:'./styles/Style-_0000_brand-colours.jpg'},
+  {name:'Modern Shaded', path:'./styles/Style-_0001_Modern-shaded.jpg'},
+  {name:'Minimalist', path:'./styles/Style-_0002_Minimalist.jpg'},
+  {name:'Modern Round', path:'./styles/Style-_0003_Modern-round.jpg'},
+  {name:'Collage Cutout', path:'./styles/Style-_0004_Collage_Cutout.jpg'},
+  {name:'Cartoon', path:'./styles/Style-_0005_Cartoon-style.jpg'},
+  {name:'Illustrated', path:'./styles/Style-_0006_Illustrated-refined.jpg'},
+  {name:'Angular', path:'./styles/Style-_0007_Angular.jpg'}
+];
+var _currentStyleIdx = 0;
+
+function selectStyle(btn, styleName, styleImagePath){
   // Remove selection from all style buttons
-  document.querySelectorAll('[onclick="selectStyle(this)"]').forEach(function(b){
+  document.querySelectorAll('button[onclick^="selectStyle"]').forEach(function(b){
     b.style.borderColor='var(--border)';
-    b.style.background='#fff';
+    b.style.boxShadow='none';
   });
   // Select this button
-  btn.style.borderColor='var(--teal2)';
-  btn.style.background='var(--teal-soft)';
+  btn.style.borderColor='var(--navy)';
+  btn.style.boxShadow='0 0 0 2px var(--teal2)';
   // Store selection
-  state.selectedStyle = btn.querySelector('[style*="font-weight:600"]').textContent;
+  state.selectedStyle = styleName;
+  // Find and store current style index
+  _currentStyleIdx = _stylesList.findIndex(function(s){return s.name===styleName;});
+  // Show modal
+  openStyleModal(styleName, styleImagePath);
   updateSidebar();
+}
+
+function openStyleModal(styleName, styleImagePath){
+  const modal = document.getElementById('styleModal');
+  const modalTitle = document.getElementById('styleModalTitle');
+  const modalImage = document.getElementById('styleModalImage');
+  if(modal && modalTitle && modalImage){
+    modalTitle.textContent = styleName;
+    modalImage.src = styleImagePath;
+    modalImage.alt = styleName;
+    modal.style.display = 'flex';
+  }
+}
+
+function closeStyleModal(){
+  const modal = document.getElementById('styleModal');
+  if(modal) modal.style.display = 'none';
+}
+
+function prevStyle(){
+  _currentStyleIdx = (_currentStyleIdx - 1 + _stylesList.length) % _stylesList.length;
+  var style = _stylesList[_currentStyleIdx];
+  var btn = document.querySelector('button[onclick*="' + style.name + '"]');
+  if(btn) selectStyle(btn, style.name, style.path);
+}
+
+function nextStyle(){
+  _currentStyleIdx = (_currentStyleIdx + 1) % _stylesList.length;
+  var style = _stylesList[_currentStyleIdx];
+  var btn = document.querySelector('button[onclick*="' + style.name + '"]');
+  if(btn) selectStyle(btn, style.name, style.path);
 }
 
 // ── Library selection (inline two-step) ──────────
@@ -3727,7 +3790,38 @@ function emailPortalLink(){
   });
 }
 
-document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModal();closeStyleModal();}});
 </script>
+
+<!-- Style Modal -->
+<div id="styleModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center;padding:20px;overflow-y:auto">
+
+  <div style="background:#fff;border-radius:var(--radius);max-width:600px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.2);overflow:hidden;animation:slideUp .3s cubic-bezier(.4,0,.2,1);position:relative">
+    <!-- Close button -->
+    <button onclick="closeStyleModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:24px;cursor:pointer;color:var(--text-muted);z-index:1001;padding:4px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:4px;transition:all .2s" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='none'">×</button>
+
+    <!-- Image -->
+    <img id="styleModalImage" src="" alt="" style="width:100%;height:auto;display:block;max-height:400px;object-fit:cover">
+
+    <!-- Navigation Arrows (centered below image) -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:20px;padding:16px 24px 0">
+      <button onclick="prevStyle()" style="background:#fff;border:2px solid var(--border);font-size:20px;cursor:pointer;color:var(--navy);padding:10px 14px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:all .2s" onmouseover="this.style.borderColor='var(--teal2)';this.style.background='var(--teal-soft)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='#fff'">‹</button>
+      <button onclick="nextStyle()" style="background:#fff;border:2px solid var(--border);font-size:20px;cursor:pointer;color:var(--navy);padding:10px 14px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:all .2s" onmouseover="this.style.borderColor='var(--teal2)';this.style.background='var(--teal-soft)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='#fff'">›</button>
+    </div>
+
+    <!-- Title -->
+    <div style="padding:24px">
+      <h2 id="styleModalTitle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:700;color:var(--navy);margin-bottom:16px">Style Name</h2>
+      <p style="font-size:14px;color:var(--text-muted);line-height:1.6">This style has been selected for your project. Our team will bring your content to life using this design aesthetic.</p>
+      <button onclick="closeStyleModal()" style="margin-top:20px;padding:12px 32px;background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;border:none;border-radius:var(--radius-sm);font-weight:600;font-size:13px;cursor:pointer;transition:all .2s" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Select</button>
+    </div>
+  </div>
+</div>
+
+
+<style>
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+</style>
+
 </body>
 </html>
