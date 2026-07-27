@@ -2981,6 +2981,7 @@ function submitScriptOwn(btn){
     var ss=document.getElementById('successSub');
     if(st) st.textContent='Thank you for submitting your script!';
     if(ss) ss.textContent='You will receive a confirmation email shortly. Our team will review your script and be in touch regarding next steps or if we need any additional information.';
+    _isSubmittingScript = false;
     goTo(7);
   },3000);
 
