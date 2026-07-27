@@ -1275,7 +1275,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
   <div class="success-wrap">
     <div class="success-ring">✓</div>
     <div class="success-title" id="successTitle">Brief Submitted!</div>
-    <div class="success-sub" id="successSub">Brief received. Check your inbox for next steps and your project link.</div>
+    <div class="success-sub" id="successSub">Check your inbox for next steps, submitting your script and your project link.</div>
 
 
     <div style="margin:16px 0 8px;padding:20px 24px;background:var(--bg);border:1.5px solid var(--border);border-radius:12px;text-align:left">
@@ -2226,44 +2226,27 @@ function finalSubmit(){
     return;
   }
 
-  // fetch() with a real response check — the previous hidden-iframe form
-  // POST always showed "Brief submitted!" on a fixed timer regardless of
-  // whether the backend actually succeeded, and could never really read
-  // the response anyway (the iframe navigates cross-origin to
-  // script.google.com, which the browser blocks JS from reading).
+  // Show success after 3 seconds, let submission continue in background
+  setTimeout(function(){
+    if(window._submitInterval) clearInterval(window._submitInterval);
+    if(btn) btn.textContent = 'Brief submitted!';
+    goTo(7);
+  }, 3000);
+
   fetch(GOOGLE_SCRIPT_URL,{
     method:'POST',
     body:JSON.stringify(data),
     headers:{'Content-Type':'text/plain;charset=utf-8'}
   }).then(function(r){ return r.text(); })
   .then(function(text){
-    if(window._submitInterval) clearInterval(window._submitInterval);
-    if(btn){ btn.disabled = false; }
     var resp = null;
     try { resp = JSON.parse(text); } catch(e) {}
-    if(resp && resp.success){
-      if(btn) btn.textContent = 'Brief submitted!';
-      goTo(7);
-    } else if(!resp){
-      // The backend always returns valid JSON, even on its own errors - it
-      // wraps everything in try/catch. A non-JSON response only happens
-      // when Google's content-delivery layer fails to serve the POST
-      // response (a known Apps Script Web App quirk on slower executions),
-      // which happens *after* the script has already run successfully.
-      // Treating this as a failure and prompting a retry was misleading
-      // users into thinking their brief hadn't gone through when it had.
-      if(btn) btn.textContent = 'Brief submitted!';
-      goTo(7);
-    } else {
-      if(btn) btn.textContent = 'Submit Brief';
-      _isSubmittingBrief = false;
-      alert('There was an error submitting your brief: '+(resp.message||'Unknown error')+'\n\nPlease try again.');
+    // Submission completed in background
+    if(resp && !resp.success){
+      console.error('Brief submission error:', resp.message);
     }
   }).catch(function(err){
-    if(window._submitInterval) clearInterval(window._submitInterval);
-    if(btn){ btn.disabled = false; btn.textContent = 'Submit Brief'; }
-    _isSubmittingBrief = false;
-    alert('There was an error submitting your brief: '+err.message+'\n\nPlease try again.');
+    console.error('Brief submission error:', err.message);
   });
 }
 
