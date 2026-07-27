@@ -1758,11 +1758,21 @@ function selSceneLib(el, name){
 
 function selMusic(el,name){
   document.querySelectorAll('#musicGrid .music-opt').forEach(o=>o.classList.remove('sel'));
-  // Pause all audio players except the one being clicked
-  document.querySelectorAll('#musicGrid audio').forEach(audio=>{if(audio!==el.querySelector('audio')){audio.pause();}});
   el.classList.add('sel'); state.music=name; updateSidebar();
 }
 
+// Setup music audio control: pause all others when one plays
+function initMusicAudioControls(){
+  const allAudios = document.querySelectorAll('#musicGrid audio');
+  allAudios.forEach(audio=>{
+    // When this audio starts playing, pause all others
+    audio.addEventListener('play', function(){
+      allAudios.forEach(otherAudio=>{
+        if(otherAudio !== audio) otherAudio.pause();
+      });
+    });
+  });
+}
 
 // ══ CHARACTER SECTION JS ══════════════════════════════════════
 var _charCount = 0;
@@ -1894,14 +1904,15 @@ function closeStyleModal(){
 
 // Close style modal when clicking on backdrop (outside the modal card)
 document.addEventListener('DOMContentLoaded', function(){
+  // Close style modal when clicking backdrop
   const styleModal = document.getElementById('styleModal');
   if(styleModal) {
     styleModal.addEventListener('click', function(e){
       if(e.target === styleModal) closeStyleModal();
     });
   }
-  // Preload audio metadata for consistent time display
-  document.querySelectorAll('audio').forEach(audio=>{audio.load();});
+  // Initialize music audio controls (pause others when one plays)
+  initMusicAudioControls();
 });
 
 function prevStyle(){
