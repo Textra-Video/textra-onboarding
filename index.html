@@ -109,6 +109,8 @@ label .hint{font-weight:400;color:var(--text-dim);font-size:11px;text-transform:
 input[type="text"],input[type="email"],input[type="tel"],input[type="url"],input[type="date"],textarea{width:100%;padding:10px 13px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-xs);font-family:'Inter',sans-serif;font-size:14px;color:var(--text);outline:none;appearance:none;transition:all .2s}
 select{width:100%;padding:10px 13px;padding-right:28px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-xs);font-family:'Inter',sans-serif;font-size:14px;color:var(--text);outline:none;appearance:none;transition:all .2s}
 input:focus,textarea:focus,select:focus{border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px rgba(102,188,173,.12)}
+input.field-error,textarea.field-error,select.field-error{border-color:#e74c3c!important;background:#fff5f5!important;box-shadow:0 0 0 3px rgba(231,76,60,.12)!important}
+[data-error]::after{content:attr(data-error);display:block;font-size:12px;color:#e74c3c;margin-top:4px;font-weight:500}
 input::placeholder,textarea::placeholder{color:var(--text-dim)}
 textarea{resize:vertical;min-height:80px;line-height:1.6}
 select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2364748b'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px;cursor:pointer}
@@ -1437,14 +1439,18 @@ function validateStep(fromStep){
     4:[{id:'c1gender'},{id:'c1age'},{id:'c1eth'},{id:'c1clothing'},{id:'c1accent'},{id:'c2gender'},{id:'c2age'},{id:'c2eth'},{id:'c2clothing'},{id:'c2accent'}],
     5:[{id:'scenedesc'}]
   };
+  document.querySelectorAll('[data-error]').forEach(el=>el.removeAttribute('data-error'));
   const fields=requiredFields[fromStep];
   if(!fields)return true;
   for(let f of fields){
     const el=document.getElementById(f.id);
     if(!el||!el.value||el.value===''){
+      el?.setAttribute('data-error','This field is required');
+      el?.classList.add('field-error');
       el?.focus();
       el?.scrollIntoView({behavior:'smooth',block:'center'});
-      alert('Please fill in all required fields (marked with *)');
+      el?.addEventListener('input',()=>{el.removeAttribute('data-error');el.classList.remove('field-error');});
+      el?.addEventListener('change',()=>{el.removeAttribute('data-error');el.classList.remove('field-error');});
       return false;
     }
   }
