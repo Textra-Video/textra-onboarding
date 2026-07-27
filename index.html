@@ -1430,7 +1430,28 @@ function initDefaultSceneDefaults(){
   }
 }
 
+function validateStep(fromStep){
+  const requiredFields={
+    1.5:[{id:'fullName'},{id:'companyName'},{id:'email'},{id:'industry'},{id:'projectName'}],
+    2:[{id:'hex1'},{id:'hex2'},{id:'hex3'}],
+    4:[{id:'c1gender'},{id:'c1age'},{id:'c1eth'},{id:'c1clothing'},{id:'c1accent'},{id:'c2gender'},{id:'c2age'},{id:'c2eth'},{id:'c2clothing'},{id:'c2accent'}],
+    5:[{id:'scenedesc'}]
+  };
+  const fields=requiredFields[fromStep];
+  if(!fields)return true;
+  for(let f of fields){
+    const el=document.getElementById(f.id);
+    if(!el||!el.value||el.value===''){
+      el?.focus();
+      el?.scrollIntoView({behavior:'smooth',block:'center'});
+      alert('Please fill in all required fields (marked with *)');
+      return false;
+    }
+  }
+  return true;
+}
 function goTo(n){
+  if(n>cur&&!validateStep(cur))return;
   if(cur!==n){try{var iframe=document.getElementById('textraVimeo');if(iframe){new Vimeo.Player(iframe).pause();}}catch(e){}}
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   var pageId=(n===1.5)?'page1pt5':'page'+n;
