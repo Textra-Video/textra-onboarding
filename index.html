@@ -2976,7 +2976,10 @@ function submitScriptOwn(btn){
   // Show success after 3 seconds, let submission continue in background
   setTimeout(function(){
     if(window._scriptSubmitInterval) clearInterval(window._scriptSubmitInterval);
-    if(btn){btn.textContent='✓ Script submitted!';}
+    if(btn){
+      btn.disabled=false;
+      btn.textContent='✓ Script submitted!';
+    }
     var st=document.getElementById('successTitle');
     var ss=document.getElementById('successSub');
     if(st) st.textContent='Thank you for submitting your script!';
@@ -2999,6 +3002,8 @@ function submitScriptOwn(btn){
     }
   }).catch(function(err){
     console.error('Script submission error:', err.message);
+    _isSubmittingScript = false;
+    if(btn){btn.disabled=false;btn.textContent='Submit Script';}
   });
 }
 
