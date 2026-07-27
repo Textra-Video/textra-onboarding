@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1",
+    "axios": "^1.15.1",
+    "inngest": "^4.2.4",
+    "superpowers": "^0.0.2"
+  }
+}
