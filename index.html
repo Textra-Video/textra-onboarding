@@ -1068,7 +1068,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
         <div class="bg-opt" onclick="selBg(this,'Abstract / Brand')"><div class="bg-thumb custom">✦</div><div class="bg-name">Abstract / Brand</div></div>
         <div class="bg-opt" onclick="selBg(this,'Custom')"><div class="bg-thumb abstract">✏️</div><div class="bg-name">Custom — Describe</div></div>
       </div>
-      <div class="form-row" style="margin-top:10px"><div class="field"><label>Describe your scene <span class="req">*</span></label><textarea id="scenedesc" placeholder="e.g. Modern open-plan office, warm lighting, plants..." oninput="updateSidebar()" required></textarea></div></div>
+      <div class="form-row" style="margin-top:10px"><div class="field"><label>Describe your scene</label><textarea id="scenedesc" placeholder="e.g. Modern open-plan office, warm lighting, plants..." oninput="updateSidebar()"></textarea></div></div>
       <div class="field"><label>Scene Reference <span class="hint">— optional</span></label>
         <label class="upload-label" id="ul-scene" style="padding:12px">
           <input type="file" accept="image/*" style="display:none" onchange="handleUpload(this,'ul-scene','fn-scene')">
@@ -1484,8 +1484,7 @@ function validateStep(fromStep){
   const requiredFields={
     1.5:[{id:'fullName'},{id:'companyName'},{id:'email'},{id:'industry'},{id:'projectName'}],
     2:[{id:'hex1'},{id:'hex2'},{id:'hex3'}],
-    4:[{id:'c1gender'},{id:'c1age'},{id:'c1eth'},{id:'c1clothing'},{id:'c1accent'},{id:'c2gender'},{id:'c2age'},{id:'c2eth'},{id:'c2clothing'},{id:'c2accent'}],
-    5:[{id:'scenedesc'}]
+    4:[{id:'c1gender'},{id:'c1age'},{id:'c1eth'},{id:'c1clothing'},{id:'c1accent'},{id:'c2gender'},{id:'c2age'},{id:'c2eth'},{id:'c2clothing'},{id:'c2accent'}]
   };
   document.querySelectorAll('[data-error]').forEach(el=>el.removeAttribute('data-error'));
   const fields=requiredFields[fromStep];
