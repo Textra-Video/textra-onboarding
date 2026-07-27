@@ -623,7 +623,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     <p class="s-desc">We apply your colours, fonts and logo to every frame — consistently, across every video. Share your brand below and we'll take care of the rest.</p>
   </div>
   <div class="card">
-    <div class="card-head"><span class="step-pill">02</span> How would you like to share your brand?</div>
+    <div class="card-head"><span class="step-pill">02</span> How would you like to share your brand? <span class="req">*</span></div>
     <!-- Intro tip -->
     <div id="brandGuidelinesTip" style="background:var(--teal-soft);border:1px solid rgba(102,188,173,.3);border-radius:var(--radius-xs);padding:10px 13px;font-size:12px;color:var(--text-muted);line-height:1.6;margin-bottom:14px;display:none">
       💡 <strong style="color:var(--navy)">Most companies already have a brand guidelines document</strong> — a PDF or Word doc with your logo, colours and fonts. If you have one, upload it below. If not, fill in the details manually — it only takes 2 minutes.
@@ -1054,17 +1054,12 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
   <!-- ── 01 Scene Background ── -->
   <div class="card">
     <div class="card-head">
-      <span class="step-pill">07</span> Scene Background
+      <span class="step-pill">07</span> Scene Background <span class="req">*</span>
       <span class="tip" data-tip="For your first template you need a background. Tell us what you'd like it to be — a classroom, a workspace, a public space? Our art team will create it to fit your brand.">?</span>
     </div>
 
-    <!-- Single option: Describe your own -->
-    <button id="tog-scene-own" onclick="sceneMethod('own')" style="padding:12px 16px;border:2px solid var(--teal2);border-radius:var(--radius-xs);background:var(--teal-soft);color:var(--navy);font-family:Inter,sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:16px;width:100%">
-      <span style="font-size:16px">✏️</span><span>Describe your own</span>
-    </button>
-
-    <!-- Panel A: Describe your own (hidden until user selects) -->
-    <div id="sm-own" style="display:none">
+    <!-- Scene Background Options -->
+    <div id="sm-own">
       <div class="bg-grid" id="bgGrid">
         <div class="bg-opt" onclick="selBg(this,'Office / Workspace')"><div class="bg-thumb office">🖥️</div><div class="bg-name">Office / Workspace</div></div>
         <div class="bg-opt" onclick="selBg(this,'Classroom / Training')"><div class="bg-thumb classroom">📚</div><div class="bg-name">Classroom / Training</div></div>
@@ -1434,6 +1429,28 @@ function initDefaultSceneDefaults(){
 }
 
 function validateStep(fromStep){
+  // Special validations for specific steps
+  if(fromStep===2){
+    if(!document.querySelector('[id*="ul-"]') || !document.querySelector('[id*="ul-"]').textContent.includes('uploaded')){
+      const msg=document.createElement('div');
+      msg.setAttribute('data-error','Select a brand sharing method (Guidelines, URL, or Logo)');
+      alert('Please select how you want to share your brand');
+      return false;
+    }
+  }
+  if(fromStep===3){
+    if(!document.querySelector('.grid .cc.sel')){
+      alert('Please select a design style');
+      return false;
+    }
+  }
+  if(fromStep===5){
+    const bgSel=document.querySelector('[id*="bg"] .bg-opt.sel');
+    if(!bgSel){
+      alert('Please select a scene background');
+      return false;
+    }
+  }
   const requiredFields={
     1.5:[{id:'fullName'},{id:'companyName'},{id:'email'},{id:'industry'},{id:'projectName'}],
     2:[{id:'hex1'},{id:'hex2'},{id:'hex3'}],
