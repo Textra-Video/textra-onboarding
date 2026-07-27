@@ -540,17 +540,17 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
   <div class="card">
     <div class="card-head"><span class="step-pill">01</span> Contact Information</div>
     <div class="form-row c2">
-      <div class="field"><label>Full Name <span class="req">*</span></label><input type="text" id="fullName" placeholder="Jane Smith" oninput="updateSidebar()"></div>
-      <div class="field"><label>Company Name <span class="req">*</span></label><input type="text" id="companyName" placeholder="Acme Corporation" oninput="autoFillProject();updateSidebar()"></div>
+      <div class="field"><label>Full Name <span class="req">*</span></label><input type="text" id="fullName" placeholder="Jane Smith" oninput="updateSidebar()" required></div>
+      <div class="field"><label>Company Name <span class="req">*</span></label><input type="text" id="companyName" placeholder="Acme Corporation" oninput="autoFillProject();updateSidebar()" required></div>
     </div>
     <div class="form-row c2">
-      <div class="field"><label>Email <span class="req">*</span></label><input type="email" id="email" placeholder="jane@acme.com" oninput="updateSidebar()"></div>
+      <div class="field"><label>Email <span class="req">*</span></label><input type="email" id="email" placeholder="jane@acme.com" oninput="updateSidebar()" required></div>
       <div class="field"><label>Phone</label><input type="tel" id="phone" placeholder="+44 7700 900000" oninput="updateSidebar()"></div>
     </div>
     <div class="form-row c2">
       <div class="field">
         <label>Industry <span class="req">*</span></label>
-        <select id="industry" onchange="updateSidebar()">
+        <select id="industry" onchange="updateSidebar()" required>
           <option value="">— Select your industry —</option>
           <optgroup label="Business &amp; Finance">
             <option>Financial Services</option>
@@ -602,7 +602,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       </div>
       <div class="field">
         <label>Project Name <span class="req">*</span><span class="hint">— auto-filled, editable</span></label>
-        <input type="text" id="projectName" placeholder="e.g. Acme_TV_21.03.2026" oninput="updateSidebar()">
+        <input type="text" id="projectName" placeholder="e.g. Acme_TV_21.03.2026" oninput="updateSidebar()" required>
       </div>
     </div>
   </div>
@@ -711,19 +711,19 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
         <div class="field"><label>Primary Colour</label>
           <div class="color-row">
             <label class="cswatch"><input type="color" value="#273572" oninput="updSwatch('cp1',this.value);syncHex('hex1',this.value);updateSidebar();updateManualPreview()"><div class="cprev" id="cp1" style="background:#273572"></div></label>
-            <input type="text" id="hex1" value="#273572" placeholder="#000000" style="flex:1" oninput="syncCol('cp1',this.value);updateSidebar();updateManualPreview()">
+            <input type="text" id="hex1" value="#273572" placeholder="#000000" required style="flex:1" oninput="syncCol('cp1',this.value);updateSidebar();updateManualPreview()">
           </div>
         </div>
         <div class="field"><label>Secondary Colour</label>
           <div class="color-row">
             <label class="cswatch"><input type="color" value="#1A71B1" oninput="updSwatch('cp2',this.value);syncHex('hex2',this.value);updateSidebar();updateManualPreview()"><div class="cprev" id="cp2" style="background:#1A71B1"></div></label>
-            <input type="text" id="hex2" value="#1A71B1" placeholder="#000000" style="flex:1" oninput="syncCol('cp2',this.value);updateSidebar();updateManualPreview()">
+            <input type="text" id="hex2" value="#1A71B1" placeholder="#000000" required style="flex:1" oninput="syncCol('cp2',this.value);updateSidebar();updateManualPreview()">
           </div>
         </div>
         <div class="field"><label>Accent Colour</label>
           <div class="color-row">
             <label class="cswatch"><input type="color" value="#66BCAD" oninput="updSwatch('cp3',this.value);syncHex('hex3',this.value);updateSidebar();updateManualPreview()"><div class="cprev" id="cp3" style="background:#66BCAD"></div></label>
-            <input type="text" id="hex3" value="#66BCAD" placeholder="#000000" style="flex:1" oninput="syncCol('cp3',this.value);updateSidebar();updateManualPreview()">
+            <input type="text" id="hex3" value="#66BCAD" placeholder="#000000" required style="flex:1" oninput="syncCol('cp3',this.value);updateSidebar();updateManualPreview()">
           </div>
         </div>
       </div>
@@ -780,7 +780,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 <div class="page" id="page3">
   <div class="section-head">
     <div class="s-eyebrow">Step 3 of 5 — Your Style</div>
-    <h1 class="s-title">Choose Your Style</h1>
+    <h1 class="s-title">Choose Your Style <span class="req">*</span></h1>
     <p class="s-desc">Select the design style that best matches your brand aesthetic. Our team will bring your content to life with your chosen style.</p>
   </div>
 
@@ -870,8 +870,8 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 
     <div class="form-row c2">
       <div class="field field-with-other">
-        <label>Gender <span class="tip" data-tip="Choose the gender presentation for this character.">?</span></label>
-        <select id="c1gender" onchange="handleOther(this,'c1gender_other');updateSidebar()">
+        <label>Gender <span class="req">*</span> <span class="tip" data-tip="Choose the gender presentation for this character.">?</span></label>
+        <select id="c1gender" required onchange="handleOther(this,'c1gender_other');updateSidebar()">
           <option value="">— Select —</option>
           <option>Female</option><option>Male</option><option>Non-binary</option>
           <option>Let Textra decide</option><option value="other">Other — describe below</option>
@@ -879,8 +879,8 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
         <div class="other-input" id="c1gender_other"><input type="text" placeholder="Describe gender presentation…" oninput="updateSidebar()"></div>
       </div>
       <div class="field field-with-other">
-        <label>Age Range <span class="tip" data-tip="The approximate age of the character. This affects face design, posture and clothing style.">?</span></label>
-        <select id="c1age" onchange="handleOther(this,'c1age_other');updateSidebar()">
+        <label>Age Range <span class="req">*</span> <span class="tip" data-tip="The approximate age of the character. This affects face design, posture and clothing style.">?</span></label>
+        <select id="c1age" required onchange="handleOther(this,'c1age_other');updateSidebar()">
           <option value="">— Select —</option>
           <option>18–25</option><option>26–35</option><option>36–45</option><option>46–55</option><option>55+</option>
           <option>Let Textra decide</option><option value="other">Other — describe below</option>
@@ -890,8 +890,8 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     </div>
     <div class="form-row c2">
       <div class="field field-with-other">
-        <label>Ethnicity <span class="tip" data-tip="Helps our designers create a character that reflects the diversity of your audience or team.">?</span></label>
-        <select id="c1eth" onchange="handleOther(this,'c1eth_other');updateSidebar()">
+        <label>Ethnicity <span class="req">*</span> <span class="tip" data-tip="Helps our designers create a character that reflects the diversity of your audience or team.">?</span></label>
+        <select id="c1eth" required onchange="handleOther(this,'c1eth_other');updateSidebar()">
           <option value="">— Select —</option>
           <option>East Asian</option><option>South Asian</option><option>Black / African</option>
           <option>Mixed / Multiracial</option><option>White / European</option>
@@ -903,8 +903,8 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     </div>
     <div class="form-row">
       <div class="field field-with-other">
-        <label>Clothing <span class="tip" data-tip="What the character wears. Smart/formal works well for corporate brands; casual suits softer tones.">?</span></label>
-        <select id="c1clothing" onchange="handleOther(this,'c1clothing_other');updateSidebar()">
+        <label>Clothing <span class="req">*</span> <span class="tip" data-tip="What the character wears. Smart/formal works well for corporate brands; casual suits softer tones.">?</span></label>
+        <select id="c1clothing" required onchange="handleOther(this,'c1clothing_other');updateSidebar()">
           <option value="">— Select —</option>
           <option>Smart / Business formal</option><option>Business casual</option>
           <option>Casual / Everyday</option><option>Uniform</option>
@@ -916,8 +916,8 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     </div>
     <div class="form-row c2">
       <div class="field field-with-other">
-        <label>Voice Accent <span class="tip" data-tip="The accent used when this character speaks. Used for voice generation.">?</span></label>
-        <select id="c1accent" onchange="handleOther(this,'c1accent_other');updateSidebar()">
+        <label>Voice Accent <span class="req">*</span> <span class="tip" data-tip="The accent used when this character speaks. Used for voice generation.">?</span></label>
+        <select id="c1accent" required onchange="handleOther(this,'c1accent_other');updateSidebar()">
           <option value="">— Select —</option>
           <option>British (Standard)</option><option>American (Neutral)</option>
           <option>Australian</option><option>Irish</option><option>South African</option>
@@ -957,8 +957,8 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
 
     <div class="form-row c2">
       <div class="field field-with-other">
-        <label>Gender <span class="tip" data-tip="Choose the gender presentation for this character.">?</span></label>
-        <select id="c2gender" onchange="handleOther(this,'c2gender_other');updateSidebar()">
+        <label>Gender <span class="req">*</span> <span class="tip" data-tip="Choose the gender presentation for this character.">?</span></label>
+        <select id="c2gender" required onchange="handleOther(this,'c2gender_other');updateSidebar()">
           <option value="">— Select —</option>
           <option>Female</option><option>Male</option><option>Non-binary</option>
           <option>Let Textra decide</option><option value="other">Other — describe below</option>
@@ -966,8 +966,8 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
         <div class="other-input" id="c2gender_other"><input type="text" placeholder="Describe gender presentation…" oninput="updateSidebar()"></div>
       </div>
       <div class="field field-with-other">
-        <label>Age Range <span class="tip" data-tip="The approximate age of the character. This affects face design, posture and clothing style.">?</span></label>
-        <select id="c2age" onchange="handleOther(this,'c2age_other');updateSidebar()">
+        <label>Age Range <span class="req">*</span> <span class="tip" data-tip="The approximate age of the character. This affects face design, posture and clothing style.">?</span></label>
+        <select id="c2age" required onchange="handleOther(this,'c2age_other');updateSidebar()">
           <option value="">— Select —</option>
           <option>18–25</option><option>26–35</option><option>36–45</option><option>46–55</option><option>55+</option>
           <option>Let Textra decide</option><option value="other">Other — describe below</option>
@@ -977,8 +977,8 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     </div>
     <div class="form-row c2">
       <div class="field field-with-other">
-        <label>Ethnicity <span class="tip" data-tip="Helps our designers create a character that reflects the diversity of your audience or team.">?</span></label>
-        <select id="c2eth" onchange="handleOther(this,'c2eth_other');updateSidebar()">
+        <label>Ethnicity <span class="req">*</span> <span class="tip" data-tip="Helps our designers create a character that reflects the diversity of your audience or team.">?</span></label>
+        <select id="c2eth" required onchange="handleOther(this,'c2eth_other');updateSidebar()">
           <option value="">— Select —</option>
           <option>East Asian</option><option>South Asian</option><option>Black / African</option>
           <option>Mixed / Multiracial</option><option>White / European</option>
@@ -990,8 +990,8 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     </div>
     <div class="form-row">
       <div class="field field-with-other">
-        <label>Clothing <span class="tip" data-tip="What the character wears. Smart/formal works well for corporate brands; casual suits softer tones.">?</span></label>
-        <select id="c2clothing" onchange="handleOther(this,'c2clothing_other');updateSidebar()">
+        <label>Clothing <span class="req">*</span> <span class="tip" data-tip="What the character wears. Smart/formal works well for corporate brands; casual suits softer tones.">?</span></label>
+        <select id="c2clothing" required onchange="handleOther(this,'c2clothing_other');updateSidebar()">
           <option value="">— Select —</option>
           <option>Smart / Business formal</option><option>Business casual</option>
           <option>Casual / Everyday</option><option>Uniform</option>
@@ -1003,8 +1003,8 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     </div>
     <div class="form-row c2">
       <div class="field field-with-other">
-        <label>Voice Accent <span class="tip" data-tip="The accent used when this character speaks. Used for voice generation.">?</span></label>
-        <select id="c2accent" onchange="handleOther(this,'c2accent_other');updateSidebar()">
+        <label>Voice Accent <span class="req">*</span> <span class="tip" data-tip="The accent used when this character speaks. Used for voice generation.">?</span></label>
+        <select id="c2accent" required onchange="handleOther(this,'c2accent_other');updateSidebar()">
           <option value="">— Select —</option>
           <option>British (Standard)</option><option>American (Neutral)</option>
           <option>Australian</option><option>Irish</option><option>South African</option>
@@ -1070,7 +1070,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
         <div class="bg-opt" onclick="selBg(this,'Abstract / Brand')"><div class="bg-thumb custom">✦</div><div class="bg-name">Abstract / Brand</div></div>
         <div class="bg-opt" onclick="selBg(this,'Custom')"><div class="bg-thumb abstract">✏️</div><div class="bg-name">Custom — Describe</div></div>
       </div>
-      <div class="form-row" style="margin-top:10px"><div class="field"><label>Describe your scene</label><textarea id="scenedesc" placeholder="e.g. Modern open-plan office, warm lighting, plants..." oninput="updateSidebar()"></textarea></div></div>
+      <div class="form-row" style="margin-top:10px"><div class="field"><label>Describe your scene <span class="req">*</span></label><textarea id="scenedesc" placeholder="e.g. Modern open-plan office, warm lighting, plants..." oninput="updateSidebar()" required></textarea></div></div>
       <div class="field"><label>Scene Reference <span class="hint">— optional</span></label>
         <label class="upload-label" id="ul-scene" style="padding:12px">
           <input type="file" accept="image/*" style="display:none" onchange="handleUpload(this,'ul-scene','fn-scene')">
@@ -1107,7 +1107,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
   <!-- ── 03 Background Music ── -->
   <div class="card">
     <div class="card-head">
-      <span class="step-pill">08</span> Background Music
+      <span class="step-pill">08</span> Background Music <span class="req">*</span>
       <span class="tip" data-tip="Music will play quietly beneath the characters as they talk. This helps set the tone of the video and keep it moving along.">?</span>
     </div>
     <div class="music-grid" id="musicGrid">
@@ -1166,8 +1166,8 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     <!-- Write Your Own Script Tab -->
     <div id="scriptModeOwn">
       <div style="margin-bottom:24px">
-        <label style="display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">Video Title</label>
-        <input type="text" id="scriptTitlePage8" placeholder="e.g. Welcome to the Team" oninput="updateSidebar()" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:Arial,sans-serif">
+        <label style="display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">Video Title <span class="req">*</span></label>
+        <input type="text" id="scriptTitlePage8" placeholder="e.g. Welcome to the Team" oninput="updateSidebar()" required style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:Arial,sans-serif">
       </div>
 
       <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
@@ -1180,8 +1180,8 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px">Video Settings</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
         <div>
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Tone</label>
-          <select id="scriptTone" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif" onchange="toggleCustomInput('scriptTone','scriptToneCustom')">
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Tone <span class="req">*</span></label>
+          <select id="scriptTone" required style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif" onchange="toggleCustomInput('scriptTone','scriptToneCustom')">
             <option value="">Select tone</option>
             <option value="light-hearted">Light Hearted</option>
             <option value="serious">Serious</option>
@@ -1190,8 +1190,8 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
           <input type="text" id="scriptToneCustom" placeholder="Enter custom tone" style="display:none;width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;margin-top:6px;">
         </div>
         <div>
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Style</label>
-          <select id="scriptStyle" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif" onchange="toggleCustomInput('scriptStyle','scriptStyleCustom')">
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Style <span class="req">*</span></label>
+          <select id="scriptStyle" required style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif" onchange="toggleCustomInput('scriptStyle','scriptStyleCustom')">
             <option value="">Select style</option>
             <option value="presenters">Presenters to Camera</option>
             <option value="actors">Actors Roleplaying</option>
@@ -1229,7 +1229,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     <!-- Done for You Tab - Give us your brief -->
     <div id="scriptModeAI" style="display:none">
       <div style="margin-bottom:24px">
-        <label style="display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">Video Title</label>
+        <label style="display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">Video Title <span class="req">*</span></label>
         <input type="text" id="aiBriefTitle" placeholder="e.g. Product Launch Video" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:Arial,sans-serif">
       </div>
 
