@@ -1769,10 +1769,14 @@ function toggleAudio(btn){
   const allAudios = document.querySelectorAll('#musicGrid audio');
   const allBtns = document.querySelectorAll('.music-play');
 
-  allAudios.forEach(a=>a.pause());
-  allBtns.forEach(b=>b.textContent='▶');
+  const isThisPlaying = !audio.paused;
 
-  if(audio && audio.paused){
+  if(isThisPlaying){
+    audio.pause();
+    btn.textContent='▶';
+  } else {
+    allAudios.forEach(a=>a.pause());
+    allBtns.forEach(b=>b.textContent='▶');
     audio.play();
     btn.textContent='⏸';
   }
