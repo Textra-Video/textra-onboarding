@@ -2941,6 +2941,32 @@ function submitScriptOwn(btn){
   var tonalVal = document.getElementById('scriptTone').value;
   var styleVal = document.getElementById('scriptStyle').value;
 
+  // Validate Tone
+  var toneEl = document.getElementById('scriptTone');
+  if(!tonalVal || tonalVal === ''){
+    _isSubmittingScript = false;
+    if(toneEl){
+      toneEl.setAttribute('data-error','Please select a tone');
+      toneEl.classList.add('field-error');
+      toneEl.scrollIntoView({behavior:'smooth',block:'center'});
+      toneEl.addEventListener('change',()=>{toneEl.removeAttribute('data-error');toneEl.classList.remove('field-error');});
+    }
+    return;
+  }
+
+  // Validate Style
+  var styleEl = document.getElementById('scriptStyle');
+  if(!styleVal || styleVal === ''){
+    _isSubmittingScript = false;
+    if(styleEl){
+      styleEl.setAttribute('data-error','Please select a style');
+      styleEl.classList.add('field-error');
+      styleEl.scrollIntoView({behavior:'smooth',block:'center'});
+      styleEl.addEventListener('change',()=>{styleEl.removeAttribute('data-error');styleEl.classList.remove('field-error');});
+    }
+    return;
+  }
+
   var payload={
     action:'submitScript',
     portalToken:getPortalToken(),
