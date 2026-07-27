@@ -1475,6 +1475,16 @@ function validateStep(fromStep){
       alert('Please select a scene background');
       return false;
     }
+    const scenedesc=document.getElementById('scenedesc')?.value?.trim();
+    if(!scenedesc){
+      alert('Please describe your scene');
+      return false;
+    }
+    const musicSel=document.querySelector('#musicGrid .music-opt.sel');
+    if(!musicSel){
+      alert('Please select background music');
+      return false;
+    }
   }
   const requiredFields={
     1.5:[{id:'fullName'},{id:'companyName'},{id:'email'},{id:'industry'},{id:'projectName'}],
@@ -3824,7 +3834,6 @@ function buildReview(){
     '<div class="review-grid">'+
       '<div class="review-item"><div class="review-label">Background</div>'+rv(bgLabel)+'</div>'+
       '<div class="review-item"><div class="review-label">Scene Notes</div>'+rv(document.getElementById('scenedesc').value)+'</div>'+
-      '<div class="review-item"><div class="review-label">Title Screen</div>'+rv(selTitleBg?selTitleBg.textContent:'')+'</div>'+
       '<div class="review-item"><div class="review-label">Music</div>'+rv(selMusic?selMusic.textContent:'')+'</div>'+
       '<div class="review-item"><div class="review-label">Music Reference Track</div>'+rv(document.getElementById('musicTrackUrl').value)+'</div>'+
       '<div class="review-item"><div class="review-label">Music Notes</div>'+rv(document.getElementById('musicNotes').value)+'</div>'+
