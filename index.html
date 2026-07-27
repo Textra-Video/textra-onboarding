@@ -2919,10 +2919,17 @@ function submitScript(){
 }
 
 function submitScriptOwn(btn){
-  var title=document.getElementById('scriptTitlePage8')&&document.getElementById('scriptTitlePage8').value;
+  var titleEl=document.getElementById('scriptTitlePage8');
+  var title=titleEl&&titleEl.value;
   if(!title||!title.trim()){
     _isSubmittingScript = false;
-    alert('Please add a video title before submitting.');
+    if(titleEl){
+      titleEl.setAttribute('data-error','Please add a video title');
+      titleEl.classList.add('field-error');
+      titleEl.scrollIntoView({behavior:'smooth',block:'center'});
+      titleEl.addEventListener('input',()=>{titleEl.removeAttribute('data-error');titleEl.classList.remove('field-error');});
+      titleEl.addEventListener('change',()=>{titleEl.removeAttribute('data-error');titleEl.classList.remove('field-error');});
+    }
     return;
   }
   if(!state.scriptBlocks.length){
