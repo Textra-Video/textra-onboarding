@@ -2903,18 +2903,24 @@ function renderScriptBlocks(){
 var _isSubmittingScript = false;
 
 function submitScript(){
-  // Prevent double-submit: if already submitting, ignore this call
-  if(_isSubmittingScript) return;
-  _isSubmittingScript = true;
+  try {
+    // Prevent double-submit: if already submitting, ignore this call
+    if(_isSubmittingScript) return;
+    _isSubmittingScript = true;
 
-  var btn=document.getElementById('submitScriptBtn');
-  var modeOwnContent = document.getElementById('scriptModeOwn');
-  var isOwnMode = modeOwnContent && modeOwnContent.style.display !== 'none';
+    var btn=document.getElementById('submitScriptBtn');
+    var modeOwnContent = document.getElementById('scriptModeOwn');
+    var isOwnMode = modeOwnContent && modeOwnContent.style.display !== 'none';
 
-  if(isOwnMode){
-    submitScriptOwn(btn);
-  } else {
-    submitScriptBrief(btn);
+    if(isOwnMode){
+      submitScriptOwn(btn);
+    } else {
+      submitScriptBrief(btn);
+    }
+  } catch(err) {
+    console.error('Script submission error:', err);
+    _isSubmittingScript = false;
+    alert('Error: '+err.message);
   }
 }
 
