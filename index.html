@@ -1475,11 +1475,6 @@ function validateStep(fromStep){
       alert('Please select a scene background');
       return false;
     }
-    const scenedesc=document.getElementById('scenedesc')?.value?.trim();
-    if(!scenedesc){
-      alert('Please describe your scene');
-      return false;
-    }
     const musicSel=document.querySelector('#musicGrid .music-opt.sel');
     if(!musicSel){
       alert('Please select background music');
