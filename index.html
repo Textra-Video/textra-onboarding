@@ -150,7 +150,7 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .music-opt:hover{border-color:rgba(102,188,173,.5);background:var(--teal-soft)}
 .music-opt.sel{border-color:var(--teal2);background:var(--teal-soft);box-shadow:0 0 0 2px rgba(102,188,173,.15)}
 .music-ico{font-size:16px}.music-lbl{font-size:12px;font-weight:600;color:var(--navy);display:inline}.music-desc{font-size:10px;color:var(--text-muted);display:inline}.music-desc::before{content:' — '}
-audio{width:50px!important;min-width:50px!important}
+.music-play{background:none;border:none;color:var(--teal2);font-size:12px;cursor:pointer;padding:2px 6px;transition:all .2s;display:inline-block;margin-left:4px}.music-play:hover{color:var(--teal);transform:scale(1.2)}
 
 /* ── UPLOAD ── */
 .upload-label{display:block;border:1.5px dashed rgba(102,188,173,.4);border-radius:var(--radius-sm);padding:18px;text-align:center;cursor:pointer;transition:all .2s;background:var(--teal-soft)}
@@ -1111,14 +1111,14 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       <span class="tip" data-tip="Music will play quietly beneath the characters as they talk. This helps set the tone of the video and keep it moving along.">?</span>
     </div>
     <div class="music-grid" id="musicGrid">
-      <div class="music-opt" onclick="selMusic(this,'Orchestral Upbeat')"><div class="music-ico">🎻</div><div><div class="music-lbl">Orchestral Upbeat</div><div class="music-desc">Grand, energetic</div></div><audio preload="metadata" src="https://res.cloudinary.com/oyo7xls1/video/upload/v1785150609/compressed_Orchestral_Upbeat_zrvm5a.mp3" style="width:100%;height:24px;margin-top:8px" controls></audio></div>
-      <div class="music-opt" onclick="selMusic(this,'Orchestral Serious')"><div class="music-ico">🎻</div><div><div class="music-lbl">Orchestral Serious</div><div class="music-desc">Grand, emotive</div></div><audio preload="metadata" src="https://res.cloudinary.com/oyo7xls1/video/upload/v1785150608/compressed_Orchestral_Serious_v1klab.mp3" style="width:100%;height:24px;margin-top:8px" controls></audio></div>
-      <div class="music-opt" onclick="selMusic(this,'Indie Inspiring')"><div class="music-ico">🎸</div><div><div class="music-lbl">Indie Inspiring</div><div class="music-desc">Human, uplifting</div></div><audio preload="metadata" src="https://res.cloudinary.com/oyo7xls1/video/upload/v1785150608/compressed_Indie_Inspiring_Uplifting_mgyytm.mp3" style="width:100%;height:24px;margin-top:8px" controls></audio></div>
-      <div class="music-opt" onclick="selMusic(this,'Indie Folk')"><div class="music-ico">🎸</div><div><div class="music-lbl">Indie Folk</div><div class="music-desc">Warm, friendly</div></div><audio preload="metadata" src="https://res.cloudinary.com/oyo7xls1/video/upload/v1785150608/compressed_Indie_Folk_Inspiring_Uplifting_ybrdby.mp3" style="width:100%;height:24px;margin-top:8px" controls></audio></div>
-      <div class="music-opt" onclick="selMusic(this,'EDM Uplifting Slow')"><div class="music-ico">⚡</div><div><div class="music-lbl">EDM Uplifting Slow</div><div class="music-desc">Modern, calm groove</div></div><audio preload="metadata" src="https://res.cloudinary.com/oyo7xls1/video/upload/v1785150609/compressed_EDM_uplifting_slow_wzzhdk.mp3" style="width:100%;height:24px;margin-top:8px" controls></audio></div>
-      <div class="music-opt" onclick="selMusic(this,'EDM Uplifting Fast')"><div class="music-ico">⚡</div><div><div class="music-lbl">EDM Uplifting Fast</div><div class="music-desc">Energetic, bold</div></div><audio preload="metadata" src="https://res.cloudinary.com/oyo7xls1/video/upload/v1785150608/compressed_EDM_uplifting_fast_kiuucu.mp3" style="width:100%;height:24px;margin-top:8px" controls></audio></div>
-      <div class="music-opt" onclick="selMusic(this,'EDM Serious')"><div class="music-ico">⚡</div><div><div class="music-lbl">EDM Serious</div><div class="music-desc">Intense, dramatic</div></div><audio preload="metadata" src="https://res.cloudinary.com/oyo7xls1/video/upload/v1785150608/compressed_EDM_Serious_tpgqse.mp3" style="width:100%;height:24px;margin-top:8px" controls></audio></div>
-      <div class="music-opt" onclick="selMusic(this,'EDM Relaxed')"><div class="music-ico">⚡</div><div><div class="music-lbl">EDM Relaxed</div><div class="music-desc">Chill, ambient</div></div><audio preload="metadata" src="https://res.cloudinary.com/oyo7xls1/video/upload/v1785150612/compressed_EDM_Relaxed_slow_zwryca.mp3" style="width:100%;height:24px;margin-top:8px" controls></audio></div>
+      <div class="music-opt" onclick="selMusic(this,'Orchestral Upbeat')"><div class="music-ico">🎻</div><div><div class="music-lbl">Orchestral Upbeat</div><div class="music-desc">Grand, energetic</div><button class="music-play" onclick="event.stopPropagation();toggleAudio(this)">▶</button></div><audio preload="metadata" src="https://res.cloudinary.com/oyo7xls1/video/upload/v1785150609/compressed_Orchestral_Upbeat_zrvm5a.mp3"></audio></div>
+      <div class="music-opt" onclick="selMusic(this,'Orchestral Serious')"><div class="music-ico">🎻</div><div><div class="music-lbl">Orchestral Serious</div><div class="music-desc">Grand, emotive</div><button class="music-play" onclick="event.stopPropagation();toggleAudio(this)">▶</button></div><audio preload="metadata" src="https://res.cloudinary.com/oyo7xls1/video/upload/v1785150608/compressed_Orchestral_Serious_v1klab.mp3"></audio></div>
+      <div class="music-opt" onclick="selMusic(this,'Indie Inspiring')"><div class="music-ico">🎸</div><div><div class="music-lbl">Indie Inspiring</div><div class="music-desc">Human, uplifting</div><button class="music-play" onclick="event.stopPropagation();toggleAudio(this)">▶</button></div><audio preload="metadata" src="https://res.cloudinary.com/oyo7xls1/video/upload/v1785150608/compressed_Indie_Inspiring_Uplifting_mgyytm.mp3"></audio></div>
+      <div class="music-opt" onclick="selMusic(this,'Indie Folk')"><div class="music-ico">🎸</div><div><div class="music-lbl">Indie Folk</div><div class="music-desc">Warm, friendly</div><button class="music-play" onclick="event.stopPropagation();toggleAudio(this)">▶</button></div><audio preload="metadata" src="https://res.cloudinary.com/oyo7xls1/video/upload/v1785150608/compressed_Indie_Folk_Inspiring_Uplifting_ybrdby.mp3"></audio></div>
+      <div class="music-opt" onclick="selMusic(this,'EDM Uplifting Slow')"><div class="music-ico">⚡</div><div><div class="music-lbl">EDM Uplifting Slow</div><div class="music-desc">Modern, calm groove</div><button class="music-play" onclick="event.stopPropagation();toggleAudio(this)">▶</button></div><audio preload="metadata" src="https://res.cloudinary.com/oyo7xls1/video/upload/v1785150609/compressed_EDM_uplifting_slow_wzzhdk.mp3"></audio></div>
+      <div class="music-opt" onclick="selMusic(this,'EDM Uplifting Fast')"><div class="music-ico">⚡</div><div><div class="music-lbl">EDM Uplifting Fast</div><div class="music-desc">Energetic, bold</div><button class="music-play" onclick="event.stopPropagation();toggleAudio(this)">▶</button></div><audio preload="metadata" src="https://res.cloudinary.com/oyo7xls1/video/upload/v1785150608/compressed_EDM_uplifting_fast_kiuucu.mp3"></audio></div>
+      <div class="music-opt" onclick="selMusic(this,'EDM Serious')"><div class="music-ico">⚡</div><div><div class="music-lbl">EDM Serious</div><div class="music-desc">Intense, dramatic</div><button class="music-play" onclick="event.stopPropagation();toggleAudio(this)">▶</button></div><audio preload="metadata" src="https://res.cloudinary.com/oyo7xls1/video/upload/v1785150608/compressed_EDM_Serious_tpgqse.mp3"></audio></div>
+      <div class="music-opt" onclick="selMusic(this,'EDM Relaxed')"><div class="music-ico">⚡</div><div><div class="music-lbl">EDM Relaxed</div><div class="music-desc">Chill, ambient</div><button class="music-play" onclick="event.stopPropagation();toggleAudio(this)">▶</button></div><audio preload="metadata" src="https://res.cloudinary.com/oyo7xls1/video/upload/v1785150612/compressed_EDM_Relaxed_slow_zwryca.mp3"></audio></div>
     </div>
     <div class="field" style="margin-top:10px"><label>Reference track URL <span class="hint">— optional</span></label><input type="url" id="musicTrackUrl" placeholder="https://open.spotify.com/track/..." oninput="updateSidebar()"></div>
     <div class="field" style="margin-top:10px"><label>Notes <span class="hint">— optional</span> <span class="tip" data-tip="Any additional details about the music mood, tempo, instruments, or feeling you want for your video.">?</span></label><textarea id="musicNotes" placeholder="e.g. Upbeat and energetic, with piano and strings, tempo around 120 BPM…" oninput="updateSidebar()"></textarea></div>
@@ -1763,14 +1763,27 @@ function selMusic(el,name){
 }
 
 // Setup music audio control: pause all others when one plays
+function toggleAudio(btn){
+  const audio = btn.parentElement.nextElementSibling;
+  const allAudios = document.querySelectorAll('#musicGrid audio');
+  if(audio.paused){
+    allAudios.forEach(a=>a.pause());
+    audio.play();
+    btn.textContent='⏸';
+  }else{
+    audio.pause();
+    btn.textContent='▶';
+  }
+}
 function initMusicAudioControls(){
   const allAudios = document.querySelectorAll('#musicGrid audio');
   allAudios.forEach(audio=>{
-    // When this audio starts playing, pause all others
     audio.addEventListener('play', function(){
-      allAudios.forEach(otherAudio=>{
-        if(otherAudio !== audio) otherAudio.pause();
-      });
+      document.querySelectorAll('#musicGrid audio').forEach(a=>a!==audio&&a.pause());
+      this.parentElement.previousElementSibling.textContent='⏸';
+    });
+    audio.addEventListener('pause', function(){
+      this.parentElement.previousElementSibling.textContent='▶';
     });
   });
 }
