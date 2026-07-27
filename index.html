@@ -1464,7 +1464,7 @@ function validateStep(fromStep){
     }
   }
   if(fromStep===3){
-    if(!document.querySelector('.grid .cc.sel')){
+    if(!state.selectedStyle || state.selectedStyle === ''){
       alert('Please select a design style');
       return false;
     }
