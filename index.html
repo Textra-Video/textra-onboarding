@@ -1764,28 +1764,31 @@ function selMusic(el,name){
 
 // Setup music audio control: pause all others when one plays
 function toggleAudio(btn){
-  const audio = btn.parentElement.nextElementSibling;
+  const musicOpt = btn.closest('.music-opt');
+  const audio = musicOpt.querySelector('audio');
   const allAudios = document.querySelectorAll('#musicGrid audio');
-  if(audio.paused){
-    allAudios.forEach(a=>a.pause());
+  const allBtns = document.querySelectorAll('.music-play');
+
+  allAudios.forEach(a=>a.pause());
+  allBtns.forEach(b=>b.textContent='▶');
+
+  if(audio && audio.paused){
     audio.play();
     btn.textContent='⏸';
-  }else{
-    audio.pause();
-    btn.textContent='▶';
   }
 }
-function initMusicAudioControls(){
-  const allAudios = document.querySelectorAll('#musicGrid audio');
-  allAudios.forEach(audio=>{
-    audio.addEventListener('play', function(){
-      document.querySelectorAll('#musicGrid audio').forEach(a=>a!==audio&&a.pause());
-      this.parentElement.previousElementSibling.textContent='⏸';
-    });
-    audio.addEventListener('pause', function(){
-      this.parentElement.previousElementSibling.textContent='▶';
-    });
+function stopAllAudio(){
+  document.querySelectorAll('#musicGrid audio').forEach(a=>{
+    a.pause();
+    a.currentTime=0;
   });
+  document.querySelectorAll('.music-play').forEach(b=>b.textContent='▶');
+}
+function initMusicAudioControls(){
+  document.addEventListener('visibilitychange', ()=>{if(document.hidden) stopAllAudio();});
+  window.addEventListener('beforeunload', stopAllAudio);
+  window.addEventListener('pagehide', stopAllAudio);
+  if(navigator.sendBeacon) window.addEventListener('unload', stopAllAudio);
 }
 
 // ══ CHARACTER SECTION JS ══════════════════════════════════════
