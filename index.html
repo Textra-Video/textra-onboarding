@@ -1431,11 +1431,35 @@ function initDefaultSceneDefaults(){
 function validateStep(fromStep){
   // Special validations for specific steps
   if(fromStep===2){
-    const manualFilled=document.getElementById('hex1')?.value && document.getElementById('hex2')?.value && document.getElementById('hex3')?.value;
-    const urlFilled=document.getElementById('websiteUrl')?.value?.trim();
-    const guidelinesUploaded=document.getElementById('ul-guidelines')?.textContent.includes('uploaded');
-    if(!manualFilled && !urlFilled && !guidelinesUploaded){
-      alert('Please complete at least one brand sharing method: Fill in colors, enter a URL, or upload guidelines');
+    const manualBtn=document.getElementById('tog-manual');
+    const websiteBtn=document.getElementById('tog-website');
+    const guidelinesBtn=document.getElementById('tog-guidelines');
+
+    const manualSelected=manualBtn?.style.borderColor.includes('teal');
+    const websiteSelected=websiteBtn?.style.borderColor.includes('teal');
+    const guidelinesSelected=guidelinesBtn?.style.borderColor.includes('teal');
+
+    if(manualSelected){
+      const fontFilled=document.getElementById('fontSelect')?.value && document.getElementById('fontSelect').value !== '';
+      const colorsFilled=document.getElementById('hex1')?.value && document.getElementById('hex2')?.value && document.getElementById('hex3')?.value;
+      if(!fontFilled || !colorsFilled){
+        alert('Please select a font and fill in all 3 colors (Primary, Secondary, Accent)');
+        return false;
+      }
+    } else if(websiteSelected){
+      const urlFilled=document.getElementById('websiteUrl')?.value?.trim();
+      if(!urlFilled){
+        alert('Please enter your brand website URL');
+        return false;
+      }
+    } else if(guidelinesSelected){
+      const uploaded=document.getElementById('ul-guidelines')?.textContent.includes('uploaded');
+      if(!uploaded){
+        alert('Please upload your brand guidelines document');
+        return false;
+      }
+    } else {
+      alert('Please select one brand sharing method: Fill in Manually, Extract from URL, or Upload Guidelines');
       return false;
     }
   }
