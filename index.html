@@ -1431,10 +1431,11 @@ function initDefaultSceneDefaults(){
 function validateStep(fromStep){
   // Special validations for specific steps
   if(fromStep===2){
-    if(!document.querySelector('[id*="ul-"]') || !document.querySelector('[id*="ul-"]').textContent.includes('uploaded')){
-      const msg=document.createElement('div');
-      msg.setAttribute('data-error','Select a brand sharing method (Guidelines, URL, or Logo)');
-      alert('Please select how you want to share your brand');
+    const manualFilled=document.getElementById('hex1')?.value && document.getElementById('hex2')?.value && document.getElementById('hex3')?.value;
+    const urlFilled=document.getElementById('websiteUrl')?.value?.trim();
+    const guidelinesUploaded=document.getElementById('ul-guidelines')?.textContent.includes('uploaded');
+    if(!manualFilled && !urlFilled && !guidelinesUploaded){
+      alert('Please complete at least one brand sharing method: Fill in colors, enter a URL, or upload guidelines');
       return false;
     }
   }
