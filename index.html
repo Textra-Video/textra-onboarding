@@ -1758,6 +1758,8 @@ function selSceneLib(el, name){
 
 function selMusic(el,name){
   document.querySelectorAll('#musicGrid .music-opt').forEach(o=>o.classList.remove('sel'));
+  // Pause all audio players except the one being clicked
+  document.querySelectorAll('#musicGrid audio').forEach(audio=>{if(audio!==el.querySelector('audio')){audio.pause();}});
   el.classList.add('sel'); state.music=name; updateSidebar();
 }
 
@@ -1889,6 +1891,18 @@ function closeStyleModal(){
   const modal = document.getElementById('styleModal');
   if(modal) modal.style.display = 'none';
 }
+
+// Close style modal when clicking on backdrop (outside the modal card)
+document.addEventListener('DOMContentLoaded', function(){
+  const styleModal = document.getElementById('styleModal');
+  if(styleModal) {
+    styleModal.addEventListener('click', function(e){
+      if(e.target === styleModal) closeStyleModal();
+    });
+  }
+  // Preload audio metadata for consistent time display
+  document.querySelectorAll('audio').forEach(audio=>{audio.load();});
+});
 
 function prevStyle(){
   _currentStyleIdx = (_currentStyleIdx - 1 + _stylesList.length) % _stylesList.length;
