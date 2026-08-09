@@ -2943,9 +2943,9 @@ function submitScriptOwn(btn){
     alert('Please add at least one line before submitting.');
     return;
   }
-  var videoLengthVal = document.getElementById('videoLength').value;
-  var tonalVal = document.getElementById('scriptTone').value;
-  var styleVal = document.getElementById('scriptStyle').value;
+  var videoLengthVal = document.getElementById('videoLength')?.value || '';
+  var tonalVal = document.getElementById('scriptTone')?.value || '';
+  var styleVal = document.getElementById('scriptStyle')?.value || '';
 
   // Validate Tone
   var toneEl = document.getElementById('scriptTone');
