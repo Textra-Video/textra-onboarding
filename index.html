@@ -159,6 +159,8 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 .upload-label{display:block;border:1.5px dashed rgba(102,188,173,.4);border-radius:var(--radius-sm);padding:18px;text-align:center;cursor:pointer;transition:all .2s;background:var(--teal-soft)}
 .upload-label:hover{border-color:var(--teal2);background:#d9f2ef}
 .upload-label.has-file{border-style:solid;border-color:var(--teal2)}
+.upload-label.field-error{border-style:solid;border-color:#e74c3c!important;background:#fff5f5!important;box-shadow:0 0 0 3px rgba(231,76,60,.12)!important}
+.card.field-error-card{border-color:#e74c3c!important;box-shadow:0 0 0 3px rgba(231,76,60,.12)!important}
 .upload-ico{font-size:20px;margin-bottom:4px;pointer-events:none}
 .upload-txt{font-size:12px;font-weight:600;color:var(--text-muted);pointer-events:none}
 .upload-hint{font-size:11px;color:var(--text-dim);margin-top:2px;pointer-events:none}
@@ -530,7 +532,10 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       </div>
     </div>
   </div>
-  <div class="btn-row end"><button class="btn btn-primary" onclick="goTo(1.5)">Get Started →</button></div>
+  <div class="btn-row end" style="display:flex;gap:12px;justify-content:flex-end">
+    <button class="btn btn-ghost" onclick="window.location.href='/script'" style="border:1.5px solid var(--blue);color:var(--blue)">📝 Submit Script Only</button>
+    <button class="btn btn-primary" onclick="goTo(1.5)">Get Started →</button>
+  </div>
 </div>
 
 <!-- ══ PAGE 1.5: CONTACT ══ -->
@@ -609,6 +614,39 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
       </div>
     </div>
   </div>
+  <div class="card">
+    <div class="card-head">Project Requirements <span class="hint" style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--text-dim)">— optional, helps us plan your project</span></div>
+    <div class="form-row c2">
+      <div class="field">
+        <label>Timeframe / Deadline <span class="hint">— optional</span></label>
+        <input type="date" id="deadline" oninput="updateSidebar()">
+      </div>
+      <div class="field">
+        <label>Department / Category <span class="hint">— optional</span></label>
+        <input type="text" id="department" placeholder="e.g. Customer Service, HR, Marketing" oninput="updateSidebar()">
+      </div>
+    </div>
+    <div class="form-row c2">
+      <div class="field">
+        <label>Target Audience <span class="hint">— optional</span></label>
+        <input type="text" id="targetAudience" placeholder="e.g. New starters, customers, residents" oninput="updateSidebar()">
+      </div>
+      <div class="field">
+        <label>Distribution Channel <span class="hint">— optional</span></label>
+        <select id="distributionChannel" onchange="updateSidebar()">
+          <option value="">— Select —</option>
+          <option>Intranet</option>
+          <option>YouTube</option>
+          <option>LMS / Training Platform</option>
+          <option>Email</option>
+          <option>Social Media</option>
+          <option>QR Code on Print</option>
+          <option>Website</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+  </div>
   <div class="btn-row">
     <button class="btn btn-ghost" onclick="goTo(1)">← Back</button>
     <button class="btn btn-primary" onclick="goTo(2)">Next: Brand →</button>
@@ -659,7 +697,7 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
           </p>
         </div>
         <div class="field">
-          <label style="margin-bottom:6px">Logo File <span class="hint">— any format, high-res preferred</span></label>
+          <label style="margin-bottom:6px">Logo File <span class="req">*</span> <span class="hint">— any format, high-res preferred</span></label>
           <label class="upload-label" id="ul-logo-a" style="height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-sizing:border-box">
             <input type="file" accept="image/*" style="display:none" onchange="handleUpload(this,'ul-logo-a','fn-logo-a');validateAndPreviewLogo(this,'logo-a-preview','logo-a-err')">
             <div class="upload-ico">🖼️</div>
@@ -862,6 +900,54 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
     <div style="font-size:12px;color:var(--text-muted);line-height:1.5">Textra templates have a character on the left and right, and the camera cuts between them as they speak. They can address the audience directly, or talk to each other.</div>
   </div>
 
+  <!-- Illustration Style — required: how the character(s) should be designed -->
+  <div class="card" id="charStyleCard">
+    <div class="card-head">Illustration Style <span class="req">*</span></div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:14px">Choose how you'd like your character(s) designed.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+      <button type="button" id="csb-library" onclick="setCharStyle('library')" style="padding:14px 10px;border:2px solid var(--border);border-radius:var(--radius-xs);background:#fff;cursor:pointer;text-align:center;font-family:'Plus Jakarta Sans',sans-serif;transition:all .2s">
+        <div style="font-size:20px;margin-bottom:6px">🖼️</div>
+        <div style="font-size:12.5px;font-weight:700;color:var(--navy)">Pick from Library</div>
+        <div style="font-size:10.5px;color:var(--text-muted);margin-top:3px;line-height:1.4">Choose a pre-made character</div>
+      </button>
+      <button type="button" id="csb-textra" onclick="setCharStyle('textra')" style="padding:14px 10px;border:2px solid var(--border);border-radius:var(--radius-xs);background:#fff;cursor:pointer;text-align:center;font-family:'Plus Jakarta Sans',sans-serif;transition:all .2s">
+        <div style="font-size:20px;margin-bottom:6px">✨</div>
+        <div style="font-size:12.5px;font-weight:700;color:var(--navy)">Textra Creates</div>
+        <div style="font-size:10.5px;color:var(--text-muted);margin-top:3px;line-height:1.4">We design from your description below</div>
+      </button>
+      <button type="button" id="csb-reference" onclick="setCharStyle('reference')" style="padding:14px 10px;border:2px solid var(--border);border-radius:var(--radius-xs);background:#fff;cursor:pointer;text-align:center;font-family:'Plus Jakarta Sans',sans-serif;transition:all .2s">
+        <div style="font-size:20px;margin-bottom:6px">📷</div>
+        <div style="font-size:12.5px;font-weight:700;color:var(--navy)">Supply a Reference</div>
+        <div style="font-size:10.5px;color:var(--text-muted);margin-top:3px;line-height:1.4">Upload a photo to base it on</div>
+      </button>
+    </div>
+
+    <!-- Library sub-panel -->
+    <div id="cs-library" style="display:none;margin-top:20px">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-dim);margin-bottom:8px">Character 1 — pick one</div>
+      <div id="libInlineGrid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"></div>
+      <div id="lib-confirmedA" style="display:none;align-items:center;gap:10px;margin-top:10px;padding:8px 10px;background:var(--teal-soft);border:1.5px solid var(--teal2);border-radius:var(--radius-xs)">
+        <div id="lib-confirmedA-thumb" style="width:32px;height:44px;border-radius:5px;overflow:hidden;flex-shrink:0"></div>
+        <div id="lib-confirmedA-name" style="flex:1;font-size:12px;font-weight:700;color:var(--navy)"></div>
+        <button type="button" onclick="lib_changeA()" style="font-size:11px;font-weight:700;color:var(--blue);background:none;border:none;cursor:pointer">Change</button>
+      </div>
+      <div id="lib-stepB" style="display:none;margin-top:18px">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--text-dim);margin-bottom:8px">Character 2 — pick one</div>
+        <div id="libInlineGridB" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px"></div>
+        <div id="lib-confirmedB" style="display:none;align-items:center;gap:10px;margin-top:10px;padding:8px 10px;background:#eef0fd;border:1.5px solid #8899dd;border-radius:var(--radius-xs)">
+          <div id="lib-confirmedB-thumb" style="width:32px;height:44px;border-radius:5px;overflow:hidden;flex-shrink:0"></div>
+          <div id="lib-confirmedB-name" style="flex:1;font-size:12px;font-weight:700;color:var(--navy)"></div>
+          <button type="button" onclick="lib_changeB()" style="font-size:11px;font-weight:700;color:#5566cc;background:none;border:none;cursor:pointer">Change</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reference sub-panel -->
+    <div id="cs-reference" style="display:none;margin-top:16px;padding:14px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-xs);font-size:12px;color:var(--text-muted);line-height:1.6">
+      Upload a reference photo for each character in the <strong>Reference Image</strong> field below — we'll use it as the basis for their design.
+    </div>
+  </div>
+
   <!-- Character 1 -->
   <div class="card" id="charACard" style="display:none">
     <div class="card-head"><span class="step-pill">05</span> Character 1</div>
@@ -896,10 +982,11 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
         <label>Ethnicity <span class="req">*</span> <span class="tip" data-tip="Helps our designers create a character that reflects the diversity of your audience or team.">?</span></label>
         <select id="c1eth" required onchange="handleOther(this,'c1eth_other');updateSidebar()">
           <option value="">— Select —</option>
-          <option>East Asian</option><option>South Asian</option><option>Black / African</option>
-          <option>Mixed / Multiracial</option><option>White / European</option>
-          <option>Hispanic / Latino</option><option>Middle Eastern</option>
-          <option>Let Textra decide</option><option value="other">Other — describe below</option>
+          <option>South Asian</option><option>East Asian</option>
+          <option>Middle Eastern / North African</option><option>African / Black</option>
+          <option>European / White</option><option>Latin American &amp; Caribbean</option>
+          <option>Indigenous / First Nations / Aboriginal</option><option>Mixed / Multiple ethnic groups</option>
+          <option>Let Textra decide</option><option value="other">Another ethnicity not listed</option>
         </select>
         <div class="other-input" id="c1eth_other"><input type="text" placeholder="Describe ethnicity…" oninput="updateSidebar()"></div>
       </div>
@@ -983,10 +1070,11 @@ input[type="range"]{flex:1;height:4px;accent-color:var(--teal);cursor:pointer;bo
         <label>Ethnicity <span class="req">*</span> <span class="tip" data-tip="Helps our designers create a character that reflects the diversity of your audience or team.">?</span></label>
         <select id="c2eth" required onchange="handleOther(this,'c2eth_other');updateSidebar()">
           <option value="">— Select —</option>
-          <option>East Asian</option><option>South Asian</option><option>Black / African</option>
-          <option>Mixed / Multiracial</option><option>White / European</option>
-          <option>Hispanic / Latino</option><option>Middle Eastern</option>
-          <option>Let Textra decide</option><option value="other">Other — describe below</option>
+          <option>South Asian</option><option>East Asian</option>
+          <option>Middle Eastern / North African</option><option>African / Black</option>
+          <option>European / White</option><option>Latin American &amp; Caribbean</option>
+          <option>Indigenous / First Nations / Aboriginal</option><option>Mixed / Multiple ethnic groups</option>
+          <option>Let Textra decide</option><option value="other">Another ethnicity not listed</option>
         </select>
         <div class="other-input" id="c2eth_other"><input type="text" placeholder="Describe ethnicity…" oninput="updateSidebar()"></div>
       </div>
@@ -1354,6 +1442,9 @@ function populateFromSubmission(d){
   var setVal=function(id,val){var el=document.getElementById(id);if(el&&val!==undefined)el.value=val;};
   setVal('fullName',d.fullName); setVal('companyName',d.companyName);
   setVal('email',d.email); setVal('phone',d.phone); setVal('projectName',d.projectName);
+  setVal('industry',d.industry);
+  setVal('deadline',d.deadline); setVal('department',d.department);
+  setVal('targetAudience',d.targetAudience); setVal('distributionChannel',d.distributionChannel);
   state.brandMethod=d.brandMethod||''; state.font=d.font||'';
   setVal('websiteUrl',d.websiteUrl);
   if(Array.isArray(d.colours)){state.extractedColors=d.colours;}
@@ -1406,13 +1497,12 @@ function initDefaultBrandMethod(){
 }
 
 function initDefaultCharStyle(){
-  // Page 3: Characters - default to 2 characters and "Pick from Library"
+  // Page 3: Characters - default to 2 characters. Illustration Style is a
+  // required, client-chosen field (validateStep enforces it) - it must NOT
+  // be silently auto-selected here, or the client would never actually see
+  // the choice and could submit without ever picking one.
   if(!_charCount){
     setCharCount(2);
-  }
-  if(!state.charStyle){
-    var btn=document.getElementById('csb-library');
-    if(btn)setCharStyle('library');
   }
 }
 
@@ -1453,9 +1543,22 @@ function validateStep(fromStep){
         return false;
       }
     } else if(guidelinesSelected){
-      const uploaded=document.getElementById('ul-guidelines')?.textContent.includes('uploaded');
-      if(!uploaded){
-        alert('Please upload your brand guidelines document');
+      const guidelinesEl=document.getElementById('ul-guidelines');
+      const logoEl=document.getElementById('ul-logo-a');
+      const guidelinesUploaded=guidelinesEl?.classList.contains('has-file');
+      const logoUploaded=logoEl?.classList.contains('has-file');
+      if(!guidelinesUploaded || !logoUploaded){
+        if(!guidelinesUploaded)guidelinesEl?.classList.add('field-error');
+        if(!logoUploaded)logoEl?.classList.add('field-error');
+        var msg;
+        if(!guidelinesUploaded && logoUploaded){
+          msg="You've attached a logo, but not your brand guidelines document — they're two separate uploads. Please attach the guidelines document (PDF, Word or ZIP) in the box on the left.";
+        } else if(guidelinesUploaded && !logoUploaded){
+          msg="You've attached your brand guidelines document, but not a logo file — they're two separate uploads. Please attach a logo image in the box on the right.";
+        } else {
+          msg='Please upload both your brand guidelines document and a logo file.';
+        }
+        alert(msg);
         return false;
       }
     } else {
@@ -1467,6 +1570,38 @@ function validateStep(fromStep){
     if(!state.selectedStyle || state.selectedStyle === ''){
       alert('Please select a design style');
       return false;
+    }
+  }
+  if(fromStep===4){
+    if(!state.charStyle || state.charStyle === ''){
+      var charStyleCardEl=document.getElementById('charStyleCard');
+      charStyleCardEl?.classList.add('field-error-card');
+      charStyleCardEl?.scrollIntoView({behavior:'smooth',block:'center'});
+      alert('Please choose an Illustration Style for your character(s): Pick from Library, Textra Creates, or Supply a Reference.');
+      return false;
+    }
+    if(state.charStyle==='reference'){
+      const refAEl=document.getElementById('ul-ca');
+      const refBEl=_charCount===2?document.getElementById('ul-cb'):null;
+      const refAUploaded=refAEl?.classList.contains('has-file');
+      const refBUploaded=refBEl?refBEl.classList.contains('has-file'):true;
+      if(!refAUploaded || !refBUploaded){
+        if(!refAUploaded)refAEl?.classList.add('field-error');
+        if(refBEl && !refBUploaded)refBEl.classList.add('field-error');
+        var msg;
+        if(refBEl && !refAUploaded && !refBUploaded){
+          msg="You selected \"Supply a Reference\" — please upload a reference image for both Character 1 and Character 2.";
+        } else if(refBEl && !refAUploaded){
+          msg="You selected \"Supply a Reference\" — please upload a reference image for Character 1.";
+        } else if(refBEl && !refBUploaded){
+          msg="You selected \"Supply a Reference\" — please upload a reference image for Character 2.";
+        } else {
+          msg="You selected \"Supply a Reference\" — please upload a reference image for your character below.";
+        }
+        alert(msg);
+        (!refAUploaded?refAEl:refBEl)?.scrollIntoView({behavior:'smooth',block:'center'});
+        return false;
+      }
     }
   }
   if(fromStep===5){
@@ -1506,6 +1641,7 @@ function validateStep(fromStep){
 function goTo(n){
   if(n>cur&&!validateStep(cur))return;
   if(cur!==n){try{var iframe=document.getElementById('textraVimeo');if(iframe){new Vimeo.Player(iframe).pause();}}catch(e){}}
+  if(cur!==n){try{stopAllAudio();}catch(e){}}
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   var pageId=(n===1.5)?'page1pt5':'page'+n;
   var pageEl=document.getElementById(pageId);
@@ -1566,7 +1702,7 @@ function handleUpload(input,labelId,fnId){
   var lbl=document.getElementById(labelId);
   var fnEl=document.getElementById(fnId);
   if(fnEl){fnEl.textContent='✓ '+file.name; fnEl.style.display='block';}
-  if(lbl){lbl.classList.add('has-file');}
+  if(lbl){lbl.classList.add('has-file');lbl.classList.remove('field-error');}
   var txt=lbl&&lbl.querySelector('.upload-txt');
   if(txt)txt.textContent='File attached';
   // Read as base64 and store for submission
@@ -1910,14 +2046,15 @@ function setCharCount(n){
   });
   _charStyle = '';
   state.charStyle = '';
-  document.getElementById('cs-reference').style.display='none';
-  document.getElementById('cs-library').style.display='none';
+  var csRef=document.getElementById('cs-reference'); if(csRef)csRef.style.display='none';
+  var csLib=document.getElementById('cs-library'); if(csLib)csLib.style.display='none';
   updateSidebar();
   setTimeout(function(){ca&&ca.scrollIntoView({behavior:'smooth',block:'nearest'});},100);
 }
 
 function setCharStyle(s){
   _charStyle = s; state.charStyle = s;
+  document.getElementById('charStyleCard')?.classList.remove('field-error-card');
   ['textra','library','reference'].forEach(function(k){
     var btn=document.getElementById('csb-'+k);
     if(btn){
@@ -1925,8 +2062,8 @@ function setCharStyle(s){
       btn.style.background=k===s?'var(--teal-soft)':'#fff';
     }
   });
-  document.getElementById('cs-reference').style.display=s==='reference'?'block':'none';
-  document.getElementById('cs-library').style.display=s==='library'?'block':'none';
+  var csRef=document.getElementById('cs-reference'); if(csRef)csRef.style.display=s==='reference'?'block':'none';
+  var csLib=document.getElementById('cs-library'); if(csLib)csLib.style.display=s==='library'?'block':'none';
   // Build library grids if library style selected
   if(s==='library'){
     lib_buildGridA();
@@ -3507,7 +3644,13 @@ function gatherData(){
     companyName: sel('companyName'),
     email:       sel('email'),
     phone:       sel('phone'),
+    industry:    sel('industry'),
     projectName: sel('projectName'),
+    // Project Requirements
+    deadline:            sel('deadline'),
+    department:          sel('department'),
+    targetAudience:      sel('targetAudience'),
+    distributionChannel: sel('distributionChannel'),
     // Brand
     brandMethod:  state.brandMethod,
     websiteUrl:   sel('websiteUrl'),
@@ -3668,6 +3811,7 @@ function _doSubmit(scriptLater, reminderEmail, callback){
 }
 
 function submitBrief(){
+  try{stopAllAudio();}catch(e){}
   var btn = document.getElementById('submitBtn');
   if(btn){ btn.disabled=true; btn.textContent='Submitting…'; }
 
@@ -3797,6 +3941,10 @@ function buildReview(){
       reviewItem('Company',rv(document.getElementById('companyName').value))+
       reviewItem('Email',rv(document.getElementById('email').value))+
       reviewItem('Project',rv(document.getElementById('projectName').value))+
+      reviewItem('Deadline',rvDate(document.getElementById('deadline').value))+
+      reviewItem('Department / Category',rv(document.getElementById('department').value))+
+      reviewItem('Target Audience',rv(document.getElementById('targetAudience').value))+
+      reviewItem('Distribution Channel',rv(document.getElementById('distributionChannel').value))+
     '</div></div>'+
 
     '<div class="review-section">'+
