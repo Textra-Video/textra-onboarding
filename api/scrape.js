@@ -1,3 +1,10 @@
+const Sentry = require('@sentry/node');
+
+Sentry.init({
+  dsn: 'https://c961b78d0a57151e06078c75129d144e@o4512022016688128.ingest.de.sentry.io/4512022043230288',
+  tracesSampleRate: 1.0,
+});
+
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   if (req.method === 'OPTIONS') { res.status(200).end(); return; }
@@ -10,6 +17,8 @@ module.exports = async function handler(req, res) {
     const html = await r.text();
     res.status(200).json({ contents: html });
   } catch (err) {
+    Sentry.captureException(err);
+    await Sentry.flush(2000);
     res.status(500).json({ error: err.message });
   }
 };
