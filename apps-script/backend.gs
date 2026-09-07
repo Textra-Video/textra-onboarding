@@ -264,8 +264,20 @@ function handleBriefSubmission(data) {
   // token suffix), so a name lookup would create a duplicate if the client
   // changes their company name between submissions.
   var folder = (existingRow && getFolderFromRow(sheet, existingRow)) || createClientFolder(clientLabel, token);
-  saveUploadedFiles(folder, data, clientLabel);
-  generateBriefDocument(folder, data, clientLabel);
+  // Non-blocking: a single malformed/oversized upload (bad base64, Drive
+  // quota, etc.) must never take the whole submission down with it - the
+  // row, folder and notifications below still need to happen even if a
+  // file attachment fails to save.
+  try {
+    saveUploadedFiles(folder, data, clientLabel);
+  } catch (fileErr) {
+    Logger.log('saveUploadedFiles error (non-blocking): ' + fileErr.toString());
+  }
+  try {
+    generateBriefDocument(folder, data, clientLabel);
+  } catch (docErr) {
+    Logger.log('generateBriefDocument error (non-blocking): ' + docErr.toString());
+  }
 
   const row = [
     new Date(),
@@ -1095,9 +1107,13 @@ function saveUploadedFiles(folder, data, clientLabel) {
     }
     Logger.log('  ' + key + ': ' + value.length + ' chars');
     var originalName = data[key + 'Name'] || key;
-    var result = saveBase64File(folder, value, originalName, clientLabel);
-    if (result) Logger.log('    → saved as ' + result.getName());
-    else Logger.log('    → failed to save');
+    try {
+      var result = saveBase64File(folder, value, originalName, clientLabel);
+      if (result) Logger.log('    → saved as ' + result.getName());
+      else Logger.log('    → failed to save (unrecognized data URL)');
+    } catch (e) {
+      Logger.log('    → error saving ' + key + ' (non-blocking): ' + e.toString());
+    }
   });
 }
 
