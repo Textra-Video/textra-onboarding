@@ -720,20 +720,23 @@ async function submitScriptOnly(){
     return;
   }
 
-  const tone=document.getElementById('scriptTone').value;
-  const toneCustom=document.getElementById('scriptToneCustom').value;
-  const finalTone=tone==='other'?toneCustom:tone;
-  if(!finalTone){
-    alert('Please select a tone.');
-    return;
-  }
+  let finalTone='', finalStyle='';
+  if(scriptMode==='own'){
+    const tone=document.getElementById('scriptTone').value;
+    const toneCustom=document.getElementById('scriptToneCustom').value;
+    finalTone=tone==='other'?toneCustom:tone;
+    if(!finalTone){
+      alert('Please select a tone.');
+      return;
+    }
 
-  const style=document.getElementById('scriptStyle').value;
-  const styleCustom=document.getElementById('scriptStyleCustom').value;
-  const finalStyle=style==='other'?styleCustom:style;
-  if(!finalStyle){
-    alert('Please select a style.');
-    return;
+    const style=document.getElementById('scriptStyle').value;
+    const styleCustom=document.getElementById('scriptStyleCustom').value;
+    finalStyle=style==='other'?styleCustom:style;
+    if(!finalStyle){
+      alert('Please select a style.');
+      return;
+    }
   }
 
   const btn=document.getElementById('submitScriptBtn');
