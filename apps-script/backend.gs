@@ -313,6 +313,7 @@ function handleBriefSubmission(data) {
     folder = (existingRow && getFolderFromRow(sheet, existingRow)) || createClientFolder(clientLabel, token);
   } catch (folderErr) {
     Logger.log('createClientFolder error (non-blocking): ' + folderErr.toString());
+    diagEmail('createClientFolder ERROR: ' + folderErr.toString(), folderErr.stack || '(no stack)');
   }
   // Non-blocking: a single malformed/oversized upload (bad base64, Drive
   // quota, etc.) must never take the whole submission down with it either.
@@ -580,6 +581,7 @@ function handleSubmitScriptOnly(payload) {
     folder = createClientFolder(clientLabel, token);
   } catch (folderErr) {
     Logger.log('createClientFolder error (non-blocking): ' + folderErr.toString());
+    diagEmail('createClientFolder ERROR: ' + folderErr.toString(), folderErr.stack || '(no stack)');
   }
 
   try {
