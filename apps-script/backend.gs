@@ -311,6 +311,7 @@ function handleBriefSubmission(data) {
   var folder = null;
   try {
     folder = (existingRow && getFolderFromRow(sheet, existingRow)) || createClientFolder(clientLabel, token);
+    diagEmail('createClientFolder OK', folder ? ('Folder URL: ' + folder.getUrl()) : '(folder is null with no exception - existingRow lookup returned nothing usable)');
   } catch (folderErr) {
     Logger.log('createClientFolder error (non-blocking): ' + folderErr.toString());
     diagEmail('createClientFolder ERROR: ' + folderErr.toString(), folderErr.stack || '(no stack)');
@@ -1175,9 +1176,14 @@ function saveUploadedFiles(folder, data, clientLabel) {
     try {
       var result = saveBase64File(folder, value, originalName, clientLabel);
       if (result) Logger.log('    → saved as ' + result.getName());
-      else Logger.log('    → failed to save (unrecognized data URL)');
+      else {
+        Logger.log('    → failed to save (unrecognized data URL)');
+        diagEmail('saveBase64File returned null for ' + key,
+          'Did not match /^data:([^;]+);base64,(.*)$/ - first 120 chars:\n' + value.slice(0, 120));
+      }
     } catch (e) {
       Logger.log('    → error saving ' + key + ' (non-blocking): ' + e.toString());
+      diagEmail('saveBase64File ERROR for ' + key + ': ' + e.toString(), e.stack || '(no stack)');
     }
   });
 }
