@@ -131,6 +131,12 @@ function doPost(e) {
       Logger.log('JSON parse error: ' + err.toString());
     }
 
+    // TEMPORARY DIAGNOSTIC - the Executions-list UI has been unreliable for
+    // seeing real doPost invocations, so mail the ground truth directly
+    // instead. Remove once "no data reaching the sheet" is confirmed fixed.
+    diagEmail('doPost received - action=' + (jsonPayload && jsonPayload.action || '(none / main brief)'),
+      summarizePayloadForDiag(jsonPayload));
+
     if (jsonPayload && jsonPayload.action === 'submitScript') {
       return handleSubmitScript(jsonPayload);
     }
@@ -159,12 +165,46 @@ function doPost(e) {
     }
     return handleBriefSubmission(e.parameter);
   } catch (error) {
+    // TEMPORARY DIAGNOSTIC - see note above.
+    diagEmail('doPost ERROR: ' + error.toString(),
+      (error.stack || '(no stack)') + '\n\nPayload:\n' + summarizePayloadForDiag(jsonPayload));
     Logger.log('ERROR in doPost: ' + error.toString());
     return ContentService.createTextOutput(JSON.stringify({
       success: false,
       message: error.toString()
     })).setMimeType(ContentService.MimeType.JSON);
   }
+}
+
+// TEMPORARY DIAGNOSTIC HELPERS - remove alongside the diagEmail() calls
+// above once "no data reaching the sheet" is confirmed fixed.
+function diagEmail(subject, body) {
+  try {
+    MailApp.sendEmail({
+      to: 'raj.valley@textra.video',
+      subject: '[Textra diag] ' + subject,
+      body: body || '(empty)'
+    });
+  } catch (e) {
+    Logger.log('diagEmail failed (non-blocking): ' + e.toString());
+  }
+}
+
+// Summarizes a payload without dumping huge base64 blobs into the email -
+// each field's length instead of its content, so a handful of file
+// uploads doesn't produce a multi-MB diagnostic email that itself fails.
+function summarizePayloadForDiag(obj) {
+  if (!obj) return '(null payload)';
+  var lines = [];
+  for (var k in obj) {
+    var v = obj[k];
+    if (typeof v === 'string') {
+      lines.push(k + ': ' + (v.length > 80 ? (v.slice(0, 80) + '... [' + v.length + ' chars total]') : (v || '(empty)')));
+    } else {
+      try { lines.push(k + ': ' + JSON.stringify(v)); } catch (e) { lines.push(k + ': (unserializable)'); }
+    }
+  }
+  return lines.join('\n');
 }
 
 function doGet(e) {
