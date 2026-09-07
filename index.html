@@ -3186,15 +3186,15 @@ function submitScriptBrief(btn){
   var title = document.getElementById('aiBriefTitle') && document.getElementById('aiBriefTitle').value.trim();
   var briefDesc = document.getElementById('briefDescription') && document.getElementById('briefDescription').value.trim();
   var briefLink = document.getElementById('briefLink') && document.getElementById('briefLink').value.trim();
-  var briefDoc = document.getElementById('briefDocUpload');
-  var hasUpload = briefDoc && briefDoc.files && briefDoc.files[0];
+  var briefDocData = getFileData('briefDocUpload');
+  var briefDocName = (window._uploadedFileNames && window._uploadedFileNames['briefDocUpload']) || '';
 
   if(!title){
     _isSubmittingScript = false;
     alert('Please add a video title for your brief.');
     return;
   }
-  if(!briefDesc && !briefLink && !hasUpload){
+  if(!briefDesc && !briefLink && !briefDocData){
     _isSubmittingScript = false;
     alert('Please provide your brief content: describe it, paste a link, or upload a document.');
     return;
@@ -3206,7 +3206,8 @@ function submitScriptBrief(btn){
     scriptTitle: title,
     briefDescription: briefDesc || '',
     briefLink: briefLink || '',
-    uploadFileName: hasUpload ? briefDoc.files[0].name : '',
+    briefDocData: briefDocData || '',
+    briefDocName: briefDocName || '',
   };
 
   if(btn){
@@ -3221,23 +3222,16 @@ function submitScriptBrief(btn){
     window._scriptSubmitInterval = dotInterval;
   }
 
-  var formData = new FormData();
-  formData.append('payload', JSON.stringify(payload));
-  if(hasUpload){
-    formData.append('file', briefDoc.files[0]);
-  }
-
   fetch(GOOGLE_SCRIPT_URL, {
     method: 'POST',
-    body: formData
+    body: JSON.stringify(payload),
+    headers: {'Content-Type':'text/plain;charset=utf-8'}
   }).then(function(r){ return r.text(); })
   .then(function(text){
     if(window._scriptSubmitInterval) clearInterval(window._scriptSubmitInterval);
     var resp = null;
     try { resp = JSON.parse(text); } catch(e) {}
-    if(resp && resp.message && resp.message.includes('Unknown action')){
-      Logger.log('Brief submission likely succeeded despite unknown action response');
-    } else if(resp && !resp.success){
+    if(resp && !resp.success){
       if(btn){btn.disabled=false;btn.textContent='Submit Brief';}
       _isSubmittingScript = false;
       alert('There was an error submitting your brief: '+(resp.message||'Unknown error'));
@@ -3264,11 +3258,20 @@ function submitScriptBrief(btn){
 // ── BRIEF HANDLING ──────────────────────────────
 function handleBriefUpload(input){
   var nameDiv = document.getElementById('briefUploadName');
-  if(input.files && input.files[0]){
-    nameDiv.textContent = '✓ ' + input.files[0].name;
-  } else {
+  var file = input.files && input.files[0];
+  if(!file){
     nameDiv.textContent = '';
+    return;
   }
+  nameDiv.textContent = '✓ ' + file.name;
+  var reader = new FileReader();
+  reader.onload = function(e){
+    window._uploadedFiles = window._uploadedFiles || {};
+    window._uploadedFiles['briefDocUpload'] = e.target.result;
+    window._uploadedFileNames = window._uploadedFileNames || {};
+    window._uploadedFileNames['briefDocUpload'] = file.name;
+  };
+  reader.readAsDataURL(file);
 }
 
 // ── SCRIPT MODE TABS ─────────────────────────────

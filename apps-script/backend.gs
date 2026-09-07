@@ -134,6 +134,9 @@ function doPost(e) {
     if (jsonPayload && jsonPayload.action === 'submitScript') {
       return handleSubmitScript(jsonPayload);
     }
+    if (jsonPayload && jsonPayload.action === 'submitScriptBrief') {
+      return handleSubmitScriptBrief(jsonPayload);
+    }
     if (jsonPayload && jsonPayload.action === 'submitScriptOnly') {
       return handleSubmitScriptOnly(jsonPayload);
     }
@@ -382,6 +385,73 @@ function handleSubmitScript(payload) {
   }
 
   return jsonOut({ success: true, scriptLink: scriptLink });
+}
+
+// -- SCRIPT SUBMISSION VIA BRIEF (returning client, "Give us your brief"
+// tab) - same row via token as handleSubmitScript, but the client hasn't
+// written structured script lines; they've described the content, pasted
+// a link, and/or uploaded a document instead. Was previously routed here
+// via a raw multipart FormData POST with no `action` the backend ever
+// checked for, so every submission silently fell through to
+// handleBriefSubmission() and failed on "Email is required" (that handler
+// expects a brand-new brief's full field set, not a returning client's
+// portalToken). Frontend now sends action:'submitScriptBrief' as a plain
+// JSON body instead, matching every other action here.
+function handleSubmitScriptBrief(payload) {
+  if (!payload.portalToken) {
+    return jsonOut({ success: false, message: 'Portal token is required' });
+  }
+
+  const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('Sheet1');
+  const tokenCol = findColumnByHeader(sheet, 'Portal Token');
+  if (tokenCol === -1) return jsonOut({ success: false, message: 'Portal Token column not found - submit a brief first.' });
+
+  const row = findRowByColumnValue(sheet, tokenCol, payload.portalToken);
+  if (!row) return jsonOut({ success: false, message: 'No submission found for this token.' });
+
+  var folder = getFolderFromRow(sheet, row);
+  var clientLabel = getColumnValue(sheet, row, 'Company') || getColumnValue(sheet, row, 'Project') ||
+                     getColumnValue(sheet, row, 'Full Name') || 'Client';
+
+  var docLink = '';
+  if (folder && payload.briefDocData) {
+    try {
+      var docFile = saveBase64File(folder, payload.briefDocData, payload.briefDocName || 'Brief document', clientLabel);
+      if (docFile) docLink = docFile.getUrl();
+    } catch (e) {
+      Logger.log('Error saving brief document: ' + e.toString());
+    }
+  }
+
+  if (folder && (payload.briefDescription || payload.briefLink)) {
+    var noteParts = [];
+    if (payload.briefDescription) noteParts.push('Description:\n' + payload.briefDescription);
+    if (payload.briefLink) noteParts.push('Reference link:\n' + payload.briefLink);
+    try {
+      folder.createFile('Script Brief Notes - ' + clientLabel + '.txt', noteParts.join('\n\n'), MimeType.PLAIN_TEXT);
+    } catch (e) {
+      Logger.log('Error saving brief notes: ' + e.toString());
+    }
+  }
+
+  setColumnValue(sheet, row, 'Script Title', payload.scriptTitle || '');
+  setColumnValue(sheet, row, 'Script Method', 'brief');
+  if (docLink) setColumnFormula(sheet, row, 'Script Sheet URL', '=HYPERLINK("' + docLink + '","[Brief] Open Document")');
+  setColumnValue(sheet, row, 'Status', 'Script submitted (brief)');
+
+  var clientEmail = getColumnValue(sheet, row, 'Email');
+  var fullName = getColumnValue(sheet, row, 'Full Name');
+  var company = getColumnValue(sheet, row, 'Company');
+  var project = getColumnValue(sheet, row, 'Project');
+
+  try {
+    sendScriptConfirmationEmail(clientEmail, fullName, docLink);
+    sendScriptSlackNotification(fullName, clientEmail, company, project, docLink);
+  } catch (err) {
+    Logger.log('Notification error (non-blocking): ' + err.toString());
+  }
+
+  return jsonOut({ success: true, scriptLink: docLink });
 }
 
 // -- SCRIPT CONFIRMATION EMAIL (automatic, on script submission) -
