@@ -99,6 +99,20 @@ const SLACK_WEBHOOK = PropertiesService.getScriptProperties().getProperty('SLACK
 // SLACK_WEBHOOK: Script Properties -> key TEAM_NOTIFY_EMAIL -> your address.
 const TEAM_NOTIFY_EMAIL = PropertiesService.getScriptProperties().getProperty('TEAM_NOTIFY_EMAIL');
 
+// Single source of truth for the sheet's header row - shared by every
+// handler that writes a row, so a standalone submission (no prior brief)
+// lands in the exact same columns as one that went through the full flow.
+const SHEET_HEADERS = [
+  'Timestamp', 'Email', 'Full Name', 'Company', 'Project', 'Brand Method', 'Font',
+  'Characters Style', 'Character A Gender', 'Character A Age', 'Character A Ethnicity',
+  'Character A Accent', 'Character A Clothing', 'Character A Notes',
+  'Character B Gender', 'Character B Age', 'Character B Ethnicity',
+  'Character B Accent', 'Character B Clothing', 'Character B Notes',
+  'Background', 'Scene Notes', 'Title Screen', 'Music',
+  'Script Title', 'Script Method', 'Deadline',
+  'Portal Token', 'Status', 'Client Folder', 'Full Data'
+];
+
 // Fields that carry base64 data URLs - saved as real Drive files instead of
 // being stuffed into a sheet cell.
 const FILE_FIELDS = ['logoDataUrl', 'guidelinesFileData', 'c1refFileData', 'c2refFileData',
@@ -119,6 +133,9 @@ function doPost(e) {
 
     if (jsonPayload && jsonPayload.action === 'submitScript') {
       return handleSubmitScript(jsonPayload);
+    }
+    if (jsonPayload && jsonPayload.action === 'submitScriptOnly') {
+      return handleSubmitScriptOnly(jsonPayload);
     }
     if (jsonPayload && jsonPayload.action === 'uploadOverlay') {
       return handleUploadOverlay(jsonPayload);
@@ -227,17 +244,7 @@ function handleBriefSubmission(data) {
   // findColumnByHeader(sheet, 'Portal Token') always came back empty since
   // that literal header text was never written, which is also why magic
   // links couldn't find a client's existing submission.
-  const HEADERS = [
-    'Timestamp', 'Email', 'Full Name', 'Company', 'Project', 'Brand Method', 'Font',
-    'Characters Style', 'Character A Gender', 'Character A Age', 'Character A Ethnicity',
-    'Character A Accent', 'Character A Clothing', 'Character A Notes',
-    'Character B Gender', 'Character B Age', 'Character B Ethnicity',
-    'Character B Accent', 'Character B Clothing', 'Character B Notes',
-    'Background', 'Scene Notes', 'Title Screen', 'Music',
-    'Script Title', 'Script Method', 'Deadline',
-    'Portal Token', 'Status', 'Client Folder', 'Full Data'
-  ];
-  sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
+  sheet.getRange(1, 1, 1, SHEET_HEADERS.length).setValues([SHEET_HEADERS]);
 
   // Hide the Full Data column (internal use only for portal data restoration)
   var fullDataCol = findColumnByHeader(sheet, 'Full Data');
@@ -403,6 +410,80 @@ function sendScriptConfirmationEmail(email, fullName, scriptLink) {
   } catch (e) {
     Logger.log('Script confirmation email error: ' + e.toString());
   }
+}
+
+// -- STANDALONE SCRIPT-ONLY SUBMISSION (the /script page) -------
+// Unlike handleSubmitScript, there is no prior brief and no portalToken to
+// find an existing row by - this page is meant for someone who wants to
+// submit a script without ever going through the full onboarding flow, so
+// it always creates its own new row/folder, same as handleBriefSubmission
+// does, then reuses the same script-specific email + Slack notification as
+// the "add a script to an existing brief" flow.
+function handleSubmitScriptOnly(payload) {
+  if (!payload.email || !payload.email.trim()) {
+    return jsonOut({ success: false, message: 'Email is required' });
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
+    return jsonOut({ success: false, message: 'Invalid email format' });
+  }
+  if (!payload.fullName || !payload.fullName.trim()) {
+    return jsonOut({ success: false, message: 'Full name is required' });
+  }
+  if (!payload.companyName || !payload.companyName.trim()) {
+    return jsonOut({ success: false, message: 'Company name is required' });
+  }
+  if (!payload.videoTitle || !payload.videoTitle.trim()) {
+    return jsonOut({ success: false, message: 'Video title is required' });
+  }
+
+  const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName('Sheet1');
+  sheet.getRange(1, 1, 1, SHEET_HEADERS.length).setValues([SHEET_HEADERS]);
+
+  var token = Utilities.getUuid();
+  var clientLabel = payload.companyName || payload.fullName || 'Client';
+  var folder = createClientFolder(clientLabel, token);
+
+  saveUploadedFiles(folder, payload, clientLabel);
+
+  var scriptLink = '';
+  if (payload.scriptMode === 'own') {
+    scriptLink = saveScriptVersion(folder, clientLabel, payload.scriptLines || [], {
+      videoLength: '',
+      scriptTone: payload.tone || '',
+      scriptStyle: payload.style || ''
+    });
+  }
+
+  const row = [
+    new Date(),
+    payload.email || '',
+    payload.fullName || '',
+    payload.companyName || '',
+    '',   // Project - not collected on the script-only page
+    '', '', '', '', '', '', '', '', '',
+    '', '', '', '', '', '',
+    '', '', '', '',
+    payload.videoTitle || '',
+    payload.scriptMode || '',
+    '',   // Deadline
+    token,
+    'Script submitted (standalone)',
+    '',
+    JSON.stringify(payload)
+  ];
+  sheet.appendRow(row);
+  var targetRow = sheet.getLastRow();
+  setColumnFormula(sheet, targetRow, 'Client Folder', '=HYPERLINK("' + folder.getUrl() + '","[Folder] Open Folder")');
+  if (scriptLink) setColumnFormula(sheet, targetRow, 'Script Sheet URL', '=HYPERLINK("' + scriptLink + '","[Script] Open Script")');
+
+  try {
+    sendScriptConfirmationEmail(payload.email, payload.fullName, scriptLink);
+    sendScriptSlackNotification(payload.fullName, payload.email, payload.companyName, payload.videoTitle, scriptLink);
+  } catch (err) {
+    Logger.log('Notification error (non-blocking): ' + err.toString());
+  }
+
+  return jsonOut({ success: true, scriptLink: scriptLink, token: token });
 }
 
 function handleUploadOverlay(payload) {
