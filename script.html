@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Textra Video — Submit Script Only</title>
+<script defer src="/_vercel/insights/script.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Montserrat:wght@400;600&family=Nunito:wght@400;600&family=Raleway:wght@400;600&family=Poppins:wght@400;600&family=Lato:wght@400;600&family=Merriweather:wght@400;700&family=Playfair+Display:wght@400;700&family=Oswald:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0d1b3e;--blue:#1A71B1;--teal:#66BCAD;--teal2:#4fa99a;
+  --teal-soft:#e8f7f5;--blue-soft:#e8f2fb;
+  --bg:#f7f9fc;--card:#fff;--border:#e2e8f0;
+  --text:#0d1b3e;--text-muted:#64748b;--text-dim:#94a3b8;
+  --radius:16px;--radius-sm:10px;--radius-xs:8px;
+  --shadow:0 1px 3px rgba(13,27,62,.06),0 4px 16px rgba(13,27,62,.08);
+  --shadow-md:0 4px 24px rgba(13,27,62,.10);
+  --sidebar:280px;
+}
+/* scroll-behavior:smooth intentionally omitted — it interacts badly with
+   the sticky section headers below: mid-scroll, window.scrollY updates
+   before the animated scroll finishes painting, so the sticky elements
+   briefly render at a lagging position and their tops get clipped. */
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+
+.header{background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300}
+.header-left{display:flex;align-items:center;gap:16px}
+.logo-img{height:26px;width:auto;display:block}
+.header-back{display:flex;align-items:center;gap:5px;background:none;border:1.5px solid var(--border);border-radius:var(--radius-xs);padding:6px 12px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--text-muted);cursor:pointer;transition:all .2s}
+.header-back:hover{border-color:var(--teal);color:var(--teal2)}
+.header-badge{display:flex;align-items:center;gap:8px;background:#f0f5ff;border:1px solid var(--border);border-radius:99px;padding:5px 14px 5px 10px;font-size:12px;color:var(--text-muted);font-weight:500}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 2px rgba(102,188,173,.3);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+
+.layout{display:flex;gap:0;max-width:1100px;margin:0 auto;padding:32px 24px 80px;position:relative;z-index:1;align-items:flex-start}
+.form-col{flex:1;min-width:0;padding-right:0}
+.sidebar-col{width:var(--sidebar);flex-shrink:0;position:sticky;top:118px;max-height:calc(100vh - 130px);display:none;flex-direction:column}
+
+.section-head{margin-bottom:24px;position:sticky;top:60px;background:var(--bg);z-index:100;padding:16px 0;border-bottom:1px solid var(--border)}
+.s-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--teal2);margin-bottom:8px}
+.s-eyebrow::before{content:'';display:inline-block;width:14px;height:2px;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:2px}
+.s-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:24px;font-weight:800;color:var(--navy);line-height:1.2;margin-bottom:5px;letter-spacing:-.4px}
+.s-desc{font-size:13px;color:var(--text-muted);line-height:1.65}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:14px;box-shadow:var(--shadow);transition:box-shadow .2s,border-color .2s}
+.card:hover{box-shadow:var(--shadow-md);border-color:rgba(102,188,173,.2)}
+.card-head{font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.step-pill{background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:99px;letter-spacing:.3px;flex-shrink:0}
+
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-xs);font-size:13px;font-family:Arial,sans-serif}
+.field textarea{resize:vertical;min-height:100px}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(102,188,173,.1)}
+.hint{color:var(--text-muted);font-weight:400;font-size:11px}
+.tip{cursor:help;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;background:var(--teal-soft);border:1.5px solid var(--teal2);border-radius:50%;color:var(--teal2);font-size:11px;font-weight:700}
+
+/* ── FORM (global, exact match to index.html) ── */
+label{font-size:11px;font-weight:700;color:var(--text-muted);letter-spacing:.4px;text-transform:uppercase}
+label .req{color:var(--blue);margin-left:2px}
+label .hint{font-weight:400;color:var(--text-dim);font-size:11px;text-transform:none;letter-spacing:0;margin-left:4px}
+.req{color:var(--blue)}
+input[type="text"],input[type="email"],input[type="tel"],input[type="url"],input[type="date"],textarea{width:100%;padding:10px 13px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-xs);font-family:'Inter',sans-serif;font-size:14px;color:var(--text);outline:none;appearance:none;transition:all .2s}
+select{width:100%;padding:10px 13px;padding-right:28px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-xs);font-family:'Inter',sans-serif;font-size:14px;color:var(--text);outline:none;appearance:none;transition:all .2s}
+input:focus,textarea:focus,select:focus{border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px rgba(102,188,173,.12)}
+input::placeholder,textarea::placeholder{color:var(--text-dim)}
+textarea{resize:vertical;min-height:80px;line-height:1.6}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2364748b'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px;cursor:pointer}
+
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-row.c3{grid-template-columns:1fr 1fr 1fr}
+
+.btn{padding:10px 22px;border-radius:var(--radius-xs);font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .2s;display:inline-flex;align-items:center;gap:7px}
+.btn-primary{background:linear-gradient(135deg,var(--blue),var(--teal2));color:#fff;box-shadow:0 2px 12px rgba(26,113,177,.25)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,113,177,.35)}
+.btn-ghost{background:#fff;color:var(--text-muted);border:1.5px solid var(--border)}
+.btn-ghost:hover{border-color:var(--teal);color:var(--teal2)}
+
+.upload-label{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;border:2px dashed var(--border);border-radius:8px;cursor:pointer;transition:all .2s;background:var(--bg)}
+.upload-label:hover{border-color:var(--teal);background:var(--teal-soft)}
+.upload-txt{font-size:12px;color:var(--text-muted);font-weight:500;margin-bottom:8px}
+.upload-fn{font-size:11px;color:var(--teal2);font-weight:600}
+
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(13,27,62,.5);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal{background:var(--card);border-radius:var(--radius);padding:24px;max-width:600px;width:90%;box-shadow:var(--shadow-md)}
+.modal-title{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:16px}
+.modal-textarea{width:100%;padding:12px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:Arial,sans-serif;resize:vertical;min-height:120px}
+.modal-buttons{display:flex;gap:8px;margin-top:16px;justify-content:flex-end}
+.modal-box{background:#fff;border-radius:var(--radius);padding:26px;width:100%;max-width:560px;box-shadow:0 20px 60px rgba(13,27,62,.2);position:relative}
+.modal-sub{font-size:12px;color:var(--text-muted);margin-bottom:14px}
+.modal-close{position:absolute;top:14px;right:14px;width:26px;height:26px;border-radius:50%;background:var(--bg);border:1px solid var(--border);cursor:pointer;font-size:13px;color:var(--text-muted);display:flex;align-items:center;justify-content:center;transition:all .2s}
+
+.sidebar-panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;max-height:calc(100vh - 130px)}
+.sidebar-header{background:linear-gradient(135deg,var(--navy),#1a2d6e);padding:14px 16px;display:flex;align-items:center;gap:8px}
+.sidebar-header-title{font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;color:#fff;letter-spacing:.3px}
+.sidebar-header-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 6px var(--teal)}
+.sidebar-body{padding:14px;overflow-y:auto;flex:1}
+.sb-section{margin-bottom:14px}
+.sb-section:last-child{margin-bottom:0}
+.sb-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text-dim);margin-bottom:6px}
+.sb-row{display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--bg);border-radius:6px;margin-bottom:4px}
+.sb-row:last-child{margin-bottom:0}
+.sb-icon{font-size:14px;flex-shrink:0}
+.sb-val{font-size:12px;color:var(--text);font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-val.empty{color:var(--text-dim);font-style:italic;font-weight:400}
+
+.badge-script-only{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(26,113,177,.1),rgba(102,188,173,.1));border:1.5px solid var(--blue);border-radius:99px;padding:6px 14px;font-size:11px;color:var(--blue);font-weight:600;margin-bottom:12px}
+.badge-script-only::before{content:'📝';font-size:12px}
+
+.loading{display:none;text-align:center;padding:20px}
+.loading.active{display:block}
+.spinner{display:inline-block;width:20px;height:20px;border:3px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.submit-actions{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap;padding-top:16px;border-top:1.5px solid var(--border)}
+.submit-actions button{flex:0 1 auto}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <button class="header-back" onclick="goHome()">← Back to Home</button>
+  </div>
+  <div class="header-badge"><div class="badge-dot"></div><span>Script Only Mode</span></div>
+</div>
+
+<div class="layout">
+  <div class="form-col">
+
+    <!-- YOUR DETAILS SECTION -->
+    <div id="detailsSection">
+      <div class="section-head">
+        <div class="s-eyebrow">Your Information</div>
+        <h1 class="s-title">Your Details</h1>
+        <p class="s-desc">Tell us who you are so we can reach out about your project.</p>
+      </div>
+
+      <div class="badge-script-only">Script-only submission — these details will be stored separately</div>
+
+      <div class="card">
+        <div class="form-row">
+          <div class="field"><label>Full Name <span class="req">*</span></label><input type="text" id="fullName" placeholder="Jane Smith" oninput="updateSidebar()" required></div>
+          <div class="field"><label>Email <span class="req">*</span></label><input type="email" id="email" placeholder="jane@acme.com" oninput="updateSidebar()" required></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label>Company Name <span class="req">*</span></label><input type="text" id="companyName" placeholder="Acme Corporation" oninput="updateSidebar()" required></div>
+          <div class="field"><label>Phone <span class="hint">— optional</span></label><input type="tel" id="phone" placeholder="+44 7700 900000" oninput="updateSidebar()"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCRIPT SECTION -->
+    <div id="scriptSection" style="margin-top:32px">
+      <div class="section-head">
+        <div class="s-eyebrow">Your Project — Script</div>
+        <h1 class="s-title">Video Title & Script</h1>
+        <p class="s-desc">Write your script with custom elements (logos, backgrounds, references).</p>
+      </div>
+
+      <div class="card" id="scriptWriteCard">
+        <div class="card-head">Script</div>
+
+        <!-- Script Mode Tabs -->
+        <div style="display:flex;gap:0;margin-bottom:16px;border-bottom:3px solid var(--border)">
+          <button id="scriptTabOwn" onclick="switchScriptMode('own')" style="flex:1;padding:16px 12px;background:none;border:none;border-bottom:4px solid var(--teal);color:var(--teal);font-weight:800;font-size:15px;cursor:pointer">Write your own script</button>
+          <button id="scriptTabAI" onclick="switchScriptMode('ai')" style="flex:1;padding:16px 12px;background:none;border:none;border-bottom:4px solid transparent;color:var(--text-muted);font-weight:800;font-size:15px;cursor:pointer">Give us your brief</button>
+        </div>
+
+        <!-- Write Your Own Script Tab -->
+        <div id="scriptModeOwn">
+          <div style="margin-bottom:24px">
+            <label style="display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">Video Title <span class="req">*</span></label>
+            <input type="text" id="scriptTitlePage8" placeholder="e.g. Welcome to the Team" oninput="updateSidebar()" required style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:Arial,sans-serif">
+          </div>
+
+          <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap">
+            <button class="btn btn-ghost" style="font-size:12px;padding:8px 14px" onclick="addScriptBlock('title')">+ Add Title</button>
+            <button class="btn btn-primary" style="font-size:12px;padding:8px 14px" onclick="addScriptBlock('line')">+ Add Line</button>
+            <button class="btn btn-ghost" style="font-size:12px;padding:8px 14px" onclick="addScriptBlock('endcredits')">+ Add End Credits</button>
+          </div>
+
+          <div style="margin-bottom:20px;padding:16px;background:var(--bg);border:1.5px solid var(--border);border-radius:8px">
+            <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px">Video Settings</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Tone <span class="req">*</span></label>
+                <select id="scriptTone" required style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif" onchange="toggleCustomInput('scriptTone','scriptToneCustom')">
+                  <option value="">Select tone</option>
+                  <option value="light-hearted">Light Hearted</option>
+                  <option value="serious">Serious</option>
+                  <option value="other">Other</option>
+                </select>
+                <input type="text" id="scriptToneCustom" placeholder="Enter custom tone" style="display:none;width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;margin-top:6px;">
+              </div>
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Style <span class="req">*</span></label>
+                <select id="scriptStyle" required style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif" onchange="toggleCustomInput('scriptStyle','scriptStyleCustom')">
+                  <option value="">Select style</option>
+                  <option value="presenters">Presenters to Camera</option>
+                  <option value="actors">Actors Roleplaying</option>
+                  <option value="other">Other</option>
+                </select>
+                <input type="text" id="scriptStyleCustom" placeholder="Enter custom style" style="display:none;width:100%;padding:8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;margin-top:6px;">
+              </div>
+            </div>
+          </div>
+
+          <div id="scriptBlocksContainer"></div>
+          <div id="scriptBlocksEmpty" style="text-align:center;padding:24px 0;color:var(--text-muted);font-size:13px">No lines yet — click "Add Line" to start writing your script.</div>
+
+          <div class="submit-actions">
+            <button class="btn btn-ghost" style="font-size:12px;padding:8px 14px" onclick="addScriptBlock('title')">+ Add Title</button>
+            <button class="btn btn-primary" style="font-size:12px;padding:8px 14px" onclick="addScriptBlock('line')">+ Add Line</button>
+            <button class="btn btn-ghost" style="font-size:12px;padding:8px 14px" onclick="addScriptBlock('endcredits')">+ Add End Credits</button>
+          </div>
+
+          <div style="margin-top:20px">
+            <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">Writing Tips</div>
+            <ul style="font-size:12px;color:var(--text-muted);line-height:1.6;margin:0;padding-left:20px">
+              <li>Keep the goal clear: one message per video</li>
+              <li>Use plain, conversational language</li>
+              <li>Stick to one idea per line</li>
+              <li>Write like people talk, not like a document</li>
+              <li>Add visual descriptions for on-screen upgrades</li>
+            </ul>
+          </div>
+        </div><!-- /scriptModeOwn -->
+
+        <!-- Done for You Tab -->
+        <div id="scriptModeAI" style="display:none">
+          <div style="margin-bottom:24px">
+            <label style="display:block;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">Video Title <span class="req">*</span></label>
+            <input type="text" id="aiBriefTitle" placeholder="e.g. Product Launch Video" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:Arial,sans-serif">
+          </div>
+
+          <div style="margin-bottom:24px">
+            <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px">Give us your brief</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Share your content as a document, link, or describe it in the text box below. We'll transform it into a script.</div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:8px">📄 Upload Document</label>
+                <input type="file" id="briefDocUpload" accept=".pdf,.doc,.docx,.txt,.md" style="width:100%;padding:10px;border:1.5px dashed var(--border);border-radius:6px;font-size:12px;cursor:pointer" onchange="handleBriefUpload(this)">
+                <div id="briefUploadName" style="font-size:11px;color:var(--text-muted);margin-top:6px"></div>
+              </div>
+              <div>
+                <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:8px">🔗 Or Paste Link</label>
+                <input type="url" id="briefLink" placeholder="https://..." style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif">
+              </div>
+            </div>
+
+            <div>
+              <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:8px">✍️ Or Describe Your Content</label>
+              <textarea id="briefDescription" placeholder="Describe the video topic, key messages, target audience, tone, any specific points you want covered..." style="width:100%;padding:12px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif;min-height:120px;resize:vertical"></textarea>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:6px" id="briefCharCount">0 characters</div>
+            </div>
+          </div>
+
+          <div style="margin-bottom:16px;padding:12px;background:var(--bg);border-radius:6px;border:1.5px solid var(--border)">
+            <div style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">💡 Tip</div>
+            <div style="font-size:12px;color:var(--text-muted)">The more details you provide about your audience, tone, and message, the better our AI can tailor your script.</div>
+          </div>
+        </div><!-- /scriptModeAI -->
+      </div>
+    </div>
+
+    <!-- SUBMIT SECTION -->
+    <div style="margin-top:32px;text-align:center">
+      <div class="loading" id="submitLoading">
+        <div class="spinner"></div>
+        <p style="margin-top:12px;color:var(--text-muted);font-size:12px">Processing your submission...</p>
+      </div>
+      <button id="submitScriptBtn" onclick="submitScriptOnly()" style="padding:14px 32px;background:linear-gradient(135deg,var(--blue),var(--teal));color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s">Submit Script</button>
+    </div>
+
+    <div style="margin-top:16px;text-align:center">
+      <button class="btn btn-ghost" onclick="goHome()" style="font-size:12px;padding:8px 16px">← Back to Portal</button>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar-col" id="sidebarCol">
+    <div class="sidebar-panel">
+      <div class="sidebar-header">
+        <div class="sidebar-header-dot"></div>
+        <div class="sidebar-header-title">Your Details Summary</div>
+      </div>
+      <div class="sidebar-body" id="sidebarBody"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Visual Upgrade (overlay) modal — exact copy of the one in index.html -->
+<div class="modal-overlay" id="overlayModal" style="display:none">
+  <div class="modal-box" style="max-width:600px;max-height:80vh;overflow-y:auto">
+    <button class="modal-close" onclick="closeOverlayModal()">✕</button>
+    <div class="modal-title">Visual Upgrade</div>
+    <div class="modal-sub">Add a visual to enhance this line.</div>
+    <div style="margin:12px 0;padding:12px;background:var(--teal-soft);border:1.5px solid var(--teal2);border-radius:6px;font-size:12px;color:var(--navy);line-height:1.5">
+      <strong>What is a Visual Upgrade?</strong><br>
+      Enhance your script line with on-screen visuals like screenshots, product demos, charts, or graphics. Choose the layout and upload your image to make the video more engaging.
+    </div>
+
+    <div style="margin:16px 0">
+      <div style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:10px">Scene Layout & Media</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+        <button class="overlay-pos-btn" data-pos="none" onclick="selectOverlayPos('none')" style="padding:8px;border:2px solid var(--border);border-radius:6px;cursor:pointer;background:#fff;display:flex;flex-direction:column;align-items:center">
+          <div style="width:50px;height:40px;background:#ddd;border-radius:3px;margin-bottom:4px"></div>
+          <div style="font-size:10px;text-align:center;line-height:1.2">None</div>
+        </button>
+        <button class="overlay-pos-btn" data-pos="left-right" onclick="selectOverlayPos('left-right')" style="padding:8px;border:2px solid var(--border);border-radius:6px;cursor:pointer;background:#fff;display:flex;flex-direction:column;align-items:center">
+          <div style="width:50px;height:40px;display:flex;border-radius:3px;margin-bottom:4px"><div style="flex:1;background:#ddd"></div><div style="flex:1;background:#4da8e6"></div></div>
+          <div style="font-size:10px;text-align:center;line-height:1.2">Screen left</div>
+        </button>
+        <button class="overlay-pos-btn" data-pos="right-left" onclick="selectOverlayPos('right-left')" style="padding:8px;border:2px solid var(--border);border-radius:6px;cursor:pointer;background:#fff;display:flex;flex-direction:column;align-items:center">
+          <div style="width:50px;height:40px;display:flex;border-radius:3px;margin-bottom:4px"><div style="flex:1;background:#4da8e6"></div><div style="flex:1;background:#ddd"></div></div>
+          <div style="font-size:10px;text-align:center;line-height:1.2">Screen right</div>
+        </button>
+        <button class="overlay-pos-btn" data-pos="full" onclick="selectOverlayPos('full')" style="padding:8px;border:2px solid var(--border);border-radius:6px;cursor:pointer;background:#fff;display:flex;flex-direction:column;align-items:center">
+          <div style="width:50px;height:40px;background:#4da8e6;border-radius:3px;margin-bottom:4px"></div>
+          <div style="font-size:10px;text-align:center;line-height:1.2">Full screen</div>
+        </button>
+      </div>
+    </div>
+
+    <div style="margin:16px 0">
+      <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Name <span style="color:#c0392b">*</span></label>
+      <input type="text" id="overlayName" placeholder="e.g., Product Screenshot" style="display:block;width:100%;padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;box-sizing:border-box" />
+    </div>
+
+    <div style="margin:16px 0">
+      <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Description <span style="font-size:11px;font-weight:400;color:var(--text-muted)">(optional)</span></label>
+      <textarea id="overlayDescription" placeholder="Brief description of this asset" style="display:block;width:100%;padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;box-sizing:border-box;resize:vertical;min-height:60px" rows="3"></textarea>
+    </div>
+
+    <div style="margin:16px 0">
+      <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Visual Style <span style="font-size:11px;font-weight:400;color:var(--text-muted)">(optional)</span></label>
+      <select id="overlayStyle" style="display:block;width:100%;padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:Arial,sans-serif;box-sizing:border-box">
+        <option value="">Select a style</option>
+        <option value="icon">Icon</option>
+        <option value="flat-illustration">Flat Illustration</option>
+        <option value="detailed-illustration">Detailed Illustration</option>
+        <option value="photographic">Photographic</option>
+      </select>
+    </div>
+
+    <div style="margin:16px 0">
+      <label style="display:block;font-size:12px;font-weight:600;color:var(--navy);margin-bottom:6px">Image File <span style="font-size:11px;font-weight:400;color:var(--text-muted)">(optional)</span></label>
+      <input type="file" id="overlayFileInput" accept="image/*,video/*" style="display:block;width:100%;padding:10px;border:1.5px solid var(--border);border-radius:6px;font-size:12px" />
+      <div style="font-size:11px;color:var(--text-muted);margin-top:6px">Max file size: 10MB</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:4px">💡 Upload an image that shows your visual style to help our team match your brand aesthetic.</div>
+    </div>
+
+    <div style="margin-top:20px;display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-ghost" onclick="closeOverlayModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveOverlay()">Apply</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Global state
+let scriptMode = 'own';
+let uploadedFiles = {}; // tracks non-base64 metadata (e.g. brief doc name) only
+let submitting = false;
+
+// Same Web App URL the main onboarding flow (index.html) posts to — this
+// page was previously pointed at a placeholder URL and never actually
+// reached the backend.
+var GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxB5dZP6S9SBW65ILi_7AjxUeJPyEI16K2oDf5O5O5r0raAXZE1A7ouPAclQoq0_U--/exec';
+
+function goHome(){window.location.href='/';}
+function switchScriptMode(mode){
+  scriptMode=mode;
+  document.getElementById('scriptTabOwn').style.borderBottomColor=mode==='own'?'var(--teal)':'transparent';
+  document.getElementById('scriptTabOwn').style.color=mode==='own'?'var(--teal)':'var(--text-muted)';
+  document.getElementById('scriptTabAI').style.borderBottomColor=mode==='ai'?'var(--teal)':'transparent';
+  document.getElementById('scriptTabAI').style.color=mode==='ai'?'var(--teal)':'var(--text-muted)';
+  document.getElementById('scriptModeOwn').style.display=mode==='own'?'block':'none';
+  document.getElementById('scriptModeAI').style.display=mode==='ai'?'block':'none';
+}
+
+// ── SCRIPT LINE EDITOR ───────────────────────────
+// Exact port of the block editor from index.html (Page 8: Create Script) —
+// an ordered list of blocks (title / line / end-credits), each with an
+// optional transition shown after it, drag-and-drop reordering, and
+// per-line visual-upgrade (overlay) attachments.
+var scriptState = { scriptBlocks: [], scriptOverlays: {} };
+var _scriptBlockSeq = 0;
+var _scriptDragId = null;
+var _currentOverlayBlockId = null;
+var _selectedOverlayPos = null;
+var SCRIPT_TRANSITIONS = ['','Fade to Black','Cross Dissolve','Slide Left','Slide Right','Wipe Left','Wipe Right'];
+
+function scriptCharColor(ch){ return ch==='B' ? '#d1559e' : 'var(--blue)'; }
+function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+
+function addScriptBlock(kind){
+  var lastLine=null;
+  for(var i=scriptState.scriptBlocks.length-1;i>=0;i--){
+    if(scriptState.scriptBlocks[i].kind==='line'){ lastLine=scriptState.scriptBlocks[i]; break; }
+  }
+  var nextChar = lastLine ? (lastLine.character==='A'?'B':'A') : 'A';
+  var block={
+    id:++_scriptBlockSeq,
+    kind:kind,
+    character: kind==='line' ? nextChar : '',
+    text:'',
+    transition:'',
+    transitionDuration:0.5
+  };
+  scriptState.scriptBlocks.push(block);
+  renderScriptBlocks();
+  updateSidebar();
+  var el=document.querySelector('[data-block-id="'+block.id+'"] textarea, [data-block-id="'+block.id+'"] input[type="text"]');
+  if(el) el.focus();
+}
+
+function deleteScriptBlock(id){
+  scriptState.scriptBlocks=scriptState.scriptBlocks.filter(function(b){ return b.id!==id; });
+  renderScriptBlocks();
+  updateSidebar();
+}
+
+function updateScriptBlockText(id,value){
+  var b=scriptState.scriptBlocks.find(function(b){ return b.id===id; });
+  if(b) b.text=value;
+}
+
+function updateScriptBlockField(id,field,value){
+  var b=scriptState.scriptBlocks.find(function(b){ return b.id===id; });
+  if(!b) return;
+  b[field]=field==='transitionDuration' ? (parseFloat(value)||0) : value;
+  renderScriptBlocks();
+  updateSidebar();
+}
+
+function scriptBlockDragStart(e,id){ _scriptDragId=id; e.dataTransfer.effectAllowed='move'; }
+function scriptBlockDragOver(e){ e.preventDefault(); }
+function scriptBlockDrop(e,targetId){
+  e.preventDefault();
+  if(_scriptDragId==null||_scriptDragId===targetId) return;
+  var fromIdx=scriptState.scriptBlocks.findIndex(function(b){ return b.id===_scriptDragId; });
+  var toIdx=scriptState.scriptBlocks.findIndex(function(b){ return b.id===targetId; });
+  if(fromIdx===-1||toIdx===-1) return;
+  var moved=scriptState.scriptBlocks.splice(fromIdx,1)[0];
+  scriptState.scriptBlocks.splice(toIdx,0,moved);
+  _scriptDragId=null;
+  renderScriptBlocks();
+}
+
+function renderScriptBlocks(){
+  var container=document.getElementById('scriptBlocksContainer');
+  var empty=document.getElementById('scriptBlocksEmpty');
+  if(!container) return;
+  if(!scriptState.scriptBlocks.length){
+    container.innerHTML='';
+    if(empty) empty.style.display='block';
+    return;
+  }
+  if(empty) empty.style.display='none';
+
+  var html='';
+  scriptState.scriptBlocks.forEach(function(b,i){
+    var accent = b.kind==='line' ? scriptCharColor(b.character) : 'var(--teal2)';
+    html+='<div data-block-id="'+b.id+'" ondragover="scriptBlockDragOver(event)" ondrop="scriptBlockDrop(event,'+b.id+')" style="border:1.5px solid var(--border);border-left:4px solid '+accent+';border-radius:var(--radius-xs);padding:14px;margin-bottom:4px;background:#fff;display:flex;gap:12px;align-items:flex-start">';
+    html+='<div draggable="true" ondragstart="scriptBlockDragStart(event,'+b.id+')" title="Drag to reorder" style="color:var(--text-dim);font-size:16px;line-height:1;padding-top:8px;cursor:grab">☰</div>';
+    html+='<div style="flex:1;min-width:0">';
+
+    if(b.kind==='line'){
+      html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">';
+      html+='<div style="width:26px;height:26px;border-radius:50%;background:'+accent+';color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">'+(b.character||'A')+'</div>';
+      html+='<select onchange="updateScriptBlockField('+b.id+',\'character\',this.value)" style="width:auto;max-width:160px;padding:6px 10px;padding-right:24px;font-size:13px;font-weight:600">';
+      html+='<option value="A"'+(b.character==='A'?' selected':'')+'>Character A</option>';
+      html+='<option value="B"'+(b.character==='B'?' selected':'')+'>Character B</option>';
+      html+='</select></div>';
+      html+='<textarea rows="2" placeholder="Enter dialogue…" oninput="updateScriptBlockText('+b.id+',this.value)" style="resize:vertical">'+escapeHtml(b.text)+'</textarea>';
+    } else if(b.kind==='title'){
+      html+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--teal2);margin-bottom:6px">Title Card</div>';
+      html+='<input type="text" placeholder="Enter title text…" value="'+escapeHtml(b.text)+'" oninput="updateScriptBlockText('+b.id+',this.value)">';
+    } else {
+      html+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--teal2);margin-bottom:6px">End Credits</div>';
+      html+='<textarea rows="2" placeholder="Enter end credits text…" oninput="updateScriptBlockText('+b.id+',this.value)">'+escapeHtml(b.text)+'</textarea>';
+    }
+
+    html+='</div>';
+    html+='<div style="display:flex;gap:6px">';
+    if(b.kind==='line'){
+      var overlayInfo=scriptState.scriptOverlays[b.id];
+      var overlayTitle = overlayInfo ? ('Overlay: '+overlayInfo.position+' • '+overlayInfo.fileName) : 'Add visual upgrade';
+      var overlayIcon = overlayInfo ? '✓' : '🎬';
+      html+='<button onclick="'+(overlayInfo?'previewOverlay('+b.id+')':'openOverlayModal('+b.id+')')+'" title="'+overlayTitle+'" style="background:none;border:none;color:'+(overlayInfo?'var(--blue)':'var(--text-dim)')+';cursor:pointer;font-size:16px;padding:4px;font-weight:'+(overlayInfo?'700':'400')+';background-color:'+(overlayInfo?'#e8f2f9':'transparent')+';border-radius:4px;padding:4px 6px">'+overlayIcon+'</button>';
+    }
+    html+='<button onclick="deleteScriptBlock('+b.id+')" title="Delete" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:16px;padding:4px">🗑️</button>';
+    html+='</div></div>';
+
+    if(i<scriptState.scriptBlocks.length-1){
+      html+='<div style="display:flex;align-items:center;gap:10px;padding:8px 4px;margin-bottom:4px">';
+      html+='<div style="flex:1;height:1px;background:var(--border)"></div>';
+      html+='<select onchange="updateScriptBlockField('+b.id+',\'transition\',this.value);if(!this.value)updateScriptBlockField('+b.id+',\'transitionDuration\',0)" style="width:auto;padding:6px 10px;padding-right:20px;font-size:12px">';
+      SCRIPT_TRANSITIONS.forEach(function(t){
+        html+='<option value="'+t+'"'+(b.transition===t?' selected':'')+'>'+(t||'— No Transition —')+'</option>';
+      });
+      html+='</select>';
+      html+='<input type="number" min="0" step="0.1" value="'+(b.transition?b.transitionDuration!=null?b.transitionDuration:0.5:0)+'" onchange="updateScriptBlockField('+b.id+',\'transitionDuration\',this.value)" style="width:56px;padding:6px;font-size:12px;text-align:center">';
+      html+='<span style="font-size:12px;color:var(--text-muted)">s</span>';
+      html+='<div style="flex:1;height:1px;background:var(--border)"></div>';
+      html+='</div>';
+    }
+  });
+  container.innerHTML=html;
+}
+
+// ── VISUAL UPGRADE (OVERLAY) MODAL ───────────────
+// Uploads go into the same per-company Drive folder the final script
+// spreadsheet lands in (keyed by Company Name — there's no portal token in
+// this standalone flow), so Company Name must be filled in first.
+function openOverlayModal(blockId){
+  var company=document.getElementById('companyName').value.trim();
+  if(!company){
+    alert('Please enter your Company Name first — visual upgrades are stored in your project folder.');
+    document.getElementById('companyName').focus();
+    return;
+  }
+  _currentOverlayBlockId=blockId;
+  _selectedOverlayPos=null;
+  document.getElementById('overlayFileInput').value='';
+  document.getElementById('overlayName').value='';
+  document.getElementById('overlayDescription').value='';
+  document.getElementById('overlayStyle').value='';
+  document.querySelectorAll('.overlay-pos-btn').forEach(function(btn){ btn.style.borderColor='var(--border)'; btn.style.background='#fff'; });
+  var applyBtn = document.querySelector('[onclick*="saveOverlay"]');
+  if(applyBtn){ applyBtn.textContent='Apply'; applyBtn.disabled=false; }
+  document.getElementById('overlayModal').style.display='flex';
+}
+
+function closeOverlayModal(){
+  document.getElementById('overlayModal').style.display='none';
+  _currentOverlayBlockId=null;
+  _selectedOverlayPos=null;
+}
+
+function selectOverlayPos(pos){
+  _selectedOverlayPos=pos;
+  document.querySelectorAll('.overlay-pos-btn').forEach(function(btn){
+    if(btn.dataset.pos===pos){ btn.style.borderColor='var(--blue)'; btn.style.background='#e8f2f9'; }
+    else { btn.style.borderColor='var(--border)'; btn.style.background='#fff'; }
+  });
+}
+
+function saveOverlay(){
+  if(!_selectedOverlayPos || !_currentOverlayBlockId){
+    alert('Please select an overlay position.');
+    return;
+  }
+  var nameInput=document.getElementById('overlayName');
+  if(!nameInput.value.trim()){
+    alert('Please enter a name for the overlay.');
+    return;
+  }
+  var fileInput=document.getElementById('overlayFileInput');
+  if(!fileInput.files || !fileInput.files[0]){
+    alert('Please select a file to upload.');
+    return;
+  }
+  var file=fileInput.files[0];
+  if(file.size>10*1024*1024){
+    alert('File size must be less than 10MB.');
+    return;
+  }
+  var company=document.getElementById('companyName').value.trim();
+
+  var applyBtn = document.querySelector('[onclick*="saveOverlay"]');
+  var originalText = applyBtn ? applyBtn.textContent : 'Apply';
+  if(applyBtn) applyBtn.disabled = true;
+
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var fileData=e.target.result;
+    var styleInput=document.getElementById('overlayStyle');
+    var payload={
+      action:'uploadScriptOnlyOverlay',
+      companyName:company,
+      overlayName:nameInput.value.trim(),
+      overlayFileName:file.name,
+      overlayFileData:fileData,
+      overlayStyle:styleInput.value||''
+    };
+
+    if(applyBtn) applyBtn.textContent = 'Uploading...';
+
+    fetch(GOOGLE_SCRIPT_URL,{
+      method:'POST',
+      body:JSON.stringify(payload),
+      headers:{'Content-Type':'text/plain;charset=utf-8'}
+    }).then(function(r){ return r.text(); })
+    .then(function(text){
+      var resp = null;
+      try { resp = JSON.parse(text); } catch(e) {}
+      if(resp && resp.success && resp.fileUrl){
+        scriptState.scriptOverlays[_currentOverlayBlockId]={
+          position:_selectedOverlayPos,
+          name:nameInput.value.trim(),
+          description:document.getElementById('overlayDescription').value.trim()||'',
+          style:styleInput.value||'',
+          fileName:file.name,
+          fileUrl:resp.fileUrl
+        };
+        if(applyBtn) applyBtn.textContent = '✓ Uploaded!';
+        setTimeout(function(){
+          renderScriptBlocks();
+          closeOverlayModal();
+        }, 500);
+      } else {
+        alert('Error uploading overlay: '+(resp&&resp.message?resp.message:'Unknown error'));
+        if(applyBtn) { applyBtn.disabled=false; applyBtn.textContent=originalText; }
+      }
+    }).catch(function(err){
+      alert('Error uploading overlay: '+err.message);
+      if(applyBtn) { applyBtn.disabled=false; applyBtn.textContent=originalText; }
+    });
+  };
+  reader.readAsDataURL(file);
+}
+
+function previewOverlay(blockId){
+  var overlayInfo=scriptState.scriptOverlays[blockId];
+  if(!overlayInfo) return;
+  var preview='Overlay Details\n\nName: '+overlayInfo.name+'\nPosition: '+overlayInfo.position+'\nFile: '+overlayInfo.fileName;
+  if(overlayInfo.description) preview+='\nDescription: '+overlayInfo.description;
+  alert(preview);
+}
+
+function toggleCustomInput(selectId,inputId){
+  const select=document.getElementById(selectId);
+  const input=document.getElementById(inputId);
+  input.style.display=select.value==='other'?'block':'none';
+}
+
+// ── FILE UPLOADS ─────────────────────────────────
+// Base64-encoded and posted inline in the JSON payload — same pattern as
+// index.html's handleUpload() — so the backend's existing saveUploadedFiles()
+// / FILE_FIELDS pipeline picks them up unchanged.
+function handleUpload(input,labelId,fnId){
+  if(!input.files||!input.files[0])return;
+  var file=input.files[0];
+  var fnEl=document.getElementById(fnId);
+  if(fnEl){fnEl.textContent='✓ '+file.name;fnEl.style.display='block';}
+  var reader=new FileReader();
+  reader.onload=function(e){
+    window._uploadedFiles=window._uploadedFiles||{};
+    window._uploadedFiles[labelId]=e.target.result;
+    if(labelId==='ul-logo'){
+      var prev=document.getElementById('logo-preview');
+      var prevImg=document.getElementById('logo-preview-img');
+      if(prev&&prevImg){prevImg.src=e.target.result;prev.style.display='block';}
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function getFileData(uploadId){
+  return (window._uploadedFiles && window._uploadedFiles[uploadId]) ? window._uploadedFiles[uploadId] : '';
+}
+
+function handleBriefUpload(input){
+  const file=input.files[0];
+  if(!file)return;
+  document.getElementById('briefUploadName').textContent=file.name;
+  uploadedFiles.briefDoc=file;
+}
+
+function updateSidebar(){
+  const fullName=document.getElementById('fullName').value;
+  const email=document.getElementById('email').value;
+  const company=document.getElementById('companyName').value;
+  const phone=document.getElementById('phone').value;
+  const title=scriptMode==='own'?document.getElementById('scriptTitlePage8').value:document.getElementById('aiBriefTitle').value;
+  const lineCount=scriptState.scriptBlocks.filter(function(b){return b.kind==='line';}).length;
+
+  let html=`
+    <div class="sb-section">
+      <div class="sb-label">Contact</div>
+      <div class="sb-row"><div class="sb-icon">👤</div><div class="sb-val ${fullName?'':'empty'}">${fullName||'No name'}</div></div>
+      <div class="sb-row"><div class="sb-icon">📧</div><div class="sb-val ${email?'':'empty'}">${email||'No email'}</div></div>
+      <div class="sb-row"><div class="sb-icon">🏢</div><div class="sb-val ${company?'':'empty'}">${company||'No company'}</div></div>
+      ${phone?`<div class="sb-row"><div class="sb-icon">📱</div><div class="sb-val">${phone}</div></div>`:''}
+    </div>
+    <div class="sb-section">
+      <div class="sb-label">Project</div>
+      <div class="sb-row"><div class="sb-icon">🎬</div><div class="sb-val ${title?'':'empty'}">${title||'No title'}</div></div>
+      ${scriptMode==='own'?`<div class="sb-row"><div class="sb-icon">📝</div><div class="sb-val ${lineCount?'':'empty'}">${lineCount?lineCount+' line'+(lineCount===1?'':'s'):'No lines yet'}</div></div>`:''}
+    </div>
+  `;
+  document.getElementById('sidebarBody').innerHTML=html;
+}
+
+async function submitScriptOnly(){
+  // Validate required fields
+  const fullName=document.getElementById('fullName').value.trim();
+  const email=document.getElementById('email').value.trim();
+  const company=document.getElementById('companyName').value.trim();
+
+  if(!fullName||!email||!company){
+    alert('Please fill in your full name, email, and company.');
+    return;
+  }
+
+  const title=scriptMode==='own'?document.getElementById('scriptTitlePage8').value.trim():document.getElementById('aiBriefTitle').value.trim();
+  if(!title){
+    alert('Please provide a video title.');
+    return;
+  }
+
+  if(scriptMode==='own'&&scriptState.scriptBlocks.length===0){
+    alert('Please add at least one line to your script.');
+    return;
+  }
+
+  const tone=document.getElementById('scriptTone').value;
+  const toneCustom=document.getElementById('scriptToneCustom').value;
+  const finalTone=tone==='other'?toneCustom:tone;
+  if(!finalTone){
+    alert('Please select a tone.');
+    return;
+  }
+
+  const style=document.getElementById('scriptStyle').value;
+  const styleCustom=document.getElementById('scriptStyleCustom').value;
+  const finalStyle=style==='other'?styleCustom:style;
+  if(!finalStyle){
+    alert('Please select a style.');
+    return;
+  }
+
+  const btn=document.getElementById('submitScriptBtn');
+  btn.disabled=true;
+  document.getElementById('submitLoading').classList.add('active');
+  submitting=true;
+
+  const payload={
+    fullName:fullName,
+    email:email,
+    companyName:company,
+    phone:document.getElementById('phone').value,
+    videoTitle:title,
+    scriptMode:scriptMode,
+    tone:finalTone,
+    style:finalStyle,
+    logoDataUrl: getFileData('ul-logo'),
+    backgroundFileData: getFileData('ul-background'),
+    guidelinesFileData: getFileData('ul-guidelines'),
+    c1refFileData: getFileData('ul-c1ref'),
+    c2refFileData: getFileData('ul-c2ref'),
+    sceneRefFileData: getFileData('ul-scene'),
+    musicRefFileData: getFileData('ul-music')
+  };
+
+  if(scriptMode==='own'){
+    payload.scriptLines = scriptState.scriptBlocks.map(function(b){
+      var overlayInfo=scriptState.scriptOverlays[b.id];
+      return {
+        kind:b.kind,
+        character:b.character||'',
+        text:b.text||'',
+        transition:b.transition||'',
+        transitionDuration:b.transitionDuration||0,
+        overlayPosition:overlayInfo?overlayInfo.position:'',
+        overlayFileName:overlayInfo?overlayInfo.fileName:'',
+        overlayFileUrl:overlayInfo?overlayInfo.fileUrl:''
+      };
+    });
+  }else{
+    payload.briefDescription=document.getElementById('briefDescription').value;
+    payload.briefLink=document.getElementById('briefLink').value;
+  }
+
+  // Same optimistic-success pattern as the main flow's submitScript(): Apps
+  // Script's response can trigger a false-alarm CORS error even on success,
+  // so show success after a short delay and let the request finish in the
+  // background rather than blocking on it.
+  setTimeout(function(){
+    document.getElementById('submitLoading').classList.remove('active');
+    btn.textContent='✓ Script submitted!';
+    submitting=false;
+    alert('✅ Your script has been submitted successfully! We\'ll be in touch shortly.');
+    setTimeout(function(){goHome();},1200);
+  },2000);
+
+  fetch(GOOGLE_SCRIPT_URL,{
+    method:'POST',
+    body:JSON.stringify(payload),
+    headers:{'Content-Type':'text/plain;charset=utf-8'}
+  }).then(function(r){ return r.text(); })
+  .then(function(text){
+    var resp = null;
+    try { resp = JSON.parse(text); } catch(e) {}
+    if(resp && !resp.success){
+      console.error('Script-only submission error:', resp.error||resp.message);
+    }
+  }).catch(function(err){
+    console.error('Script-only submission error:', err.message);
+  });
+}
+
+// Initialize
+updateSidebar();
+</script>
+
+</body>
+</html>
