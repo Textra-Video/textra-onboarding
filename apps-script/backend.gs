@@ -303,11 +303,19 @@ function handleBriefSubmission(data) {
   // matching on name - the folder is now named after the client only (no
   // token suffix), so a name lookup would create a duplicate if the client
   // changes their company name between submissions.
-  var folder = (existingRow && getFolderFromRow(sheet, existingRow)) || createClientFolder(clientLabel, token);
+  // Non-blocking: Drive being unavailable/unauthorized (or any other
+  // failure creating/finding the client folder) must never take the whole
+  // submission down with it - the row and notifications below still need
+  // to happen even with no folder. Every downstream use of `folder` below
+  // is written to tolerate it being null.
+  var folder = null;
+  try {
+    folder = (existingRow && getFolderFromRow(sheet, existingRow)) || createClientFolder(clientLabel, token);
+  } catch (folderErr) {
+    Logger.log('createClientFolder error (non-blocking): ' + folderErr.toString());
+  }
   // Non-blocking: a single malformed/oversized upload (bad base64, Drive
-  // quota, etc.) must never take the whole submission down with it - the
-  // row, folder and notifications below still need to happen even if a
-  // file attachment fails to save.
+  // quota, etc.) must never take the whole submission down with it either.
   try {
     saveUploadedFiles(folder, data, clientLabel);
   } catch (fileErr) {
@@ -361,7 +369,11 @@ function handleBriefSubmission(data) {
   }
 
   var targetRow = existingRow || sheet.getLastRow();
-  setColumnFormula(sheet, targetRow, 'Client Folder', '=HYPERLINK("' + folder.getUrl() + '","[Folder] Open Folder")');
+  var folderUrl = '';
+  try { folderUrl = folder ? folder.getUrl() : ''; } catch (e) { Logger.log('folder.getUrl() error (non-blocking): ' + e.toString()); }
+  if (folderUrl) {
+    setColumnFormula(sheet, targetRow, 'Client Folder', '=HYPERLINK("' + folderUrl + '","[Folder] Open Folder")');
+  }
 
   // Legacy: if a script sheet URL happened to arrive with the brief itself,
   // still link it (kept for backwards compatibility with the old flow).
@@ -371,9 +383,9 @@ function handleBriefSubmission(data) {
 
   // Send notifications asynchronously so they don't block the response
   try {
-    sendSlack(data, folder.getUrl());
+    sendSlack(data, folderUrl);
     sendClientConfirmationEmail(data, data.portalLink);
-    sendTeamNotificationEmail(data, folder.getUrl());
+    sendTeamNotificationEmail(data, folderUrl);
   } catch (notifErr) {
     Logger.log('Notification error (non-blocking): ' + notifErr.toString());
   }
@@ -563,9 +575,18 @@ function handleSubmitScriptOnly(payload) {
 
   var token = Utilities.getUuid();
   var clientLabel = payload.companyName || payload.fullName || 'Client';
-  var folder = createClientFolder(clientLabel, token);
+  var folder = null;
+  try {
+    folder = createClientFolder(clientLabel, token);
+  } catch (folderErr) {
+    Logger.log('createClientFolder error (non-blocking): ' + folderErr.toString());
+  }
 
-  saveUploadedFiles(folder, payload, clientLabel);
+  try {
+    saveUploadedFiles(folder, payload, clientLabel);
+  } catch (fileErr) {
+    Logger.log('saveUploadedFiles error (non-blocking): ' + fileErr.toString());
+  }
 
   var scriptLink = '';
   if (payload.scriptMode === 'own') {
@@ -595,7 +616,9 @@ function handleSubmitScriptOnly(payload) {
   ];
   sheet.appendRow(row);
   var targetRow = sheet.getLastRow();
-  setColumnFormula(sheet, targetRow, 'Client Folder', '=HYPERLINK("' + folder.getUrl() + '","[Folder] Open Folder")');
+  if (folder) {
+    setColumnFormula(sheet, targetRow, 'Client Folder', '=HYPERLINK("' + folder.getUrl() + '","[Folder] Open Folder")');
+  }
   if (scriptLink) setColumnFormula(sheet, targetRow, 'Script Sheet URL', '=HYPERLINK("' + scriptLink + '","[Script] Open Script")');
 
   try {
