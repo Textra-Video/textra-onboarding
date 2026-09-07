@@ -502,7 +502,7 @@ function handleSubmitScriptBrief(payload) {
 
   setColumnValue(sheet, row, 'Script Title', payload.scriptTitle || '');
   setColumnValue(sheet, row, 'Script Method', 'brief');
-  if (docLink) setColumnFormula(sheet, row, 'Script Sheet URL', '=HYPERLINK("' + docLink + '","[Brief] Open Document")');
+  if (docLink) setColumnFormula(sheet, row, 'Script Sheet URL', '=HYPERLINK("' + docLink + '","[Script] Open Document")');
   setColumnValue(sheet, row, 'Status', 'Script submitted (brief)');
 
   var clientEmail = getColumnValue(sheet, row, 'Email');
